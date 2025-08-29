@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ose.micro.authora.user.v1;
+
+import "ose/micro/authora/user/v1/data.proto";
+
+option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/user/v1;userv1";
+
+service UserService {
+  rpc Create(ose.micro.authora.user.v1.CreateRequest) returns (ose.micro.authora.user.v1.CreateResponse);
+  rpc Update(ose.micro.authora.user.v1.UpdateRequest) returns (ose.micro.authora.user.v1.UpdateResponse);
+  rpc Read(ose.micro.authora.user.v1.ReadRequest) returns (ose.micro.authora.user.v1.ReadResponse);
+}

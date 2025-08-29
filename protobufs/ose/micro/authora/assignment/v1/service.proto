@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ose.micro.authora.assignment.v1;
+
+import "ose/micro/authora/assignment/v1/data.proto";
+
+option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/assignment/v1;assignmentv1";
+
+service AssignmentService {
+  rpc Create(ose.micro.authora.assignment.v1.CreateRequest) returns (ose.micro.authora.assignment.v1.CreateResponse);
+  rpc Update(ose.micro.authora.assignment.v1.UpdateRequest) returns (ose.micro.authora.assignment.v1.UpdateResponse);
+  rpc Read(ose.micro.authora.assignment.v1.ReadRequest) returns (ose.micro.authora.assignment.v1.ReadResponse);
+}

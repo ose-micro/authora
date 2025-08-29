@@ -1,0 +1,100 @@
+{
+  "service": {
+    "name": "organization",
+    "logger": {
+      "environment": "production",
+      "level": "info"
+    },
+    "tracer": {
+      "endpoint": "jaeger.railway.internal:4317",
+      "serviceName": "organization",
+      "sampleRatio": 1.0
+    }
+  },
+  "bus": {
+    "url": "nats://nats.railway.internal:4222"
+  },
+  "grpc": {
+    "port": 8080
+  },
+  "mongo": {
+    "host": "organization-mongo.railway.internal",
+    "port": 27017,
+    "timeout": "3s",
+    "user": "mongo",
+    "password": "ibdqzgYAkSKxvGOuIQRLSLOXCGIjldqQ",
+    "database": "organization"
+  },
+  "mailer": {
+    "organizationSubmitted": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "cd17a045-2e24-40b8-8d6c-1345c8d7bb30"
+    },
+    "organizationSuspended": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "65e95232-583b-44b0-8413-fed25db7ce7a"
+    },
+    "organizationApproved": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "9ac741f1-a755-4402-90aa-ef3ca906b3e2"
+    },
+    "organizationReinstated": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "a05cb5bb-8dfd-40f5-81b4-d41cb99e7bdc"
+    },
+    "organizationRejected": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "417fd8d0-fdf9-4ccb-9bc7-95e310f46ce4"
+    },
+    "organizationRemoved": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "8e078052-69df-4cca-8328-75c451698a81"
+    },
+    "organizationActionRequired": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "0598b736-501a-4d01-b94e-5683808c8ef2"
+    },
+    "memberInvited": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "2572c8d3-487a-4e54-a994-0388dbfe2b04"
+    },
+    "memberAccepted": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "1cf52302-a303-48ad-9181-527f395d113b"
+    },
+    "memberRemoved": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "d0325e9c-e12d-4e5b-9c9f-31ce0681e61d"
+    },
+    "memberSuspended": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "41fa1b98-732a-4f33-8ca3-227417a11210"
+    },
+    "memberReinstated": {
+      "sender": "notification@fundme.cloud",
+      "from": "Fundme",
+      "template": "5e744654-a77c-4101-83f6-ce8daa95146d"
+    }
+  },
+  "services": {
+    "account": {
+      "name": "account",
+      "address": "account.railway.internal:8080"
+    }
+  },
+  "systemValues": {
+    "ownerRole": "ROLE-20250821-194313-8J80",
+    "mainGroup": "GROU-20250822-031937-ZWCZ"
+  }
+}

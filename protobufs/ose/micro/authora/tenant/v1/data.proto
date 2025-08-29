@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package ose.micro.authora.tenant.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ose/micro/common/v1/request.proto";
+
+option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/tenant/v1;tenantv1";
+
+message Tenant {
+  string id = 1;
+  string name = 2;
+  map<string, string> metadata = 3;
+  int32 version = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}
+
+message CreateRequest {
+  string name = 1;
+  map<string, string> metadata = 2;
+}
+
+message CreateResponse {
+  string message = 1;
+  Tenant record = 2;
+}
+
+message UpdateRequest {
+  string id = 1;
+  string name = 2;
+  map<string, string> metadata = 3;
+}
+
+message UpdateResponse {
+  string message = 1;
+  Tenant record = 2;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  string message = 1;
+}
+
+message Tenants {
+  repeated Tenant data = 1;
+}
+
+message ReadRequest {
+  ose.micro.common.v1.Request request = 1;
+}
+
+message ReadResponse {
+  map<string, Tenants> result = 1;
+}

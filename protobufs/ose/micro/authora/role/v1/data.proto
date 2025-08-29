@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package ose.micro.authora.role.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ose/micro/common/v1/request.proto";
+
+option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/role/v1;rolev1";
+
+message Role {
+  string id = 1;
+  string name = 2;
+  string tenant = 3;
+  repeated string permissions = 4;
+  int32 version = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp deleted_at = 8;
+}
+
+message CreateRequest {
+  string name = 1;
+  string tenant = 2;
+  repeated string permissions = 3;
+}
+
+message CreateResponse {
+  string message = 1;
+  Role record = 2;
+}
+
+message UpdateRequest {
+  string id = 1;
+  string name = 2;
+  string tenant = 3;
+  repeated string permissions = 4;
+}
+
+message UpdateResponse {
+  string message = 1;
+  Role record = 2;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  string message = 1;
+}
+
+message Tenants {
+  repeated Role data = 1;
+}
+
+message ReadRequest {
+  ose.micro.common.v1.Request request = 1;
+}
+
+message ReadResponse {
+  map<string, Tenants> result = 1;
+}
