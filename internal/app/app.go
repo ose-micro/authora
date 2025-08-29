@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/ose-micro/authora/internal/app/role"
 	"github.com/ose-micro/authora/internal/app/tenant"
 	"github.com/ose-micro/authora/internal/domain"
 	assignmentDomain "github.com/ose-micro/authora/internal/domain/assignment"
@@ -24,5 +25,6 @@ func Inject(bs domain.Domain, repo repository.Repository, log logger.Logger,
 
 	return Apps{
 		Tenant: tenant.NewApp(bs, log, tracer, repo),
+		Role:   role.NewApp(bs, log, tracer, repo),
 	}
 }

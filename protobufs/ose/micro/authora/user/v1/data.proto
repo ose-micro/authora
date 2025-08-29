@@ -5,7 +5,7 @@ package ose.micro.authora.user.v1;
 import "google/protobuf/timestamp.proto";
 import "ose/micro/common/v1/request.proto";
 
-option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/user/v1;userv1";
+option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/user/v1;userpb";
 
 message User {
   string id = 1;

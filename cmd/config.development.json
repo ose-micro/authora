@@ -19,11 +19,11 @@
   },
   "mongo": {
     "host": "localhost",
-    "port": 27017,
+    "port": 27018,
     "timeout": "3s",
     "user": "moriba",
     "password": "yT7f9hK3vLqP8dX2bHcM",
-    "database": "organization"
+    "database": "authora"
   },
   "mailer": {
     "organizationSubmitted": {

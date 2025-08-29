@@ -4,24 +4,27 @@ package ose.micro.authora.role.v1;
 
 import "google/protobuf/timestamp.proto";
 import "ose/micro/common/v1/request.proto";
+import "ose/micro/common/v1/common.proto";
 
-option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/role/v1;rolev1";
+option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/role/v1;rolepb";
 
 message Role {
   string id = 1;
   string name = 2;
   string tenant = 3;
-  repeated string permissions = 4;
-  int32 version = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
-  google.protobuf.Timestamp deleted_at = 8;
+  string description = 4;
+  repeated ose.micro.common.v1.Permission permissions = 5;
+  int32 version = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  google.protobuf.Timestamp deleted_at = 9;
 }
 
 message CreateRequest {
   string name = 1;
   string tenant = 2;
-  repeated string permissions = 3;
+  string description = 3;
+  repeated  ose.micro.common.v1.Permission permissions = 4;
 }
 
 message CreateResponse {
@@ -33,7 +36,8 @@ message UpdateRequest {
   string id = 1;
   string name = 2;
   string tenant = 3;
-  repeated string permissions = 4;
+  string description = 4;
+  repeated ose.micro.common.v1.Permission permissions = 5;
 }
 
 message UpdateResponse {

@@ -28,8 +28,8 @@ const file_ose_micro_authora_assignment_v1_service_proto_rawDesc = "" +
 	"\x11AssignmentService\x12i\n" +
 	"\x06Create\x12..ose.micro.authora.assignment.v1.CreateRequest\x1a/.ose.micro.authora.assignment.v1.CreateResponse\x12i\n" +
 	"\x06Update\x12..ose.micro.authora.assignment.v1.UpdateRequest\x1a/.ose.micro.authora.assignment.v1.UpdateResponse\x12c\n" +
-	"\x04Read\x12,.ose.micro.authora.assignment.v1.ReadRequest\x1a-.ose.micro.authora.assignment.v1.ReadResponseB\x9f\x02\n" +
-	"#com.ose.micro.authora.assignment.v1B\fServiceProtoP\x01ZIgithub.com/ose-micro/authora/ose/micro/authora/assignment/v1;assignmentv1\xa2\x02\x04OMAA\xaa\x02\x1fOse.Micro.Authora.Assignment.V1\xca\x02\x1fOse\\Micro\\Authora\\Assignment\\V1\xe2\x02+Ose\\Micro\\Authora\\Assignment\\V1\\GPBMetadata\xea\x02#Ose::Micro::Authora::Assignment::V1b\x06proto3"
+	"\x04Read\x12,.ose.micro.authora.assignment.v1.ReadRequest\x1a-.ose.micro.authora.assignment.v1.ReadResponseB\xbe\x02\n" +
+	"#com.ose.micro.authora.assignment.v1B\fServiceProtoP\x01Zhgithub.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/assignment/v1;assignmentv1\xa2\x02\x04OMAA\xaa\x02\x1fOse.Micro.Authora.Assignment.V1\xca\x02\x1fOse\\Micro\\Authora\\Assignment\\V1\xe2\x02+Ose\\Micro\\Authora\\Assignment\\V1\\GPBMetadata\xea\x02#Ose::Micro::Authora::Assignment::V1b\x06proto3"
 
 var file_ose_micro_authora_assignment_v1_service_proto_goTypes = []any{
 	(*CreateRequest)(nil),  // 0: ose.micro.authora.assignment.v1.CreateRequest

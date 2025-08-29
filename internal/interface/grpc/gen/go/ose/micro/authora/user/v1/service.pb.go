@@ -28,8 +28,8 @@ const file_ose_micro_authora_user_v1_service_proto_rawDesc = "" +
 	"\vUserService\x12]\n" +
 	"\x06Create\x12(.ose.micro.authora.user.v1.CreateRequest\x1a).ose.micro.authora.user.v1.CreateResponse\x12]\n" +
 	"\x06Update\x12(.ose.micro.authora.user.v1.UpdateRequest\x1a).ose.micro.authora.user.v1.UpdateResponse\x12W\n" +
-	"\x04Read\x12&.ose.micro.authora.user.v1.ReadRequest\x1a'.ose.micro.authora.user.v1.ReadResponseB\xf5\x01\n" +
-	"\x1dcom.ose.micro.authora.user.v1B\fServiceProtoP\x01Z=github.com/ose-micro/authora/ose/micro/authora/user/v1;userv1\xa2\x02\x04OMAU\xaa\x02\x19Ose.Micro.Authora.User.V1\xca\x02\x19Ose\\Micro\\Authora\\User\\V1\xe2\x02%Ose\\Micro\\Authora\\User\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::User::V1b\x06proto3"
+	"\x04Read\x12&.ose.micro.authora.user.v1.ReadRequest\x1a'.ose.micro.authora.user.v1.ReadResponseB\x94\x02\n" +
+	"\x1dcom.ose.micro.authora.user.v1B\fServiceProtoP\x01Z\\github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/user/v1;userv1\xa2\x02\x04OMAU\xaa\x02\x19Ose.Micro.Authora.User.V1\xca\x02\x19Ose\\Micro\\Authora\\User\\V1\xe2\x02%Ose\\Micro\\Authora\\User\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::User::V1b\x06proto3"
 
 var file_ose_micro_authora_user_v1_service_proto_goTypes = []any{
 	(*CreateRequest)(nil),  // 0: ose.micro.authora.user.v1.CreateRequest

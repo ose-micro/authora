@@ -5,7 +5,7 @@ package ose.micro.authora.assignment.v1;
 import "google/protobuf/timestamp.proto";
 import "ose/micro/common/v1/request.proto";
 
-option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/assignment/v1;assignmentv1";
+option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/assignment/v1;assignmentpb";
 
 message Assignment {
   string id = 1;

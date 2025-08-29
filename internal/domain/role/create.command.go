@@ -4,13 +4,15 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/ose-micro/common"
 	"github.com/ose-micro/cqrs"
 )
 
 type CreateCommand struct {
 	Name        string
 	Tenant      string
-	Permissions []string
+	Description string
+	Permissions []common.Permission
 }
 
 func (c CreateCommand) CommandName() string {
@@ -22,6 +24,10 @@ func (c CreateCommand) Validate() error {
 
 	if c.Name == "" {
 		fields = append(fields, "name is required")
+	}
+
+	if c.Description == "" {
+		fields = append(fields, "description is required")
 	}
 
 	if len(fields) > 0 {

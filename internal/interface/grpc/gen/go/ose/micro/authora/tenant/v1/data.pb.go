@@ -7,7 +7,7 @@
 package tenantv1
 
 import (
-	v1 "github.com/ose-micro/authora/ose/micro/common/v1"
+	v1 "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -601,8 +601,8 @@ const file_ose_micro_authora_tenant_v1_data_proto_rawDesc = "" +
 	"\x06result\x18\x01 \x03(\v25.ose.micro.authora.tenant.v1.ReadResponse.ResultEntryR\x06result\x1a_\n" +
 	"\vResultEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12:\n" +
-	"\x05value\x18\x02 \x01(\v2$.ose.micro.authora.tenant.v1.TenantsR\x05value:\x028\x01B\x80\x02\n" +
-	"\x1fcom.ose.micro.authora.tenant.v1B\tDataProtoP\x01ZAgithub.com/ose-micro/authora/ose/micro/authora/tenant/v1;tenantv1\xa2\x02\x04OMAT\xaa\x02\x1bOse.Micro.Authora.Tenant.V1\xca\x02\x1bOse\\Micro\\Authora\\Tenant\\V1\xe2\x02'Ose\\Micro\\Authora\\Tenant\\V1\\GPBMetadata\xea\x02\x1fOse::Micro::Authora::Tenant::V1b\x06proto3"
+	"\x05value\x18\x02 \x01(\v2$.ose.micro.authora.tenant.v1.TenantsR\x05value:\x028\x01B\x9f\x02\n" +
+	"\x1fcom.ose.micro.authora.tenant.v1B\tDataProtoP\x01Z`github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/tenant/v1;tenantv1\xa2\x02\x04OMAT\xaa\x02\x1bOse.Micro.Authora.Tenant.V1\xca\x02\x1bOse\\Micro\\Authora\\Tenant\\V1\xe2\x02'Ose\\Micro\\Authora\\Tenant\\V1\\GPBMetadata\xea\x02\x1fOse::Micro::Authora::Tenant::V1b\x06proto3"
 
 var (
 	file_ose_micro_authora_tenant_v1_data_proto_rawDescOnce sync.Once

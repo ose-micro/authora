@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"github.com/ose-micro/authora/internal/app"
+	rolev1 "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/role/v1"
 	tenantv1 "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/tenant/v1"
 	"github.com/ose-micro/authora/internal/interface/grpc/handlers"
 	"github.com/ose-micro/core/logger"
@@ -44,6 +45,7 @@ func RunGRPCServer(lc fx.Lifecycle, conf Config, log logger.Logger, tracer traci
 					log.Info(fmt.Sprintf("gRPC server listening on :%d", conf.Port))
 
 					tenantv1.RegisterTenantServiceServer(s, handlers.NewTenant(apps, log, tracer))
+					rolev1.RegisterRoleServiceServer(s, handlers.NewRole(apps, log, tracer))
 
 				}); err != nil {
 					log.Fatal("gRPC server failed", zap.Error(err))

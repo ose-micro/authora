@@ -3,6 +3,7 @@ package role
 import (
 	"time"
 
+	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/rid"
 )
@@ -11,26 +12,29 @@ type Domain struct {
 	*domain.Aggregate
 	name        string
 	tenant      string
-	permissions []string
+	description string
+	permissions []common.Permission
 }
 
 type Params struct {
 	Aggregate   *domain.Aggregate
-	Name        string   `json:"name"`
-	Tenant      string   `json:"tenant"`
-	Permissions []string `json:"permissions"`
+	Name        string              `json:"name"`
+	Tenant      string              `json:"tenant"`
+	Description string              `json:"description"`
+	Permissions []common.Permission `json:"permissions"`
 }
 
 type Public struct {
-	Id          string         `json:"_id"`
-	Name        string         `json:"name"`
-	Tenant      string         `json:"tenant"`
-	Permissions []string       `json:"permissions"`
-	Version     int32          `json:"version"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   *time.Time     `json:"deleted_at"`
-	Events      []domain.Event `json:"events"`
+	Id          string              `json:"_id"`
+	Name        string              `json:"name"`
+	Tenant      string              `json:"tenant"`
+	Permissions []common.Permission `json:"permissions"`
+	Description string              `json:"description"`
+	Version     int32               `json:"version"`
+	CreatedAt   time.Time           `json:"created_at"`
+	UpdatedAt   time.Time           `json:"updated_at"`
+	DeletedAt   *time.Time          `json:"deleted_at"`
+	Events      []domain.Event      `json:"events"`
 }
 
 func (d *Domain) Name() string {
@@ -41,8 +45,38 @@ func (d *Domain) Tenant() string {
 	return d.tenant
 }
 
-func (d *Domain) Permissions() []string {
+func (d *Domain) Description() string {
+	return d.description
+}
+
+func (d *Domain) Permissions() []common.Permission {
 	return d.permissions
+}
+
+func (d *Domain) Equals(other Domain) bool {
+	return d.ID() == other.ID() && d.Version() == other.Version()
+}
+
+func (d *Domain) Update(params Params) {
+	if params.Name != d.Name() {
+		d.name = params.Name
+		d.Touch()
+	}
+
+	if params.Tenant != d.Tenant() {
+		d.tenant = params.Tenant
+		d.Touch()
+	}
+
+	if params.Description != d.Description() {
+		d.description = params.Description
+		d.Touch()
+	}
+
+	if params.Permissions != nil {
+		d.permissions = params.Permissions
+		d.Touch()
+	}
 }
 
 func (d *Domain) Public() *Public {
@@ -51,6 +85,7 @@ func (d *Domain) Public() *Public {
 		Name:        d.name,
 		Tenant:      d.tenant,
 		Permissions: d.permissions,
+		Description: d.description,
 		Version:     d.Version(),
 		CreatedAt:   d.CreatedAt(),
 		UpdatedAt:   d.UpdatedAt(),
@@ -74,5 +109,6 @@ func (p *Public) Params() *Params {
 		Name:        p.Name,
 		Tenant:      p.Tenant,
 		Permissions: p.Permissions,
+		Description: p.Description,
 	}
 }

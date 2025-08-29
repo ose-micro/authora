@@ -10,6 +10,7 @@ import (
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	ose_error "github.com/ose-micro/error"
 	mongodb "github.com/ose-micro/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -42,6 +43,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 
 	res, err := r.Read(ctx, request)
 	if err != nil {
+		err := ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to read res",
@@ -54,12 +56,22 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 
 	raw, ok := res["one"]
 	if !ok {
-		return nil, fmt.Errorf("failed to fetch role")
+		err := ose_error.New(ose_error.ErrInternal, "read one not found")
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		r.log.Error("failed to read res",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+
+		return nil, err
 	}
 
 	var records []role.Public
 
 	if err := common.JsonToAny(raw, &records); err != nil {
+		err := ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to read res",
@@ -71,7 +83,11 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 	}
 
 	if len(records) == 0 {
-		return nil, fmt.Errorf("no record found for the role detail")
+		err := ose_error.New(ose_error.ErrInternal, "read one not found")
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		r.log.Error("failed to read res", zap.String("trace_id", traceId), zap.String("operation", "read_one"), zap.Error(err))
+		return nil, err
 	}
 
 	return r.toDomain(records[0]), nil
@@ -89,6 +105,7 @@ func (r *repository) Create(ctx context.Context, payload role.Domain) error {
 
 	record := newCollection(payload)
 	if _, err := r.collection.InsertOne(ctx, record); err != nil {
+		err := ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to create in mongo",
@@ -125,6 +142,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 
 	res, err := mongodb.RunFaceted(ctx, r.collection, request)
 	if err != nil {
+		err := ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
@@ -145,6 +163,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 
 	records, err := mongodb.CastFacetedResult(res, typeHints)
 	if err != nil {
+		err := ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("Failed to cast faceted result",
@@ -162,7 +181,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 // Update implements role.Repository.
 func (r *repository) Update(ctx context.Context, payload role.Domain) error {
 	ctx, span := r.tracer.Start(ctx, "repository.read.role.update", trace.WithAttributes(
-		attribute.String("operation", "UPDATE"),
+		attribute.String("operation", "update"),
 		attribute.String("payload", fmt.Sprintf("%+v", payload.Public())),
 	))
 	defer span.End()
@@ -175,6 +194,7 @@ func (r *repository) Update(ctx context.Context, payload role.Domain) error {
 	if _, err := r.collection.UpdateOne(ctx, filter, bson.M{
 		"$set": collection,
 	}); err != nil {
+		err := ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
+	commonv1 "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/common/v1"
 	"github.com/ose-micro/core/dto"
-	commonv1 "github.com/ose-micro/grpc/gen/go/common/v1"
 )
 
 func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
@@ -24,21 +24,21 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 				Field: filter.Field,
 				Op: func() dto.FilterOp {
 					switch filter.Op {
-					case commonv1.FilterOp_EQ:
+					case commonv1.FilterOp_FILTER_OP_EQ:
 						return dto.OpEq
-					case commonv1.FilterOp_GTE:
+					case commonv1.FilterOp_FILTER_OP_GTE:
 						return dto.OpGte
-					case commonv1.FilterOp_GT:
+					case commonv1.FilterOp_FILTER_OP_GT:
 						return dto.OpGt
-					case commonv1.FilterOp_LT:
+					case commonv1.FilterOp_FILTER_OP_LT:
 						return dto.OpLt
-					case commonv1.FilterOp_LTE:
+					case commonv1.FilterOp_FILTER_OP_LTE:
 						return dto.OpLte
-					case commonv1.FilterOp_IN:
+					case commonv1.FilterOp_FILTER_OP_IN:
 						return dto.OpIn
-					case commonv1.FilterOp_NE:
+					case commonv1.FilterOp_FILTER_OP_NE:
 						return dto.OpNe
-					case commonv1.FilterOp_NIN:
+					case commonv1.FilterOp_FILTER_OP_NIN:
 						return dto.OpNin
 					default:
 						return dto.OpEq
@@ -46,11 +46,11 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 				}(),
 				Value: func() interface{} {
 					switch filter.Op {
-					case commonv1.FilterOp_EQ, commonv1.FilterOp_IN, commonv1.FilterOp_NE,
-						commonv1.FilterOp_NIN:
+					case commonv1.FilterOp_FILTER_OP_EQ, commonv1.FilterOp_FILTER_OP_IN, commonv1.FilterOp_FILTER_OP_NE,
+						commonv1.FilterOp_FILTER_OP_NIN:
 						return filter.Value
-					case commonv1.FilterOp_GTE, commonv1.FilterOp_GT, commonv1.FilterOp_LT,
-						commonv1.FilterOp_LTE:
+					case commonv1.FilterOp_FILTER_OP_GTE, commonv1.FilterOp_FILTER_OP_GT, commonv1.FilterOp_FILTER_OP_LT,
+						commonv1.FilterOp_FILTER_OP_LTE:
 						value, err := strconv.ParseFloat(filter.Value, 32)
 						if err != nil {
 							return nil
@@ -71,15 +71,15 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 				As:    agg.As,
 				Type: func() dto.AggregationType {
 					switch agg.Type {
-					case commonv1.AggregationType_SUM:
+					case commonv1.AggregationType_AGGREGATION_TYPE_SUM:
 						return dto.AggSum
-					case commonv1.AggregationType_AVG:
+					case commonv1.AggregationType_AGGREGATION_TYPE_AVG:
 						return dto.AggAvg
-					case commonv1.AggregationType_COUNT:
+					case commonv1.AggregationType_AGGREGATION_TYPE_COUNT:
 						return dto.AggCount
-					case commonv1.AggregationType_MAX:
+					case commonv1.AggregationType_AGGREGATION_TYPE_MAX:
 						return dto.AggMax
-					case commonv1.AggregationType_MIN:
+					case commonv1.AggregationType_AGGREGATION_TYPE_MIN:
 						return dto.AggMin
 					default:
 						return dto.AggCount
@@ -94,9 +94,9 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 				Field: sort.Field,
 				Order: func() dto.SortOrder {
 					switch sort.Order {
-					case commonv1.SortOrder_ASC:
+					case commonv1.SortOrder_SORT_ORDER_ASC:
 						return dto.SortAsc
-					case commonv1.SortOrder_DESC:
+					case commonv1.SortOrder_SORT_ORDER_DESC:
 						return dto.SortDesc
 					default:
 						return dto.SortAsc
@@ -111,31 +111,31 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 				Name: computed.Name,
 				Operator: func() dto.ComputedOperator {
 					switch computed.Operator {
-					case commonv1.ComputedOperator_ADD:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_ADD:
 						return dto.OpAdd
-					case commonv1.ComputedOperator_SUBTRACT:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_SUBTRACT:
 						return dto.OpSubtract
-					case commonv1.ComputedOperator_MULTIPLY:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_MULTIPLY:
 						return dto.OpMultiply
-					case commonv1.ComputedOperator_DIVIDE:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_DIVIDE:
 						return dto.OpDivide
-					case commonv1.ComputedOperator_CONCAT:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_CONCAT:
 						return dto.OpConcat
-					case commonv1.ComputedOperator_DATE_TRUNC:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_DATE_TRUNC:
 						return dto.OpDateTrunc
-					case commonv1.ComputedOperator_DAY_OF_MONTH:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_DAY_OF_MONTH:
 						return dto.OpDateTrunc
-					case commonv1.ComputedOperator_IF_NULL:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_IF_NULL:
 						return dto.OpIfNull
-					case commonv1.ComputedOperator_MONTH:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_MONTH:
 						return dto.OpDayOfMonth
-					case commonv1.ComputedOperator_SUBSTR:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_SUBSTR:
 						return dto.OpSubstr
-					case commonv1.ComputedOperator_TO_LOWER:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_TO_LOWER:
 						return dto.OpToLower
-					case commonv1.ComputedOperator_TO_UPPER:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_TO_UPPER:
 						return dto.OpToUpper
-					case commonv1.ComputedOperator_YEAR:
+					case commonv1.ComputedOperator_COMPUTED_OPERATOR_YEAR:
 						return dto.OpYear
 					default:
 						return dto.OpAdd

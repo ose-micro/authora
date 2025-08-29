@@ -7,7 +7,7 @@
 package assignmentv1
 
 import (
-	v1 "github.com/ose-micro/authora/ose/micro/common/v1"
+	v1 "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -620,8 +620,8 @@ const file_ose_micro_authora_assignment_v1_data_proto_rawDesc = "" +
 	"\x06result\x18\x01 \x03(\v29.ose.micro.authora.assignment.v1.ReadResponse.ResultEntryR\x06result\x1ac\n" +
 	"\vResultEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12>\n" +
-	"\x05value\x18\x02 \x01(\v2(.ose.micro.authora.assignment.v1.TenantsR\x05value:\x028\x01B\x9c\x02\n" +
-	"#com.ose.micro.authora.assignment.v1B\tDataProtoP\x01ZIgithub.com/ose-micro/authora/ose/micro/authora/assignment/v1;assignmentv1\xa2\x02\x04OMAA\xaa\x02\x1fOse.Micro.Authora.Assignment.V1\xca\x02\x1fOse\\Micro\\Authora\\Assignment\\V1\xe2\x02+Ose\\Micro\\Authora\\Assignment\\V1\\GPBMetadata\xea\x02#Ose::Micro::Authora::Assignment::V1b\x06proto3"
+	"\x05value\x18\x02 \x01(\v2(.ose.micro.authora.assignment.v1.TenantsR\x05value:\x028\x01B\xbb\x02\n" +
+	"#com.ose.micro.authora.assignment.v1B\tDataProtoP\x01Zhgithub.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/assignment/v1;assignmentv1\xa2\x02\x04OMAA\xaa\x02\x1fOse.Micro.Authora.Assignment.V1\xca\x02\x1fOse\\Micro\\Authora\\Assignment\\V1\xe2\x02+Ose\\Micro\\Authora\\Assignment\\V1\\GPBMetadata\xea\x02#Ose::Micro::Authora::Assignment::V1b\x06proto3"
 
 var (
 	file_ose_micro_authora_assignment_v1_data_proto_rawDescOnce sync.Once

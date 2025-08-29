@@ -4,13 +4,16 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/ose-micro/common"
 	"github.com/ose-micro/cqrs"
 )
 
 type UpdateCommand struct {
-	Id       string
-	Name     string
-	Metadata map[string]interface{}
+	Id          string
+	Name        string
+	Tenant      string
+	Description string
+	Permissions []common.Permission
 }
 
 func (u UpdateCommand) CommandName() string {

@@ -28,8 +28,8 @@ const file_ose_micro_authora_role_v1_service_proto_rawDesc = "" +
 	"\vRoleService\x12]\n" +
 	"\x06Create\x12(.ose.micro.authora.role.v1.CreateRequest\x1a).ose.micro.authora.role.v1.CreateResponse\x12]\n" +
 	"\x06Update\x12(.ose.micro.authora.role.v1.UpdateRequest\x1a).ose.micro.authora.role.v1.UpdateResponse\x12W\n" +
-	"\x04Read\x12&.ose.micro.authora.role.v1.ReadRequest\x1a'.ose.micro.authora.role.v1.ReadResponseB\xf5\x01\n" +
-	"\x1dcom.ose.micro.authora.role.v1B\fServiceProtoP\x01Z=github.com/ose-micro/authora/ose/micro/authora/role/v1;rolev1\xa2\x02\x04OMAR\xaa\x02\x19Ose.Micro.Authora.Role.V1\xca\x02\x19Ose\\Micro\\Authora\\Role\\V1\xe2\x02%Ose\\Micro\\Authora\\Role\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::Role::V1b\x06proto3"
+	"\x04Read\x12&.ose.micro.authora.role.v1.ReadRequest\x1a'.ose.micro.authora.role.v1.ReadResponseB\x94\x02\n" +
+	"\x1dcom.ose.micro.authora.role.v1B\fServiceProtoP\x01Z\\github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/role/v1;rolev1\xa2\x02\x04OMAR\xaa\x02\x19Ose.Micro.Authora.Role.V1\xca\x02\x19Ose\\Micro\\Authora\\Role\\V1\xe2\x02%Ose\\Micro\\Authora\\Role\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::Role::V1b\x06proto3"
 
 var file_ose_micro_authora_role_v1_service_proto_goTypes = []any{
 	(*CreateRequest)(nil),  // 0: ose.micro.authora.role.v1.CreateRequest
