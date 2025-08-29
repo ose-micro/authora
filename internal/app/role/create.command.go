@@ -64,7 +64,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 					{
 						Field: "tenant",
 						Op:    dto.OpEq,
-						Value: command.Name,
+						Value: command.Tenant,
 					},
 				},
 			},
