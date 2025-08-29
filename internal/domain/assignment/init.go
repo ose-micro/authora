@@ -17,7 +17,7 @@ func (i initializer) New(param Params) (*Domain, error) {
 		Aggregate: aggregate,
 		user:      param.User,
 		tenant:    param.Tenant,
-		roles:     param.Roles,
+		role:      param.Role,
 	}, nil
 }
 
@@ -35,7 +35,7 @@ func (i initializer) Existing(param Params) (*Domain, error) {
 		Aggregate: aggregate,
 		user:      param.User,
 		tenant:    param.Tenant,
-		roles:     param.Roles,
+		role:      param.Role,
 	}, nil
 }
 

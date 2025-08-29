@@ -5,13 +5,13 @@ package ose.micro.authora.assignment.v1;
 import "google/protobuf/timestamp.proto";
 import "ose/micro/common/v1/request.proto";
 
-option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/assignment/v1;assignmentpb";
+option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/assignment/v1;assignmentpb";
 
 message Assignment {
   string id = 1;
   string user = 2;
   string tenant = 3;
-  repeated string roles = 4;
+  string role = 4;
   int32 version = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
@@ -21,7 +21,7 @@ message Assignment {
 message CreateRequest {
   string user = 1;
   string tenant = 2;
-  repeated string roles = 3;
+  string role = 3;
 }
 
 message CreateResponse {
@@ -33,7 +33,7 @@ message UpdateRequest {
   string id = 1;
   string user = 2;
   string tenant = 3;
-  repeated string roles = 4;
+  string role = 4;
 }
 
 message UpdateResponse {
@@ -49,7 +49,7 @@ message DeleteResponse {
   string message = 1;
 }
 
-message Tenants {
+message Assignments {
   repeated Assignment data = 1;
 }
 
@@ -58,5 +58,5 @@ message ReadRequest {
 }
 
 message ReadResponse {
-  map<string, Tenants> result = 1;
+  map<string, Assignments> result = 1;
 }

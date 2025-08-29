@@ -12,6 +12,7 @@ type User struct {
 	GivenNames string                 `bson:"given_names"`
 	FamilyName string                 `bson:"family_name"`
 	Email      string                 `bson:"email"`
+	Password   string                 `bson:"password"`
 	Metadata   map[string]interface{} `bson:"metadata"`
 	Version    int32                  `bson:"version"`
 	CreatedAt  time.Time              `bson:"created_at"`
@@ -26,6 +27,7 @@ func newCollection(params user.Domain) User {
 		GivenNames: params.GivenNames(),
 		FamilyName: params.FamilyName(),
 		Email:      params.Email(),
+		Password:   params.Password(),
 		Metadata:   params.Metadata(),
 		Version:    params.Version(),
 		CreatedAt:  params.CreatedAt(),

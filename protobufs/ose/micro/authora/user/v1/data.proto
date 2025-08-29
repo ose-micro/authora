@@ -5,25 +5,27 @@ package ose.micro.authora.user.v1;
 import "google/protobuf/timestamp.proto";
 import "ose/micro/common/v1/request.proto";
 
-option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/user/v1;userpb";
+option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userpb";
 
 message User {
   string id = 1;
   string given_names = 2;
   string family_name = 3;
   string email = 4;
-  map<string, string> metadata = 5;
-  int32 version = 6;
-  google.protobuf.Timestamp created_at = 7;
-  google.protobuf.Timestamp updated_at = 8;
-  google.protobuf.Timestamp deleted_at = 9;
+  string password = 5;
+  map<string, string> metadata = 6;
+  int32 version = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+  google.protobuf.Timestamp deleted_at = 10;
 }
 
 message CreateRequest {
   string given_names = 1;
   string family_name = 2;
   string email = 3;
-  map<string, string> metadata = 4;
+  string password = 4;
+  map<string, string> metadata = 5;
 }
 
 message CreateResponse {
@@ -43,6 +45,17 @@ message UpdateResponse {
   User record = 2;
 }
 
+message ChangePasswordRequest {
+  string id = 1;
+  string password = 2;
+  string old_password = 3;
+}
+
+message ChangePasswordResponse {
+  string message = 1;
+  User record = 2;
+}
+
 message DeleteRequest {
   string id = 1;
 }
@@ -51,7 +64,7 @@ message DeleteResponse {
   string message = 1;
 }
 
-message Tenants {
+message Users {
   repeated User data = 1;
 }
 
@@ -60,5 +73,5 @@ message ReadRequest {
 }
 
 message ReadResponse {
-  map<string, Tenants> result = 1;
+  map<string, Users> result = 1;
 }

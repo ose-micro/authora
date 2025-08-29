@@ -9,9 +9,11 @@ import (
 )
 
 type CreateCommand struct {
-	Name     string
-	Email    string
-	Metadata map[string]interface{}
+	GivenNames string
+	FamilyName string
+	Email      string
+	Password   string
+	Metadata   map[string]interface{}
 }
 
 func (c CreateCommand) CommandName() string {
@@ -21,8 +23,18 @@ func (c CreateCommand) CommandName() string {
 func (c CreateCommand) Validate() error {
 	fields := make([]string, 0)
 
-	if c.Name == "" {
-		fields = append(fields, "name is required")
+	if c.GivenNames == "" {
+		fields = append(fields, "given names is required")
+	}
+
+	if c.FamilyName == "" {
+		fields = append(fields, "family name is required")
+	}
+
+	if c.Password == "" {
+		fields = append(fields, "password is required")
+	} else if len(c.Password) < 8 {
+		fields = append(fields, "password must be at least 8 characters")
 	}
 
 	if c.Email == "" {

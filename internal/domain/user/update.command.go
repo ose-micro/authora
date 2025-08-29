@@ -8,9 +8,10 @@ import (
 )
 
 type UpdateCommand struct {
-	Id       string
-	Name     string
-	Metadata map[string]interface{}
+	Id         string
+	GivenNames string
+	FamilyName string
+	Metadata   map[string]interface{}
 }
 
 func (u UpdateCommand) CommandName() string {
@@ -24,8 +25,12 @@ func (u UpdateCommand) Validate() error {
 		fields = append(fields, "id is required")
 	}
 
-	if u.Name == "" {
-		fields = append(fields, "name is required")
+	if u.GivenNames == "" {
+		fields = append(fields, "given names is required")
+	}
+
+	if u.FamilyName == "" {
+		fields = append(fields, "family name is required")
 	}
 
 	if len(fields) > 0 {

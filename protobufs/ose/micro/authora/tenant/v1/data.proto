@@ -5,7 +5,7 @@ package ose.micro.authora.tenant.v1;
 import "google/protobuf/timestamp.proto";
 import "ose/micro/common/v1/request.proto";
 
-option go_package = "github.com/ose-micro/authora/internal/interface/grpc/gen/go/ose/micro/authora/tenant/v1;tenantpb";
+option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/tenant/v1;tenantpb";
 
 message Tenant {
   string id = 1;

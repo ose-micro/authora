@@ -11,21 +11,21 @@ type Domain struct {
 	*domain.Aggregate
 	user   string
 	tenant string
-	roles  []string
+	role   string
 }
 
 type Params struct {
 	Aggregate *domain.Aggregate
 	User      string
 	Tenant    string
-	Roles     []string
+	Role      string
 }
 
 type Public struct {
 	Id        string         `json:"_id"`
 	User      string         `json:"user"`
 	Tenant    string         `json:"tenant"`
-	Roles     []string       `json:"roles"`
+	Role      string         `json:"role"`
 	Version   int32          `json:"version"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -41,12 +41,12 @@ func (d *Domain) Tenant() string {
 	return d.tenant
 }
 
-func (d *Domain) Roles() []string {
-	return d.roles
+func (d *Domain) Role() string {
+	return d.role
 }
 
-func (d *Domain) UpdateRole(roles []string) {
-	d.roles = roles
+func (d *Domain) UpdateRole(role string) {
+	d.role = role
 	d.Touch()
 }
 
@@ -55,7 +55,7 @@ func (d *Domain) Public() *Public {
 		Id:        d.ID(),
 		User:      d.user,
 		Tenant:    d.tenant,
-		Roles:     d.roles,
+		Role:      d.role,
 		Version:   d.Version(),
 		CreatedAt: d.CreatedAt(),
 		UpdatedAt: d.UpdatedAt(),
@@ -78,6 +78,6 @@ func (p *Public) Params() *Params {
 		Aggregate: aggregate,
 		User:      p.User,
 		Tenant:    p.Tenant,
-		Roles:     p.Roles,
+		Role:      p.Role,
 	}
 }

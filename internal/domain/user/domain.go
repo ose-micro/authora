@@ -1,9 +1,12 @@
 package user
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ose-micro/core/domain"
+	"github.com/ose-micro/core/utils"
+	ose_error "github.com/ose-micro/error"
 	"github.com/ose-micro/rid"
 )
 
@@ -12,6 +15,7 @@ type Domain struct {
 	givenNames string
 	familyName string
 	email      string
+	password   string
 	metadata   map[string]interface{}
 }
 
@@ -20,7 +24,8 @@ type Params struct {
 	GivenNames string
 	FamilyName string
 	Email      string
-	metadata   map[string]interface{}
+	Password   string
+	Metadata   map[string]interface{}
 }
 
 type Public struct {
@@ -28,6 +33,7 @@ type Public struct {
 	GivenNames string                 `json:"given_names"`
 	FamilyName string                 `json:"family_name"`
 	Email      string                 `json:"email"`
+	Password   string                 `json:"password"`
 	Metadata   map[string]interface{} `json:"metadata"`
 	Version    int32                  `json:"version"`
 	CreatedAt  time.Time              `json:"created_at"`
@@ -44,6 +50,14 @@ func (d *Domain) FamilyName() string {
 	return d.familyName
 }
 
+func (d *Domain) Password() string {
+	return d.password
+}
+
+func (d *Domain) Name() string {
+	return fmt.Sprintf("%s %s", d.givenNames, d.familyName)
+}
+
 func (d *Domain) Email() string {
 	return d.email
 }
@@ -53,8 +67,8 @@ func (d *Domain) Metadata() map[string]interface{} {
 }
 
 func (d *Domain) Update(params Params) {
-	if params.metadata != nil {
-		d.metadata = params.metadata
+	if params.Metadata != nil {
+		d.metadata = params.Metadata
 		d.Touch()
 	}
 
@@ -69,6 +83,21 @@ func (d *Domain) Update(params Params) {
 	}
 }
 
+func (d *Domain) ChangePassword(password string, oldPassword string) error {
+
+	if !utils.CheckPasswordHash(d.password, oldPassword) {
+		return ose_error.New(ose_error.ErrUnauthorized, "password does not match")
+	}
+
+	hash, err := utils.HashPassword(password)
+	if err != nil {
+		return ose_error.New(ose_error.ErrInvalidInput, err.Error())
+	}
+
+	d.password = hash
+	return nil
+}
+
 func (d *Domain) Public() *Public {
 	return &Public{
 		Id:         d.ID(),
@@ -76,6 +105,7 @@ func (d *Domain) Public() *Public {
 		FamilyName: d.familyName,
 		Email:      d.email,
 		Metadata:   d.metadata,
+		Password:   d.password,
 		Version:    d.Version(),
 		CreatedAt:  d.CreatedAt(),
 		UpdatedAt:  d.UpdatedAt(),
@@ -99,6 +129,7 @@ func (p Public) Params() *Params {
 		GivenNames: p.GivenNames,
 		FamilyName: p.FamilyName,
 		Email:      p.Email,
-		metadata:   p.Metadata,
+		Metadata:   p.Metadata,
+		Password:   p.Password,
 	}
 }

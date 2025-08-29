@@ -162,7 +162,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 // Update implements user.Repository.
 func (r *repository) Update(ctx context.Context, payload user.Domain) error {
 	ctx, span := r.tracer.Start(ctx, "repository.read.user.update", trace.WithAttributes(
-		attribute.String("operation", "UPDATE"),
+		attribute.String("operation", "update"),
 		attribute.String("payload", fmt.Sprintf("%+v", payload.Public())),
 	))
 	defer span.End()

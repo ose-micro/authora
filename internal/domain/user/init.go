@@ -2,6 +2,8 @@ package user
 
 import (
 	"github.com/ose-micro/core/domain"
+	"github.com/ose-micro/core/utils"
+	ose_error "github.com/ose-micro/error"
 	"github.com/ose-micro/rid"
 )
 
@@ -12,13 +14,18 @@ func (i initializer) New(param Params) (*Domain, error) {
 	id := rid.New("usr", true)
 
 	aggregate := domain.NewAggregate(*id)
+	password, err := utils.HashPassword(param.Password)
+	if err != nil {
+		return nil, ose_error.New(ose_error.ErrInvalidInput, err.Error())
+	}
 
 	return &Domain{
 		Aggregate:  aggregate,
 		givenNames: param.GivenNames,
 		familyName: param.FamilyName,
 		email:      param.Email,
-		metadata:   param.metadata,
+		metadata:   param.Metadata,
+		password:   password,
 	}, nil
 }
 
@@ -37,7 +44,7 @@ func (i initializer) Existing(param Params) (*Domain, error) {
 		givenNames: param.GivenNames,
 		familyName: param.FamilyName,
 		email:      param.Email,
-		metadata:   param.metadata,
+		metadata:   param.Metadata,
 	}, nil
 }
 

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/ose-micro/authora/internal/api/grpc"
 	"github.com/ose-micro/authora/internal/app"
 	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/interface/grpc"
 	"github.com/ose-micro/authora/internal/repository"
 	ose "github.com/ose-micro/core"
 	"github.com/ose-micro/core/config"

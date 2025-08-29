@@ -23,6 +23,10 @@ func (u UpdateCommand) Validate() error {
 		fields = append(fields, "id is required")
 	}
 
+	if u.Role == "" {
+		fields = append(fields, "role is required")
+	}
+
 	if len(fields) > 0 {
 		msg := strings.Join(fields, " ")
 		return errors.New(msg)

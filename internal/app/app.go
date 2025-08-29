@@ -1,8 +1,10 @@
 package app
 
 import (
+	"github.com/ose-micro/authora/internal/app/assignment"
 	"github.com/ose-micro/authora/internal/app/role"
 	"github.com/ose-micro/authora/internal/app/tenant"
+	"github.com/ose-micro/authora/internal/app/user"
 	"github.com/ose-micro/authora/internal/domain"
 	assignmentDomain "github.com/ose-micro/authora/internal/domain/assignment"
 	roleDomain "github.com/ose-micro/authora/internal/domain/role"
@@ -24,7 +26,9 @@ func Inject(bs domain.Domain, repo repository.Repository, log logger.Logger,
 	tracer tracing.Tracer) Apps {
 
 	return Apps{
-		Tenant: tenant.NewApp(bs, log, tracer, repo),
-		Role:   role.NewApp(bs, log, tracer, repo),
+		Tenant:     tenant.NewApp(bs, log, tracer, repo),
+		Role:       role.NewApp(bs, log, tracer, repo),
+		User:       user.NewApp(bs, log, tracer, repo),
+		Assignment: assignment.NewApp(bs, log, tracer, repo),
 	}
 }

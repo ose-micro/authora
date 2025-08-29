@@ -10,7 +10,7 @@ import (
 type CreateCommand struct {
 	User   string
 	Tenant string
-	Roles  []string
+	Role   string
 }
 
 func (c CreateCommand) CommandName() string {
@@ -26,6 +26,10 @@ func (c CreateCommand) Validate() error {
 
 	if c.Tenant == "" {
 		fields = append(fields, "tenant is required")
+	}
+
+	if c.Role == "" {
+		fields = append(fields, "role is required")
 	}
 
 	if len(fields) > 0 {
