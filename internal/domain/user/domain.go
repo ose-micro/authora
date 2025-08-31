@@ -84,8 +84,7 @@ func (d *Domain) Update(params Params) {
 }
 
 func (d *Domain) ChangePassword(password string, oldPassword string) error {
-
-	if !utils.CheckPasswordHash(d.password, oldPassword) {
+	if !utils.CheckPasswordHash(oldPassword, d.password) {
 		return ose_error.New(ose_error.ErrUnauthorized, "password does not match")
 	}
 

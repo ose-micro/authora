@@ -80,7 +80,7 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 		return nil, err
 	}
 
-	if utils.CheckPasswordHash(record.Password(), command.Password) {
+	if !utils.CheckPasswordHash(command.Password, record.Password()) {
 		err := ose_error.New(ose_error.ErrUnauthorized, "password does not match")
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -184,11 +184,12 @@ func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domai
 }
 
 func newLoginCommandHandler(bs domain.Domain, repo repository.Repository,
-	log logger.Logger, tracer tracing.Tracer) cqrs.CommandHandle[user.LoginCommand, *user.Auth] {
+	log logger.Logger, tracer tracing.Tracer, jwt ose_jwt.Manager) cqrs.CommandHandle[user.LoginCommand, *user.Auth] {
 	return &loginCommandHandler{
 		repo:   repo,
 		log:    log,
 		tracer: tracer,
 		bs:     bs,
+		jwt:    jwt,
 	}
 }

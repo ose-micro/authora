@@ -10,6 +10,7 @@ import (
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"github.com/ose-micro/cqrs"
+	ose_jwt "github.com/ose-micro/jwt"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -22,8 +23,80 @@ type app struct {
 	create         cqrs.CommandHandle[user.CreateCommand, *user.Domain]
 	update         cqrs.CommandHandle[user.UpdateCommand, *user.Domain]
 	login          cqrs.CommandHandle[user.LoginCommand, *user.Auth]
+	hasRole        cqrs.CommandHandle[user.HasRoleCommand, *bool]
+	hasPermission  cqrs.CommandHandle[user.HasPermissionCommand, *bool]
+	parseClaims    cqrs.CommandHandle[user.TokenCommand, *ose_jwt.Claims]
 	changePassword cqrs.CommandHandle[user.ChangePasswordCommand, *user.Domain]
 	read           cqrs.QueryHandle[user.ReadQuery, map[string]any]
+}
+
+func (a app) HasRole(ctx context.Context, command user.HasRoleCommand) (bool, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.has_role.command", trace.WithAttributes(
+		attribute.String("operation", "has_role"),
+		attribute.String("payload", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	res, err := a.hasRole.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "has_role"),
+			zap.Error(err),
+		)
+		return false, err
+	}
+
+	return *res, nil
+}
+
+func (a app) HasPermission(ctx context.Context, command user.HasPermissionCommand) (bool, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.has_permission.command", trace.WithAttributes(
+		attribute.String("operation", "has_permission"),
+		attribute.String("payload", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	res, err := a.hasPermission.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "has_permission"),
+			zap.Error(err),
+		)
+		return false, err
+	}
+
+	return *res, nil
+}
+
+func (a app) ParseClaims(ctx context.Context, command user.TokenCommand) (*ose_jwt.Claims, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.parse_claims.command", trace.WithAttributes(
+		attribute.String("operation", "parse_claims"),
+		attribute.String("payload", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	res, err := a.parseClaims.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "parse_claims"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	return res, nil
 }
 
 func (a app) Login(ctx context.Context, command user.LoginCommand) (*user.Auth, error) {
@@ -146,7 +219,8 @@ func (a app) Delete(ctx context.Context, params user.UpdateCommand) (*user.Domai
 	panic("implement me")
 }
 
-func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) user.App {
+func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository,
+	jwt ose_jwt.Manager) user.App {
 	return &app{
 		tracer:         tracer,
 		log:            log,
@@ -154,6 +228,9 @@ func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo rep
 		update:         newUpdateCommandHandler(bs, repo, log, tracer),
 		read:           newReadQueryHandler(repo.User, log, tracer),
 		changePassword: newChangePasswordCommandHandler(bs, repo, log, tracer),
-		login:          newLoginCommandHandler(bs, repo, log, tracer),
+		login:          newLoginCommandHandler(bs, repo, log, tracer, jwt),
+		hasRole:        newHasRoleCommandHandler(log, tracer, jwt),
+		hasPermission:  newHasPermissionCommandHandler(log, tracer, jwt),
+		parseClaims:    newParseClaimCommandHandler(log, tracer, jwt),
 	}
 }

@@ -179,6 +179,46 @@ func (h *UserHandler) Update(ctx context.Context, request *userv1.UpdateRequest)
 	}, nil
 }
 
+func (h *UserHandler) ChangePassword(ctx context.Context, request *userv1.ChangePasswordRequest) (*userv1.ChangePasswordResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.change_password.handler", trace.WithAttributes(
+		attribute.String("operation", "change_password"),
+		attribute.String("payload", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	payload := user.ChangePasswordCommand{
+		Id:          request.Id,
+		OldPassword: request.OldPassword,
+		Password:    request.Password,
+	}
+
+	record, err := h.app.ChangePassword(ctx, payload)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to update user",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "update"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	h.log.Info("user update process successfully",
+		zap.String("trace_id", traceId),
+		zap.String("operation", "update"),
+		zap.Any("payload", request),
+	)
+
+	result, _ := h.response(*record.Public())
+
+	return &userv1.ChangePasswordResponse{
+		Record: result,
+	}, nil
+}
+
 func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (*userv1.LoginResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.login.handler", trace.WithAttributes(
 		attribute.String("operation", "login"),

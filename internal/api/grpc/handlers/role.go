@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	rolev1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/role/v1"
 	"github.com/ose-micro/authora/internal/app"
 	"github.com/ose-micro/authora/internal/domain/role"
-	rolev1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/role/v1"
-	commonv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -29,24 +28,13 @@ type (
 
 func (h *RoleHandler) response(param role.Public) *rolev1.Role {
 	return &rolev1.Role{
-		Id:     param.Id,
-		Name:   param.Name,
-		Tenant: param.Tenant,
-		Permissions: func() []*commonv1.Permission {
-			var permissions []*commonv1.Permission
-
-			for _, p := range param.Permissions {
-				permissions = append(permissions, &commonv1.Permission{
-					Resource: p.Resource,
-					Action:   p.Action,
-				})
-			}
-
-			return permissions
-		}(),
-		Version:   param.Version,
-		CreatedAt: timestamppb.New(param.CreatedAt),
-		UpdatedAt: timestamppb.New(param.UpdatedAt),
+		Id:          param.Id,
+		Name:        param.Name,
+		Tenant:      param.Tenant,
+		Permissions: buildPermissionsProto(param.Permissions),
+		Version:     param.Version,
+		CreatedAt:   timestamppb.New(param.CreatedAt),
+		UpdatedAt:   timestamppb.New(param.UpdatedAt),
 		DeletedAt: func() *timestamppb.Timestamp {
 			if param.DeletedAt != nil {
 				return timestamppb.New(*param.DeletedAt)
@@ -69,18 +57,7 @@ func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest)
 		Name:        request.Name,
 		Tenant:      request.Tenant,
 		Description: request.Description,
-		Permissions: func() []common.Permission {
-			var permissions []common.Permission
-
-			for _, p := range request.Permissions {
-				permissions = append(permissions, common.Permission{
-					Resource: p.Resource,
-					Action:   p.Action,
-				})
-			}
-
-			return permissions
-		}(),
+		Permissions: buildPermissions(request.Permissions),
 	}
 
 	record, err := h.app.Create(ctx, payload)

@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"strconv"
 
+	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/auth/v1"
 	commonv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
+	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/dto"
+	ose_jwt "github.com/ose-micro/jwt"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
@@ -160,4 +164,66 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 	return &dto.Request{
 		Queries: facets,
 	}, nil
+}
+
+func buildPermissions(list []*commonv1.Permission) []common.Permission {
+	var permissions []common.Permission
+
+	for _, p := range list {
+		permissions = append(permissions, common.Permission{
+			Resource: p.Resource,
+			Action:   p.Action,
+		})
+	}
+
+	return permissions
+}
+
+func buildPermissionsProto(list []common.Permission) []*commonv1.Permission {
+	var permissions []*commonv1.Permission
+
+	for _, p := range list {
+		permissions = append(permissions, &commonv1.Permission{
+			Resource: p.Resource,
+			Action:   p.Action,
+		})
+	}
+
+	return permissions
+}
+
+func buildClaim(claims ose_jwt.Claims) *authv1.Claims {
+	var kind authv1.TokenKind
+
+	switch claims.Kind {
+	case ose_jwt.PurposeToken:
+		kind = authv1.TokenKind_TokenKind_PurposeToken
+	case ose_jwt.RefreshToken:
+		kind = authv1.TokenKind_TokenKind_RefreshToken
+	case ose_jwt.AccessToken:
+		kind = authv1.TokenKind_TokenKind_AccessToken
+	}
+
+	tenants := make([]*authv1.Tenant, 0)
+	for _, t := range claims.Tenants {
+		tenants = append(tenants, buildTenant(t))
+	}
+
+	return &authv1.Claims{
+		Sub:       claims.Sub,
+		Kind:      kind,
+		Tenants:   tenants,
+		Jti:       claims.JTI,
+		Issuer:    claims.Issuer,
+		ExpiresAt: timestamppb.New(claims.ExpiresAt.Time),
+		IssuedAt:  timestamppb.New(claims.IssuedAt.Time),
+	}
+}
+
+func buildTenant(tenant ose_jwt.Tenant) *authv1.Tenant {
+	return &authv1.Tenant{
+		Role:        tenant.Role,
+		Tenant:      tenant.Tenant,
+		Permissions: buildPermissionsProto(tenant.Permissions),
+	}
 }

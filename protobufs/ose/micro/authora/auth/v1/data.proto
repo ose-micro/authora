@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package ose.micro.authora.auth.v1;
+
+import "ose/micro/auth/v1/auth.proto";
+import "ose/micro/common/v1/common.proto";
+
+option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/auth/v1;authpb";
+
+message HasRoleRequest {
+  string token = 1;
+  string tenant = 2;
+  string role = 3;
+}
+
+message HasRoleResponse {
+  string message = 1;
+}
+
+message ParseClaimRequest {
+  string token = 1;
+}
+
+message ParseClaimResponse {
+  string message = 1;
+  ose.micro.auth.v1.Claims claim = 2;
+}
+
+message HasPermissionRequest {
+  string token = 1;
+  string tenant = 2;
+  ose.micro.common.v1.Permission permission = 3;
+}
+
+message HasPermissionResponse {
+  string message = 1;
+}
