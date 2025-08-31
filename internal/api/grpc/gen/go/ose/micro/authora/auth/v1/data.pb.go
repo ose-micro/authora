@@ -223,6 +223,190 @@ func (x *ParseClaimResponse) GetClaim() *v1.Claims {
 	return nil
 }
 
+type RequestPurposeTokenRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Purpose       string                 `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestPurposeTokenRequest) Reset() {
+	*x = RequestPurposeTokenRequest{}
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestPurposeTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestPurposeTokenRequest) ProtoMessage() {}
+
+func (x *RequestPurposeTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestPurposeTokenRequest.ProtoReflect.Descriptor instead.
+func (*RequestPurposeTokenRequest) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RequestPurposeTokenRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *RequestPurposeTokenRequest) GetPurpose() string {
+	if x != nil {
+		return x.Purpose
+	}
+	return ""
+}
+
+type RequestPurposeTokenResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestPurposeTokenResponse) Reset() {
+	*x = RequestPurposeTokenResponse{}
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestPurposeTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestPurposeTokenResponse) ProtoMessage() {}
+
+func (x *RequestPurposeTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestPurposeTokenResponse.ProtoReflect.Descriptor instead.
+func (*RequestPurposeTokenResponse) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *RequestPurposeTokenResponse) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+type RequestAccessTokenRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Refresh       string                 `protobuf:"bytes,1,opt,name=refresh,proto3" json:"refresh,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestAccessTokenRequest) Reset() {
+	*x = RequestAccessTokenRequest{}
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestAccessTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestAccessTokenRequest) ProtoMessage() {}
+
+func (x *RequestAccessTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestAccessTokenRequest.ProtoReflect.Descriptor instead.
+func (*RequestAccessTokenRequest) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *RequestAccessTokenRequest) GetRefresh() string {
+	if x != nil {
+		return x.Refresh
+	}
+	return ""
+}
+
+type RequestAccessTokenResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestAccessTokenResponse) Reset() {
+	*x = RequestAccessTokenResponse{}
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestAccessTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestAccessTokenResponse) ProtoMessage() {}
+
+func (x *RequestAccessTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestAccessTokenResponse.ProtoReflect.Descriptor instead.
+func (*RequestAccessTokenResponse) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *RequestAccessTokenResponse) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
 type HasPermissionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
@@ -234,7 +418,7 @@ type HasPermissionRequest struct {
 
 func (x *HasPermissionRequest) Reset() {
 	*x = HasPermissionRequest{}
-	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[4]
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -246,7 +430,7 @@ func (x *HasPermissionRequest) String() string {
 func (*HasPermissionRequest) ProtoMessage() {}
 
 func (x *HasPermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[4]
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -259,7 +443,7 @@ func (x *HasPermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HasPermissionRequest.ProtoReflect.Descriptor instead.
 func (*HasPermissionRequest) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{4}
+	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *HasPermissionRequest) GetToken() string {
@@ -292,7 +476,7 @@ type HasPermissionResponse struct {
 
 func (x *HasPermissionResponse) Reset() {
 	*x = HasPermissionResponse{}
-	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[5]
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -304,7 +488,7 @@ func (x *HasPermissionResponse) String() string {
 func (*HasPermissionResponse) ProtoMessage() {}
 
 func (x *HasPermissionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[5]
+	mi := &file_ose_micro_authora_auth_v1_data_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -317,7 +501,7 @@ func (x *HasPermissionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HasPermissionResponse.ProtoReflect.Descriptor instead.
 func (*HasPermissionResponse) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{5}
+	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *HasPermissionResponse) GetMessage() string {
@@ -342,7 +526,16 @@ const file_ose_micro_authora_auth_v1_data_proto_rawDesc = "" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"_\n" +
 	"\x12ParseClaimResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12/\n" +
-	"\x05claim\x18\x02 \x01(\v2\x19.ose.micro.auth.v1.ClaimsR\x05claim\"\x85\x01\n" +
+	"\x05claim\x18\x02 \x01(\v2\x19.ose.micro.auth.v1.ClaimsR\x05claim\"F\n" +
+	"\x1aRequestPurposeTokenRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
+	"\apurpose\x18\x02 \x01(\tR\apurpose\"3\n" +
+	"\x1bRequestPurposeTokenResponse\x12\x14\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"5\n" +
+	"\x19RequestAccessTokenRequest\x12\x18\n" +
+	"\arefresh\x18\x01 \x01(\tR\arefresh\"2\n" +
+	"\x1aRequestAccessTokenResponse\x12\x14\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"\x85\x01\n" +
 	"\x14HasPermissionRequest\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x16\n" +
 	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12?\n" +
@@ -365,25 +558,29 @@ func file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP() []byte {
 	return file_ose_micro_authora_auth_v1_data_proto_rawDescData
 }
 
-var file_ose_micro_authora_auth_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_ose_micro_authora_auth_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_ose_micro_authora_auth_v1_data_proto_goTypes = []any{
-	(*HasRoleRequest)(nil),        // 0: ose.micro.authora.auth.v1.HasRoleRequest
-	(*HasRoleResponse)(nil),       // 1: ose.micro.authora.auth.v1.HasRoleResponse
-	(*ParseClaimRequest)(nil),     // 2: ose.micro.authora.auth.v1.ParseClaimRequest
-	(*ParseClaimResponse)(nil),    // 3: ose.micro.authora.auth.v1.ParseClaimResponse
-	(*HasPermissionRequest)(nil),  // 4: ose.micro.authora.auth.v1.HasPermissionRequest
-	(*HasPermissionResponse)(nil), // 5: ose.micro.authora.auth.v1.HasPermissionResponse
-	(*v1.Claims)(nil),             // 6: ose.micro.auth.v1.Claims
-	(*v11.Permission)(nil),        // 7: ose.micro.common.v1.Permission
+	(*HasRoleRequest)(nil),              // 0: ose.micro.authora.auth.v1.HasRoleRequest
+	(*HasRoleResponse)(nil),             // 1: ose.micro.authora.auth.v1.HasRoleResponse
+	(*ParseClaimRequest)(nil),           // 2: ose.micro.authora.auth.v1.ParseClaimRequest
+	(*ParseClaimResponse)(nil),          // 3: ose.micro.authora.auth.v1.ParseClaimResponse
+	(*RequestPurposeTokenRequest)(nil),  // 4: ose.micro.authora.auth.v1.RequestPurposeTokenRequest
+	(*RequestPurposeTokenResponse)(nil), // 5: ose.micro.authora.auth.v1.RequestPurposeTokenResponse
+	(*RequestAccessTokenRequest)(nil),   // 6: ose.micro.authora.auth.v1.RequestAccessTokenRequest
+	(*RequestAccessTokenResponse)(nil),  // 7: ose.micro.authora.auth.v1.RequestAccessTokenResponse
+	(*HasPermissionRequest)(nil),        // 8: ose.micro.authora.auth.v1.HasPermissionRequest
+	(*HasPermissionResponse)(nil),       // 9: ose.micro.authora.auth.v1.HasPermissionResponse
+	(*v1.Claims)(nil),                   // 10: ose.micro.auth.v1.Claims
+	(*v11.Permission)(nil),              // 11: ose.micro.common.v1.Permission
 }
 var file_ose_micro_authora_auth_v1_data_proto_depIdxs = []int32{
-	6, // 0: ose.micro.authora.auth.v1.ParseClaimResponse.claim:type_name -> ose.micro.auth.v1.Claims
-	7, // 1: ose.micro.authora.auth.v1.HasPermissionRequest.permission:type_name -> ose.micro.common.v1.Permission
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	10, // 0: ose.micro.authora.auth.v1.ParseClaimResponse.claim:type_name -> ose.micro.auth.v1.Claims
+	11, // 1: ose.micro.authora.auth.v1.HasPermissionRequest.permission:type_name -> ose.micro.common.v1.Permission
+	2,  // [2:2] is the sub-list for method output_type
+	2,  // [2:2] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_ose_micro_authora_auth_v1_data_proto_init() }
@@ -397,7 +594,7 @@ func file_ose_micro_authora_auth_v1_data_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ose_micro_authora_auth_v1_data_proto_rawDesc), len(file_ose_micro_authora_auth_v1_data_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

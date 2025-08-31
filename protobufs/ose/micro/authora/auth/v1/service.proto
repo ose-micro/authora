@@ -10,4 +10,6 @@ service AuthService {
   rpc HasPermission(ose.micro.authora.auth.v1.HasPermissionRequest) returns (ose.micro.authora.auth.v1.HasPermissionResponse);
   rpc HasRole(ose.micro.authora.auth.v1.HasRoleRequest) returns (ose.micro.authora.auth.v1.HasRoleResponse);
   rpc ParseClaim(ose.micro.authora.auth.v1.ParseClaimRequest) returns (ose.micro.authora.auth.v1.ParseClaimResponse);
+  rpc RequestPurposeToken(ose.micro.authora.auth.v1.RequestPurposeTokenRequest) returns (ose.micro.authora.auth.v1.RequestPurposeTokenResponse);
+  rpc RequestAccessToken(ose.micro.authora.auth.v1.RequestAccessTokenRequest) returns (ose.micro.authora.auth.v1.RequestAccessTokenResponse);
 }

@@ -24,31 +24,41 @@ var File_ose_micro_authora_auth_v1_service_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_auth_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"'ose/micro/authora/auth/v1/service.proto\x12\x19ose.micro.authora.auth.v1\x1a$ose/micro/authora/auth/v1/data.proto2\xce\x02\n" +
+	"'ose/micro/authora/auth/v1/service.proto\x12\x19ose.micro.authora.auth.v1\x1a$ose/micro/authora/auth/v1/data.proto2\xd9\x04\n" +
 	"\vAuthService\x12r\n" +
 	"\rHasPermission\x12/.ose.micro.authora.auth.v1.HasPermissionRequest\x1a0.ose.micro.authora.auth.v1.HasPermissionResponse\x12`\n" +
 	"\aHasRole\x12).ose.micro.authora.auth.v1.HasRoleRequest\x1a*.ose.micro.authora.auth.v1.HasRoleResponse\x12i\n" +
 	"\n" +
-	"ParseClaim\x12,.ose.micro.authora.auth.v1.ParseClaimRequest\x1a-.ose.micro.authora.auth.v1.ParseClaimResponseB\x8e\x02\n" +
+	"ParseClaim\x12,.ose.micro.authora.auth.v1.ParseClaimRequest\x1a-.ose.micro.authora.auth.v1.ParseClaimResponse\x12\x84\x01\n" +
+	"\x13RequestPurposeToken\x125.ose.micro.authora.auth.v1.RequestPurposeTokenRequest\x1a6.ose.micro.authora.auth.v1.RequestPurposeTokenResponse\x12\x81\x01\n" +
+	"\x12RequestAccessToken\x124.ose.micro.authora.auth.v1.RequestAccessTokenRequest\x1a5.ose.micro.authora.auth.v1.RequestAccessTokenResponseB\x8e\x02\n" +
 	"\x1dcom.ose.micro.authora.auth.v1B\fServiceProtoP\x01ZVgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/auth/v1;authv1\xa2\x02\x04OMAA\xaa\x02\x19Ose.Micro.Authora.Auth.V1\xca\x02\x19Ose\\Micro\\Authora\\Auth\\V1\xe2\x02%Ose\\Micro\\Authora\\Auth\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::Auth::V1b\x06proto3"
 
 var file_ose_micro_authora_auth_v1_service_proto_goTypes = []any{
-	(*HasPermissionRequest)(nil),  // 0: ose.micro.authora.auth.v1.HasPermissionRequest
-	(*HasRoleRequest)(nil),        // 1: ose.micro.authora.auth.v1.HasRoleRequest
-	(*ParseClaimRequest)(nil),     // 2: ose.micro.authora.auth.v1.ParseClaimRequest
-	(*HasPermissionResponse)(nil), // 3: ose.micro.authora.auth.v1.HasPermissionResponse
-	(*HasRoleResponse)(nil),       // 4: ose.micro.authora.auth.v1.HasRoleResponse
-	(*ParseClaimResponse)(nil),    // 5: ose.micro.authora.auth.v1.ParseClaimResponse
+	(*HasPermissionRequest)(nil),        // 0: ose.micro.authora.auth.v1.HasPermissionRequest
+	(*HasRoleRequest)(nil),              // 1: ose.micro.authora.auth.v1.HasRoleRequest
+	(*ParseClaimRequest)(nil),           // 2: ose.micro.authora.auth.v1.ParseClaimRequest
+	(*RequestPurposeTokenRequest)(nil),  // 3: ose.micro.authora.auth.v1.RequestPurposeTokenRequest
+	(*RequestAccessTokenRequest)(nil),   // 4: ose.micro.authora.auth.v1.RequestAccessTokenRequest
+	(*HasPermissionResponse)(nil),       // 5: ose.micro.authora.auth.v1.HasPermissionResponse
+	(*HasRoleResponse)(nil),             // 6: ose.micro.authora.auth.v1.HasRoleResponse
+	(*ParseClaimResponse)(nil),          // 7: ose.micro.authora.auth.v1.ParseClaimResponse
+	(*RequestPurposeTokenResponse)(nil), // 8: ose.micro.authora.auth.v1.RequestPurposeTokenResponse
+	(*RequestAccessTokenResponse)(nil),  // 9: ose.micro.authora.auth.v1.RequestAccessTokenResponse
 }
 var file_ose_micro_authora_auth_v1_service_proto_depIdxs = []int32{
 	0, // 0: ose.micro.authora.auth.v1.AuthService.HasPermission:input_type -> ose.micro.authora.auth.v1.HasPermissionRequest
 	1, // 1: ose.micro.authora.auth.v1.AuthService.HasRole:input_type -> ose.micro.authora.auth.v1.HasRoleRequest
 	2, // 2: ose.micro.authora.auth.v1.AuthService.ParseClaim:input_type -> ose.micro.authora.auth.v1.ParseClaimRequest
-	3, // 3: ose.micro.authora.auth.v1.AuthService.HasPermission:output_type -> ose.micro.authora.auth.v1.HasPermissionResponse
-	4, // 4: ose.micro.authora.auth.v1.AuthService.HasRole:output_type -> ose.micro.authora.auth.v1.HasRoleResponse
-	5, // 5: ose.micro.authora.auth.v1.AuthService.ParseClaim:output_type -> ose.micro.authora.auth.v1.ParseClaimResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	3, // 3: ose.micro.authora.auth.v1.AuthService.RequestPurposeToken:input_type -> ose.micro.authora.auth.v1.RequestPurposeTokenRequest
+	4, // 4: ose.micro.authora.auth.v1.AuthService.RequestAccessToken:input_type -> ose.micro.authora.auth.v1.RequestAccessTokenRequest
+	5, // 5: ose.micro.authora.auth.v1.AuthService.HasPermission:output_type -> ose.micro.authora.auth.v1.HasPermissionResponse
+	6, // 6: ose.micro.authora.auth.v1.AuthService.HasRole:output_type -> ose.micro.authora.auth.v1.HasRoleResponse
+	7, // 7: ose.micro.authora.auth.v1.AuthService.ParseClaim:output_type -> ose.micro.authora.auth.v1.ParseClaimResponse
+	8, // 8: ose.micro.authora.auth.v1.AuthService.RequestPurposeToken:output_type -> ose.micro.authora.auth.v1.RequestPurposeTokenResponse
+	9, // 9: ose.micro.authora.auth.v1.AuthService.RequestAccessToken:output_type -> ose.micro.authora.auth.v1.RequestAccessTokenResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

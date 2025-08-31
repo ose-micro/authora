@@ -45,6 +45,7 @@ func (i initializer) Existing(param Params) (*Domain, error) {
 		familyName: param.FamilyName,
 		email:      param.Email,
 		metadata:   param.Metadata,
+		password:   param.Password,
 	}, nil
 }
 

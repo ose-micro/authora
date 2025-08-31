@@ -5,6 +5,7 @@ import (
 	"github.com/ose-micro/authora/internal/app/role"
 	"github.com/ose-micro/authora/internal/app/tenant"
 	"github.com/ose-micro/authora/internal/app/user"
+	"github.com/ose-micro/authora/internal/common"
 	"github.com/ose-micro/authora/internal/domain"
 	assignmentDomain "github.com/ose-micro/authora/internal/domain/assignment"
 	roleDomain "github.com/ose-micro/authora/internal/domain/role"
@@ -24,11 +25,11 @@ type Apps struct {
 }
 
 func Inject(bs domain.Domain, repo repository.Repository, log logger.Logger,
-	tracer tracing.Tracer, manager *ose_jwt.Manager) Apps {
+	tracer tracing.Tracer, manager *ose_jwt.Manager, permissions *common.Permissions) Apps {
 
 	return Apps{
 		Tenant:     tenant.NewApp(bs, log, tracer, repo),
-		Role:       role.NewApp(bs, log, tracer, repo),
+		Role:       role.NewApp(bs, log, tracer, repo, permissions),
 		User:       user.NewApp(bs, log, tracer, repo, *manager),
 		Assignment: assignment.NewApp(bs, log, tracer, repo),
 	}

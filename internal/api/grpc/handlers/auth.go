@@ -125,6 +125,67 @@ func (h *AuthHandler) HasPermission(ctx context.Context, request *authv1.HasPerm
 	}, nil
 }
 
+func (h *AuthHandler) RequestPurposeToken(ctx context.Context, request *authv1.RequestPurposeTokenRequest) (*authv1.RequestPurposeTokenResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.request_purpose_token.handler", trace.WithAttributes(
+		attribute.String("operation", "request_purpose_token"),
+		attribute.String("payload", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	payload := user.PurposeTokenCommand{
+		Id:      request.Id,
+		Purpose: request.Purpose,
+	}
+
+	token, err := h.app.RequestPurposeToken(ctx, payload)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to request_purpose_token auth",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "request_purpose_token"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	return &authv1.RequestPurposeTokenResponse{
+		Token: *token,
+	}, nil
+}
+
+func (h *AuthHandler) RequestAccessToken(ctx context.Context, request *authv1.RequestAccessTokenRequest) (*authv1.RequestAccessTokenResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.request_access_token.handler", trace.WithAttributes(
+		attribute.String("operation", "request_access_token"),
+		attribute.String("payload", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	payload := user.TokenCommand{
+		Token: request.Refresh,
+	}
+
+	token, err := h.app.RequestAccessToken(ctx, payload)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to request_access_token auth",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "request_access_token"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	return &authv1.RequestAccessTokenResponse{
+		Token: *token,
+	}, nil
+}
+
 func (h *AuthHandler) ParseClaim(ctx context.Context, request *authv1.ParseClaimRequest) (*authv1.ParseClaimResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.parse_claim.handler", trace.WithAttributes(
 		attribute.String("operation", "parse_claim"),

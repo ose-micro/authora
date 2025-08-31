@@ -15,5 +15,7 @@ type App interface {
 	HasRole(ctx context.Context, command HasRoleCommand) (bool, error)
 	HasPermission(ctx context.Context, command HasPermissionCommand) (bool, error)
 	ParseClaims(ctx context.Context, command TokenCommand) (*ose_jwt.Claims, error)
+	RequestPurposeToken(ctx context.Context, command PurposeTokenCommand) (*string, error)
+	RequestAccessToken(ctx context.Context, command TokenCommand) (*string, error)
 	Read(ctx context.Context, command ReadQuery) (map[string]any, error)
 }

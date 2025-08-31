@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_HasPermission_FullMethodName = "/ose.micro.authora.auth.v1.AuthService/HasPermission"
-	AuthService_HasRole_FullMethodName       = "/ose.micro.authora.auth.v1.AuthService/HasRole"
-	AuthService_ParseClaim_FullMethodName    = "/ose.micro.authora.auth.v1.AuthService/ParseClaim"
+	AuthService_HasPermission_FullMethodName       = "/ose.micro.authora.auth.v1.AuthService/HasPermission"
+	AuthService_HasRole_FullMethodName             = "/ose.micro.authora.auth.v1.AuthService/HasRole"
+	AuthService_ParseClaim_FullMethodName          = "/ose.micro.authora.auth.v1.AuthService/ParseClaim"
+	AuthService_RequestPurposeToken_FullMethodName = "/ose.micro.authora.auth.v1.AuthService/RequestPurposeToken"
+	AuthService_RequestAccessToken_FullMethodName  = "/ose.micro.authora.auth.v1.AuthService/RequestAccessToken"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -31,6 +33,8 @@ type AuthServiceClient interface {
 	HasPermission(ctx context.Context, in *HasPermissionRequest, opts ...grpc.CallOption) (*HasPermissionResponse, error)
 	HasRole(ctx context.Context, in *HasRoleRequest, opts ...grpc.CallOption) (*HasRoleResponse, error)
 	ParseClaim(ctx context.Context, in *ParseClaimRequest, opts ...grpc.CallOption) (*ParseClaimResponse, error)
+	RequestPurposeToken(ctx context.Context, in *RequestPurposeTokenRequest, opts ...grpc.CallOption) (*RequestPurposeTokenResponse, error)
+	RequestAccessToken(ctx context.Context, in *RequestAccessTokenRequest, opts ...grpc.CallOption) (*RequestAccessTokenResponse, error)
 }
 
 type authServiceClient struct {
@@ -71,6 +75,26 @@ func (c *authServiceClient) ParseClaim(ctx context.Context, in *ParseClaimReques
 	return out, nil
 }
 
+func (c *authServiceClient) RequestPurposeToken(ctx context.Context, in *RequestPurposeTokenRequest, opts ...grpc.CallOption) (*RequestPurposeTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RequestPurposeTokenResponse)
+	err := c.cc.Invoke(ctx, AuthService_RequestPurposeToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RequestAccessToken(ctx context.Context, in *RequestAccessTokenRequest, opts ...grpc.CallOption) (*RequestAccessTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RequestAccessTokenResponse)
+	err := c.cc.Invoke(ctx, AuthService_RequestAccessToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -78,6 +102,8 @@ type AuthServiceServer interface {
 	HasPermission(context.Context, *HasPermissionRequest) (*HasPermissionResponse, error)
 	HasRole(context.Context, *HasRoleRequest) (*HasRoleResponse, error)
 	ParseClaim(context.Context, *ParseClaimRequest) (*ParseClaimResponse, error)
+	RequestPurposeToken(context.Context, *RequestPurposeTokenRequest) (*RequestPurposeTokenResponse, error)
+	RequestAccessToken(context.Context, *RequestAccessTokenRequest) (*RequestAccessTokenResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -96,6 +122,12 @@ func (UnimplementedAuthServiceServer) HasRole(context.Context, *HasRoleRequest) 
 }
 func (UnimplementedAuthServiceServer) ParseClaim(context.Context, *ParseClaimRequest) (*ParseClaimResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParseClaim not implemented")
+}
+func (UnimplementedAuthServiceServer) RequestPurposeToken(context.Context, *RequestPurposeTokenRequest) (*RequestPurposeTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestPurposeToken not implemented")
+}
+func (UnimplementedAuthServiceServer) RequestAccessToken(context.Context, *RequestAccessTokenRequest) (*RequestAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestAccessToken not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -172,6 +204,42 @@ func _AuthService_ParseClaim_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_RequestPurposeToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestPurposeTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RequestPurposeToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RequestPurposeToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RequestPurposeToken(ctx, req.(*RequestPurposeTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RequestAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RequestAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RequestAccessToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RequestAccessToken(ctx, req.(*RequestAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +258,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ParseClaim",
 			Handler:    _AuthService_ParseClaim_Handler,
+		},
+		{
+			MethodName: "RequestPurposeToken",
+			Handler:    _AuthService_RequestPurposeToken_Handler,
+		},
+		{
+			MethodName: "RequestAccessToken",
+			Handler:    _AuthService_RequestAccessToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

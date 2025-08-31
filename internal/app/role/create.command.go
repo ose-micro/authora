@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ose-micro/authora/internal/common"
 	"github.com/ose-micro/authora/internal/domain"
 	"github.com/ose-micro/authora/internal/domain/role"
 	"github.com/ose-micro/authora/internal/repository"
@@ -21,10 +22,11 @@ import (
 const CreateOperation = "create"
 
 type createCommandHandler struct {
-	repo   repository.Repository
-	log    logger.Logger
-	tracer tracing.Tracer
-	bs     domain.Domain
+	repo        repository.Repository
+	log         logger.Logger
+	tracer      tracing.Tracer
+	bs          domain.Domain
+	permissions common.Permissions
 }
 
 // Handle implements cqrs.CommandHandle.
@@ -107,6 +109,22 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 		return nil, err
 	}
 
+	for _, permission := range command.Permissions {
+		if !c.isPermissionExist(permission.Resource, permission.Action) {
+			err := ose_error.New(ose_error.ErrInvalidInput,
+				fmt.Sprintf("permission resource: %s or action: %s not exist", permission.Resource, permission.Action))
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+			c.log.Error("failed to check if tenant exists",
+				zap.String("trace_id", traceId),
+				zap.String("operation", CreateOperation),
+				zap.Error(err),
+			)
+
+			return nil, err
+		}
+	}
+
 	record, err := c.bs.Role.New(role.Params{
 		Name:        command.Name,
 		Tenant:      command.Tenant,
@@ -146,12 +164,23 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 	return record, nil
 }
 
+func (c createCommandHandler) isPermissionExist(resource, action string) bool {
+	for _, permission := range c.permissions.List {
+		if permission.Resource == resource && permission.Action == action {
+			return true
+		}
+	}
+
+	return false
+}
+
 func newCreateCommandHandler(bs domain.Domain, repo repository.Repository, log logger.Logger,
-	tracer tracing.Tracer) cqrs.CommandHandle[role.CreateCommand, *role.Domain] {
+	tracer tracing.Tracer, permissions common.Permissions) cqrs.CommandHandle[role.CreateCommand, *role.Domain] {
 	return &createCommandHandler{
-		repo:   repo,
-		log:    log,
-		tracer: tracer,
-		bs:     bs,
+		repo:        repo,
+		log:         log,
+		tracer:      tracer,
+		bs:          bs,
+		permissions: permissions,
 	}
 }

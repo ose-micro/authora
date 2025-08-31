@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ose-micro/authora/internal/common"
 	"github.com/ose-micro/authora/internal/domain"
 	"github.com/ose-micro/authora/internal/domain/role"
 	"github.com/ose-micro/authora/internal/repository"
@@ -98,11 +99,12 @@ func (a app) Delete(ctx context.Context, params role.UpdateCommand) (*role.Domai
 	panic("implement me")
 }
 
-func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) role.App {
+func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository,
+	permissions *common.Permissions) role.App {
 	return &app{
 		tracer: tracer,
 		log:    log,
-		create: newCreateCommandHandler(bs, repo, log, tracer),
+		create: newCreateCommandHandler(bs, repo, log, tracer, *permissions),
 		update: newUpdateCommandHandler(bs, repo, log, tracer),
 		read:   newReadQueryHandler(repo.Role, log, tracer),
 	}
