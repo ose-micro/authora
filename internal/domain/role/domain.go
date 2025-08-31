@@ -3,7 +3,6 @@ package role
 import (
 	"time"
 
-	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/rid"
 )
@@ -13,28 +12,28 @@ type Domain struct {
 	name        string
 	tenant      string
 	description string
-	permissions []common.Permission
+	permissions []string
 }
 
 type Params struct {
 	Aggregate   *domain.Aggregate
-	Name        string              `json:"name"`
-	Tenant      string              `json:"tenant"`
-	Description string              `json:"description"`
-	Permissions []common.Permission `json:"permissions"`
+	Name        string   `json:"name"`
+	Tenant      string   `json:"tenant"`
+	Description string   `json:"description"`
+	Permissions []string `json:"permissions"`
 }
 
 type Public struct {
-	Id          string              `json:"_id"`
-	Name        string              `json:"name"`
-	Tenant      string              `json:"tenant"`
-	Permissions []common.Permission `json:"permissions"`
-	Description string              `json:"description"`
-	Version     int32               `json:"version"`
-	CreatedAt   time.Time           `json:"created_at"`
-	UpdatedAt   time.Time           `json:"updated_at"`
-	DeletedAt   *time.Time          `json:"deleted_at"`
-	Events      []domain.Event      `json:"events"`
+	Id          string         `json:"_id"`
+	Name        string         `json:"name"`
+	Tenant      string         `json:"tenant"`
+	Permissions []string       `json:"permissions"`
+	Description string         `json:"description"`
+	Version     int32          `json:"version"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	DeletedAt   *time.Time     `json:"deleted_at"`
+	Events      []domain.Event `json:"events"`
 }
 
 func (d *Domain) Name() string {
@@ -49,7 +48,7 @@ func (d *Domain) Description() string {
 	return d.description
 }
 
-func (d *Domain) Permissions() []common.Permission {
+func (d *Domain) Permissions() []string {
 	return d.permissions
 }
 

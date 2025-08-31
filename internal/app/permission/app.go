@@ -1,11 +1,11 @@
-package role
+package permission
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/domain/permission"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -19,13 +19,13 @@ import (
 type app struct {
 	tracer tracing.Tracer
 	log    logger.Logger
-	create cqrs.CommandHandle[role.CreateCommand, *role.Domain]
-	update cqrs.CommandHandle[role.UpdateCommand, *role.Domain]
-	read   cqrs.QueryHandle[role.ReadQuery, map[string]any]
+	create cqrs.CommandHandle[permission.CreateCommand, *permission.Domain]
+	update cqrs.CommandHandle[permission.UpdateCommand, *permission.Domain]
+	read   cqrs.QueryHandle[permission.ReadQuery, map[string]any]
 }
 
-func (a app) Read(ctx context.Context, command role.ReadQuery) (map[string]any, error) {
-	ctx, span := a.tracer.Start(ctx, "app.role.read.command", trace.WithAttributes(
+func (a app) Read(ctx context.Context, command permission.ReadQuery) (map[string]any, error) {
+	ctx, span := a.tracer.Start(ctx, "app.permission.read.command", trace.WithAttributes(
 		attribute.String("operation", "read"),
 		attribute.String("payload", fmt.Sprintf("%v", command)),
 	))
@@ -47,8 +47,8 @@ func (a app) Read(ctx context.Context, command role.ReadQuery) (map[string]any, 
 	return res, nil
 }
 
-func (a app) Create(ctx context.Context, command role.CreateCommand) (*role.Domain, error) {
-	ctx, span := a.tracer.Start(ctx, "app.role.create.command", trace.WithAttributes(
+func (a app) Create(ctx context.Context, command permission.CreateCommand) (*permission.Domain, error) {
+	ctx, span := a.tracer.Start(ctx, "app.permission.create.command", trace.WithAttributes(
 		attribute.String("operation", "create"),
 		attribute.String("payload", fmt.Sprintf("%v", command)),
 	))
@@ -70,8 +70,8 @@ func (a app) Create(ctx context.Context, command role.CreateCommand) (*role.Doma
 	return res, nil
 }
 
-func (a app) Update(ctx context.Context, command role.UpdateCommand) (*role.Domain, error) {
-	ctx, span := a.tracer.Start(ctx, "app.role.update.command", trace.WithAttributes(
+func (a app) Update(ctx context.Context, command permission.UpdateCommand) (*permission.Domain, error) {
+	ctx, span := a.tracer.Start(ctx, "app.permission.update.command", trace.WithAttributes(
 		attribute.String("operation", "update"),
 		attribute.String("payload", fmt.Sprintf("%v", command)),
 	))
@@ -93,17 +93,17 @@ func (a app) Update(ctx context.Context, command role.UpdateCommand) (*role.Doma
 	return res, nil
 }
 
-func (a app) Delete(ctx context.Context, params role.UpdateCommand) (*role.Domain, error) {
+func (a app) Delete(ctx context.Context, params permission.UpdateCommand) (*permission.Domain, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) role.App {
+func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) permission.App {
 	return &app{
 		tracer: tracer,
 		log:    log,
 		create: newCreateCommandHandler(bs, repo, log, tracer),
 		update: newUpdateCommandHandler(bs, repo, log, tracer),
-		read:   newReadQueryHandler(repo.Role, log, tracer),
+		read:   newReadQueryHandler(repo.Permission, log, tracer),
 	}
 }

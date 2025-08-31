@@ -1,4 +1,4 @@
-package role
+package permission
 
 import (
 	"errors"
@@ -8,25 +8,23 @@ import (
 )
 
 type CreateCommand struct {
-	Name        string
-	Tenant      string
-	Description string
-	Permissions []string
+	Resource string
+	Action   string
 }
 
 func (c CreateCommand) CommandName() string {
-	return "role.create.command"
+	return "permission.create.command"
 }
 
 func (c CreateCommand) Validate() error {
 	fields := make([]string, 0)
 
-	if c.Name == "" {
-		fields = append(fields, "name is required")
+	if c.Resource == "" {
+		fields = append(fields, "resource is required")
 	}
 
-	if c.Description == "" {
-		fields = append(fields, "description is required")
+	if c.Action == "" {
+		fields = append(fields, "action is required")
 	}
 
 	if len(fields) > 0 {

@@ -7,6 +7,7 @@ import (
 
 	assignmentv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/assignment/v1"
 	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/auth/v1"
+	permissionv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/permission/v1"
 	rolev1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/role/v1"
 	tenantv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/tenant/v1"
 	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
@@ -52,6 +53,7 @@ func RunGRPCServer(lc fx.Lifecycle, conf Config, log logger.Logger, tracer traci
 					userv1.RegisterUserServiceServer(s, handlers.NewUser(apps, log, tracer))
 					assignmentv1.RegisterAssignmentServiceServer(s, handlers.NewAssignment(apps, log, tracer))
 					authv1.RegisterAuthServiceServer(s, handlers.NewAuth(apps, log, tracer))
+					permissionv1.RegisterPermissionServiceServer(s, handlers.NewPermission(apps, log, tracer))
 
 				}); err != nil {
 					log.Fatal("gRPC server failed", zap.Error(err))

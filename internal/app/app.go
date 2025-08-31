@@ -2,12 +2,13 @@ package app
 
 import (
 	"github.com/ose-micro/authora/internal/app/assignment"
+	"github.com/ose-micro/authora/internal/app/permission"
 	"github.com/ose-micro/authora/internal/app/role"
 	"github.com/ose-micro/authora/internal/app/tenant"
 	"github.com/ose-micro/authora/internal/app/user"
-	"github.com/ose-micro/authora/internal/common"
 	"github.com/ose-micro/authora/internal/domain"
 	assignmentDomain "github.com/ose-micro/authora/internal/domain/assignment"
+	permissionDomain "github.com/ose-micro/authora/internal/domain/permission"
 	roleDomain "github.com/ose-micro/authora/internal/domain/role"
 	tenantDomain "github.com/ose-micro/authora/internal/domain/tenant"
 	userDomain "github.com/ose-micro/authora/internal/domain/user"
@@ -22,15 +23,17 @@ type Apps struct {
 	Role       roleDomain.App
 	User       userDomain.App
 	Assignment assignmentDomain.App
+	Permission permissionDomain.App
 }
 
 func Inject(bs domain.Domain, repo repository.Repository, log logger.Logger,
-	tracer tracing.Tracer, manager *ose_jwt.Manager, permissions *common.Permissions) Apps {
+	tracer tracing.Tracer, manager *ose_jwt.Manager) Apps {
 
 	return Apps{
 		Tenant:     tenant.NewApp(bs, log, tracer, repo),
-		Role:       role.NewApp(bs, log, tracer, repo, permissions),
+		Role:       role.NewApp(bs, log, tracer, repo),
 		User:       user.NewApp(bs, log, tracer, repo, *manager),
 		Assignment: assignment.NewApp(bs, log, tracer, repo),
+		Permission: permission.NewApp(bs, log, tracer, repo),
 	}
 }

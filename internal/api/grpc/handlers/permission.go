@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	rolev1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/role/v1"
+	permissionv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/permission/v1"
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/domain/permission"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"go.opentelemetry.io/otel/attribute"
@@ -17,23 +17,22 @@ import (
 )
 
 type (
-	RoleHandler struct {
-		rolev1.UnimplementedRoleServiceServer
-		app    role.App
+	PermissionHandler struct {
+		permissionv1.UnimplementedPermissionServiceServer
+		app    permission.App
 		log    logger.Logger
 		tracer tracing.Tracer
 	}
 )
 
-func (h *RoleHandler) response(param role.Public) *rolev1.Role {
-	return &rolev1.Role{
-		Id:          param.Id,
-		Name:        param.Name,
-		Tenant:      param.Tenant,
-		Permissions: param.Permissions,
-		Version:     param.Version,
-		CreatedAt:   timestamppb.New(param.CreatedAt),
-		UpdatedAt:   timestamppb.New(param.UpdatedAt),
+func (h *PermissionHandler) response(param permission.Public) *permissionv1.Permission {
+	return &permissionv1.Permission{
+		Id:        param.Id,
+		Resource:  param.Resource,
+		Action:    param.Action,
+		Version:   param.Version,
+		CreatedAt: timestamppb.New(param.CreatedAt),
+		UpdatedAt: timestamppb.New(param.UpdatedAt),
 		DeletedAt: func() *timestamppb.Timestamp {
 			if param.DeletedAt != nil {
 				return timestamppb.New(*param.DeletedAt)
@@ -44,26 +43,24 @@ func (h *RoleHandler) response(param role.Public) *rolev1.Role {
 	}
 }
 
-func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest) (*rolev1.CreateResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.role.create.handler", trace.WithAttributes(
+func (h *PermissionHandler) Create(ctx context.Context, request *permissionv1.CreateRequest) (*permissionv1.CreateResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.permission.create.handler", trace.WithAttributes(
 		attribute.String("operation", "create"),
 		attribute.String("payload", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	payload := role.CreateCommand{
-		Name:        request.Name,
-		Tenant:      request.Tenant,
-		Description: request.Description,
-		Permissions: request.Permissions,
+	payload := permission.CreateCommand{
+		Resource: request.Resource,
+		Action:   request.Action,
 	}
 
 	record, err := h.app.Create(ctx, payload)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to create role",
+		h.log.Error("failed to create permission",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "create"),
 			zap.Error(err),
@@ -72,38 +69,36 @@ func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest)
 		return nil, err
 	}
 
-	h.log.Info("role create process successfully",
+	h.log.Info("permission create process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "create"),
 		zap.Any("payload", request),
 	)
 
-	return &rolev1.CreateResponse{
+	return &permissionv1.CreateResponse{
 		Record: h.response(*record.Public()),
 	}, nil
 }
 
-func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest) (*rolev1.UpdateResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.role.update.handler", trace.WithAttributes(
+func (h *PermissionHandler) Update(ctx context.Context, request *permissionv1.UpdateRequest) (*permissionv1.UpdateResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.permission.update.handler", trace.WithAttributes(
 		attribute.String("operation", "update"),
 		attribute.String("payload", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	payload := role.UpdateCommand{
-		Id:          request.Id,
-		Name:        request.Name,
-		Tenant:      request.Tenant,
-		Description: request.Description,
-		Permissions: request.Permissions,
+	payload := permission.UpdateCommand{
+		Id:       request.Id,
+		Resource: request.Resource,
+		Action:   request.Action,
 	}
 
 	record, err := h.app.Update(ctx, payload)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to update role",
+		h.log.Error("failed to update permission",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "update"),
 			zap.Error(err),
@@ -112,20 +107,20 @@ func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest)
 		return nil, err
 	}
 
-	h.log.Info("role update process successfully",
+	h.log.Info("permission update process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
 		zap.Any("payload", request),
 	)
 
-	return &rolev1.UpdateResponse{
+	return &permissionv1.UpdateResponse{
 		Record: h.response(*record.Public()),
 	}, nil
 }
 
-func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*rolev1.ReadResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.role.read.handler", trace.WithAttributes(
-		attribute.String("operation", "read"),
+func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.ReadRequest) (*permissionv1.ReadResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.permission.read.handler", trace.WithAttributes(
+		attribute.String("operation", "READ"),
 		attribute.String("payload", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
@@ -137,13 +132,13 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "READ"),
 			zap.Error(err),
 		)
 		return nil, err
 	}
 
-	records, err := h.app.Read(ctx, role.ReadQuery{
+	records, err := h.app.Read(ctx, permission.ReadQuery{
 		Request: *query,
 	})
 	if err != nil {
@@ -157,18 +152,18 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 		return nil, err
 	}
 
-	return &rolev1.ReadResponse{
-		Result: func() map[string]*rolev1.Tenants {
-			data := map[string]*rolev1.Tenants{}
+	return &permissionv1.ReadResponse{
+		Result: func() map[string]*permissionv1.Permissions {
+			data := map[string]*permissionv1.Permissions{}
 
 			for k, v := range records {
 				switch x := v.(type) {
-				case []role.Public:
-					list := make([]*rolev1.Role, 0)
+				case []permission.Public:
+					list := make([]*permissionv1.Permission, 0)
 					for _, v := range x {
 						list = append(list, h.response(v))
 					}
-					data[k] = &rolev1.Tenants{
+					data[k] = &permissionv1.Permissions{
 						Data: list,
 					}
 				}
@@ -179,9 +174,9 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 	}, nil
 }
 
-func NewRole(apps app.Apps, log logger.Logger, tracer tracing.Tracer) *RoleHandler {
-	return &RoleHandler{
-		app:    apps.Role,
+func NewPermission(apps app.Apps, log logger.Logger, tracer tracing.Tracer) *PermissionHandler {
+	return &PermissionHandler{
+		app:    apps.Permission,
 		log:    log,
 		tracer: tracer,
 	}

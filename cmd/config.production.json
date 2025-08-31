@@ -32,49 +32,5 @@
     "access_ttl": "",
     "refresh_ttl": "",
     "purpose_ttl": ""
-  },
-  "permissions": {
-    "list": [
-      {
-        "resource": "campaign",
-        "action": "read"
-      },
-      {
-        "resource": "campaign",
-        "action": "view"
-      },
-      {
-        "resource": "campaign",
-        "action": "edit"
-      },
-      {
-        "resource": "campaign",
-        "action": "create"
-      },
-      {
-        "resource": "campaign",
-        "action": "delete"
-      },
-      {
-        "resource": "campaign",
-        "action": "read"
-      },
-      {
-        "resource": "organization",
-        "action": "view"
-      },
-      {
-        "resource": "organization",
-        "action": "edit"
-      },
-      {
-        "resource": "organization",
-        "action": "create"
-      },
-      {
-        "resource": "organization",
-        "action": "delete"
-      }
-    ]
   }
 }

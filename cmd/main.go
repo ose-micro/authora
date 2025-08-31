@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/ose-micro/authora/internal/api/grpc"
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/common"
 	"github.com/ose-micro/authora/internal/domain"
 	"github.com/ose-micro/authora/internal/repository"
 	ose "github.com/ose-micro/core"
@@ -18,29 +17,27 @@ import (
 )
 
 func loadConfig() (config.Service, logger.Config, tracing.Config, timestamp.Config,
-	mongodb.Config, nats.Config, grpc.Config, ose_jwt.Config, *common.Permissions, error) {
+	mongodb.Config, nats.Config, grpc.Config, ose_jwt.Config, error) {
 
 	var grpcConfig grpc.Config
 	var natsConf nats.Config
 	var mongoConfig mongodb.Config
 	var jwtConfig ose_jwt.Config
-	var permissionConfig common.Permissions
 
 	conf, err := config.Load(
 		config.WithExtension("bus", &natsConf),
 		config.WithExtension("mongo", &mongoConfig),
 		config.WithExtension("grpc", &grpcConfig),
 		config.WithExtension("jwt", &jwtConfig),
-		config.WithExtension("permissions", &permissionConfig),
 	)
 
 	if err != nil {
 		return config.Service{}, logger.Config{}, tracing.Config{}, timestamp.Config{},
-			mongodb.Config{}, nats.Config{}, grpc.Config{}, ose_jwt.Config{}, nil, err
+			mongodb.Config{}, nats.Config{}, grpc.Config{}, ose_jwt.Config{}, err
 	}
 
 	return conf.Core.Service, conf.Core.Service.Logger, conf.Core.Service.Tracer,
-		conf.Core.Service.Timestamp, mongoConfig, natsConf, grpcConfig, jwtConfig, &permissionConfig, nil
+		conf.Core.Service.Timestamp, mongoConfig, natsConf, grpcConfig, jwtConfig, nil
 }
 
 func main() {

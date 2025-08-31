@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ose.micro.authora.permission.v1;
+
+import "ose/micro/authora/permission/v1/data.proto";
+
+option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/permission/v1;permissionpb";
+
+service PermissionService {
+  rpc Create(ose.micro.authora.permission.v1.CreateRequest) returns (ose.micro.authora.permission.v1.CreateResponse);
+  rpc Update(ose.micro.authora.permission.v1.UpdateRequest) returns (ose.micro.authora.permission.v1.UpdateResponse);
+  rpc Read(ose.micro.authora.permission.v1.ReadRequest) returns (ose.micro.authora.permission.v1.ReadResponse);
+}

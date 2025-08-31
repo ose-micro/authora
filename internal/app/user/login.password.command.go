@@ -6,6 +6,7 @@ import (
 
 	"github.com/ose-micro/authora/internal/domain"
 	"github.com/ose-micro/authora/internal/domain/assignment"
+	"github.com/ose-micro/authora/internal/domain/role"
 	"github.com/ose-micro/authora/internal/domain/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/common"
@@ -163,10 +164,15 @@ func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domai
 			return nil, err
 		}
 
+		permissions, err := u.preparePermission(ctx, *one)
+		if err != nil {
+			return nil, err
+		}
+
 		tenants[assign.Tenant] = ose_jwt.Tenant{
 			Role:        one.ID(),
 			Tenant:      one.Tenant(),
-			Permissions: one.Permissions(),
+			Permissions: permissions,
 		}
 	}
 
@@ -181,6 +187,38 @@ func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domai
 		Access:  accessToken,
 		Refresh: refreshToken,
 	}, nil
+}
+
+func (u loginCommandHandler) preparePermission(ctx context.Context, one role.Domain) ([]common.Permission, error) {
+
+	list := make([]common.Permission, 0)
+
+	for _, id := range one.Permissions() {
+		permission, err := u.repo.Permission.ReadOne(ctx, dto.Request{
+			Queries: []dto.Query{
+				{
+					Name: "one",
+					Filters: []dto.Filter{
+						{
+							Field: "_id",
+							Op:    dto.OpEq,
+							Value: id,
+						},
+					},
+				},
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		list = append(list, common.Permission{
+			Resource: permission.Resource(),
+			Action:   permission.Action(),
+		})
+	}
+
+	return list, nil
 }
 
 func newLoginCommandHandler(bs domain.Domain, repo repository.Repository,

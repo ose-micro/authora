@@ -1,4 +1,4 @@
-package role
+package permission
 
 import (
 	"errors"
@@ -8,15 +8,13 @@ import (
 )
 
 type UpdateCommand struct {
-	Id          string
-	Name        string
-	Tenant      string
-	Description string
-	Permissions []string
+	Id       string
+	Resource string
+	Action   string
 }
 
 func (u UpdateCommand) CommandName() string {
-	return "update.command.tenant"
+	return "permission.update.command"
 }
 
 func (u UpdateCommand) Validate() error {
@@ -26,8 +24,12 @@ func (u UpdateCommand) Validate() error {
 		fields = append(fields, "id is required")
 	}
 
-	if u.Name == "" {
-		fields = append(fields, "name is required")
+	if u.Resource == "" {
+		fields = append(fields, "resource is required")
+	}
+
+	if u.Action == "" {
+		fields = append(fields, "action is required")
 	}
 
 	if len(fields) > 0 {

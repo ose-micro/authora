@@ -2,6 +2,7 @@ package domain
 
 import (
 	"github.com/ose-micro/authora/internal/domain/assignment"
+	"github.com/ose-micro/authora/internal/domain/permission"
 	"github.com/ose-micro/authora/internal/domain/role"
 	"github.com/ose-micro/authora/internal/domain/tenant"
 	"github.com/ose-micro/authora/internal/domain/user"
@@ -12,6 +13,7 @@ type Domain struct {
 	Tenant     domain.Domain[tenant.Domain, tenant.Params]
 	Role       domain.Domain[role.Domain, role.Params]
 	User       domain.Domain[user.Domain, user.Params]
+	Permission domain.Domain[permission.Domain, permission.Params]
 	Assignment domain.Domain[assignment.Domain, assignment.Params]
 }
 
@@ -21,5 +23,6 @@ func Inject() Domain {
 		Role:       role.NewDomain(),
 		User:       user.NewDomain(),
 		Assignment: assignment.NewDomain(),
+		Permission: permission.NewDomain(),
 	}
 }

@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package ose.micro.authora.permission.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ose/micro/common/v1/request.proto";
+
+option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/permission/v1;permissionpb";
+
+message Permission {
+  string id = 1;
+  string resource = 2;
+  string action = 3;
+  int32 version = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}
+
+message CreateRequest {
+  string resource = 1;
+  string action = 2;
+}
+
+message CreateResponse {
+  string message = 1;
+  Permission record = 2;
+}
+
+message UpdateRequest {
+  string id = 1;
+  string resource = 2;
+  string action = 3;
+}
+
+message UpdateResponse {
+  string message = 1;
+  Permission record = 2;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  string message = 1;
+}
+
+message Permissions {
+  repeated Permission data = 1;
+}
+
+message ReadRequest {
+  ose.micro.common.v1.Request request = 1;
+}
+
+message ReadResponse {
+  map<string, Permissions> result = 1;
+}

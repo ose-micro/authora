@@ -29,7 +29,7 @@ type Role struct {
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Tenant        string                 `protobuf:"bytes,3,opt,name=tenant,proto3" json:"tenant,omitempty"`
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Permissions   []*v1.Permission       `protobuf:"bytes,5,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Permissions   []string               `protobuf:"bytes,5,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	Version       int32                  `protobuf:"varint,6,opt,name=version,proto3" json:"version,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
@@ -96,7 +96,7 @@ func (x *Role) GetDescription() string {
 	return ""
 }
 
-func (x *Role) GetPermissions() []*v1.Permission {
+func (x *Role) GetPermissions() []string {
 	if x != nil {
 		return x.Permissions
 	}
@@ -136,7 +136,7 @@ type CreateRequest struct {
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Tenant        string                 `protobuf:"bytes,2,opt,name=tenant,proto3" json:"tenant,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	Permissions   []*v1.Permission       `protobuf:"bytes,4,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Permissions   []string               `protobuf:"bytes,4,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -192,7 +192,7 @@ func (x *CreateRequest) GetDescription() string {
 	return ""
 }
 
-func (x *CreateRequest) GetPermissions() []*v1.Permission {
+func (x *CreateRequest) GetPermissions() []string {
 	if x != nil {
 		return x.Permissions
 	}
@@ -257,7 +257,7 @@ type UpdateRequest struct {
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Tenant        string                 `protobuf:"bytes,3,opt,name=tenant,proto3" json:"tenant,omitempty"`
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Permissions   []*v1.Permission       `protobuf:"bytes,5,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Permissions   []string               `protobuf:"bytes,5,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -320,7 +320,7 @@ func (x *UpdateRequest) GetDescription() string {
 	return ""
 }
 
-func (x *UpdateRequest) GetPermissions() []*v1.Permission {
+func (x *UpdateRequest) GetPermissions() []string {
 	if x != nil {
 		return x.Permissions
 	}
@@ -603,34 +603,34 @@ var File_ose_micro_authora_role_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_role_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"$ose/micro/authora/role/v1/data.proto\x12\x19ose.micro.authora.role.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!ose/micro/common/v1/request.proto\x1a ose/micro/common/v1/common.proto\"\xf2\x02\n" +
+	"$ose/micro/authora/role/v1/data.proto\x12\x19ose.micro.authora.role.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!ose/micro/common/v1/request.proto\"\xd1\x02\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
 	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12A\n" +
-	"\vpermissions\x18\x05 \x03(\v2\x1f.ose.micro.common.v1.PermissionR\vpermissions\x12\x18\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12 \n" +
+	"\vpermissions\x18\x05 \x03(\tR\vpermissions\x12\x18\n" +
 	"\aversion\x18\x06 \x01(\x05R\aversion\x129\n" +
 	"\n" +
 	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
 	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
 	"\n" +
-	"deleted_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"\xa0\x01\n" +
+	"deleted_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"\x7f\n" +
 	"\rCreateRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
 	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12A\n" +
-	"\vpermissions\x18\x04 \x03(\v2\x1f.ose.micro.common.v1.PermissionR\vpermissions\"c\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12 \n" +
+	"\vpermissions\x18\x04 \x03(\tR\vpermissions\"c\n" +
 	"\x0eCreateResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x127\n" +
-	"\x06record\x18\x02 \x01(\v2\x1f.ose.micro.authora.role.v1.RoleR\x06record\"\xb0\x01\n" +
+	"\x06record\x18\x02 \x01(\v2\x1f.ose.micro.authora.role.v1.RoleR\x06record\"\x8f\x01\n" +
 	"\rUpdateRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
 	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12A\n" +
-	"\vpermissions\x18\x05 \x03(\v2\x1f.ose.micro.common.v1.PermissionR\vpermissions\"c\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12 \n" +
+	"\vpermissions\x18\x05 \x03(\tR\vpermissions\"c\n" +
 	"\x0eUpdateResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x127\n" +
 	"\x06record\x18\x02 \x01(\v2\x1f.ose.micro.authora.role.v1.RoleR\x06record\"\x1f\n" +
@@ -674,28 +674,24 @@ var file_ose_micro_authora_role_v1_data_proto_goTypes = []any{
 	(*ReadRequest)(nil),           // 8: ose.micro.authora.role.v1.ReadRequest
 	(*ReadResponse)(nil),          // 9: ose.micro.authora.role.v1.ReadResponse
 	nil,                           // 10: ose.micro.authora.role.v1.ReadResponse.ResultEntry
-	(*v1.Permission)(nil),         // 11: ose.micro.common.v1.Permission
-	(*timestamppb.Timestamp)(nil), // 12: google.protobuf.Timestamp
-	(*v1.Request)(nil),            // 13: ose.micro.common.v1.Request
+	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
+	(*v1.Request)(nil),            // 12: ose.micro.common.v1.Request
 }
 var file_ose_micro_authora_role_v1_data_proto_depIdxs = []int32{
-	11, // 0: ose.micro.authora.role.v1.Role.permissions:type_name -> ose.micro.common.v1.Permission
-	12, // 1: ose.micro.authora.role.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	12, // 2: ose.micro.authora.role.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	12, // 3: ose.micro.authora.role.v1.Role.deleted_at:type_name -> google.protobuf.Timestamp
-	11, // 4: ose.micro.authora.role.v1.CreateRequest.permissions:type_name -> ose.micro.common.v1.Permission
-	0,  // 5: ose.micro.authora.role.v1.CreateResponse.record:type_name -> ose.micro.authora.role.v1.Role
-	11, // 6: ose.micro.authora.role.v1.UpdateRequest.permissions:type_name -> ose.micro.common.v1.Permission
-	0,  // 7: ose.micro.authora.role.v1.UpdateResponse.record:type_name -> ose.micro.authora.role.v1.Role
-	0,  // 8: ose.micro.authora.role.v1.Tenants.data:type_name -> ose.micro.authora.role.v1.Role
-	13, // 9: ose.micro.authora.role.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
-	10, // 10: ose.micro.authora.role.v1.ReadResponse.result:type_name -> ose.micro.authora.role.v1.ReadResponse.ResultEntry
-	7,  // 11: ose.micro.authora.role.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.role.v1.Tenants
-	12, // [12:12] is the sub-list for method output_type
-	12, // [12:12] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	11, // 0: ose.micro.authora.role.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	11, // 1: ose.micro.authora.role.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	11, // 2: ose.micro.authora.role.v1.Role.deleted_at:type_name -> google.protobuf.Timestamp
+	0,  // 3: ose.micro.authora.role.v1.CreateResponse.record:type_name -> ose.micro.authora.role.v1.Role
+	0,  // 4: ose.micro.authora.role.v1.UpdateResponse.record:type_name -> ose.micro.authora.role.v1.Role
+	0,  // 5: ose.micro.authora.role.v1.Tenants.data:type_name -> ose.micro.authora.role.v1.Role
+	12, // 6: ose.micro.authora.role.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
+	10, // 7: ose.micro.authora.role.v1.ReadResponse.result:type_name -> ose.micro.authora.role.v1.ReadResponse.ResultEntry
+	7,  // 8: ose.micro.authora.role.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.role.v1.Tenants
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_ose_micro_authora_role_v1_data_proto_init() }
