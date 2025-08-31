@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/auth/v1"
+	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
 	"github.com/ose-micro/authora/internal/app"
 	"github.com/ose-micro/authora/internal/domain/user"
-	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -175,6 +176,47 @@ func (h *UserHandler) Update(ctx context.Context, request *userv1.UpdateRequest)
 
 	return &userv1.UpdateResponse{
 		Record: result,
+	}, nil
+}
+
+func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (*userv1.LoginResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.login.handler", trace.WithAttributes(
+		attribute.String("operation", "login"),
+		attribute.String("payload", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	payload := user.LoginCommand{
+		Email:    request.Email,
+		Password: request.Password,
+	}
+
+	res, err := h.app.Login(ctx, payload)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to login user",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "login"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	h.log.Info("user update process successfully",
+		zap.String("trace_id", traceId),
+		zap.String("operation", "update"),
+		zap.Any("payload", request),
+	)
+
+	return &userv1.LoginResponse{
+		Message: "success",
+		Record: &authv1.Auth{
+			Access:  res.Access,
+			Refresh: res.Refresh,
+		},
 	}, nil
 }
 

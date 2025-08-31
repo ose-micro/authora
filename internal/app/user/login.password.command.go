@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/domain/assignment"
 	"github.com/ose-micro/authora/internal/domain/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/common"
@@ -15,6 +15,7 @@ import (
 	"github.com/ose-micro/core/utils"
 	"github.com/ose-micro/cqrs"
 	ose_error "github.com/ose-micro/error"
+	ose_jwt "github.com/ose-micro/jwt"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -26,10 +27,11 @@ type loginCommandHandler struct {
 	log    logger.Logger
 	tracer tracing.Tracer
 	bs     domain.Domain
+	jwt    ose_jwt.Manager
 }
 
 // Handle implements cqrs.CommandHandle.
-func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginCommand) (*user.Domain, error) {
+func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginCommand) (*user.Auth, error) {
 	ctx, span := u.tracer.Start(ctx, "app.user.login.command.handler", trace.WithAttributes(
 		attribute.String("operation", "login"),
 		attribute.String("payload", fmt.Sprintf("%v", command)),
@@ -91,42 +93,7 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 		return nil, err
 	}
 
-	// Fetch all roles for user
-	assigns, err := u.repo.Assignment.Read(ctx, dto.Request{
-		Queries: []dto.Query{
-			{
-				Name: "one",
-				Filters: []dto.Filter{
-					{
-						Field: "user",
-						Op:    dto.OpEq,
-						Value: record.ID(),
-					},
-				},
-			},
-		},
-	})
-	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, err.Error())
-		u.log.Error("failed to login record",
-			zap.String("trace_id", traceId),
-			zap.String("operation", "login"),
-			zap.Error(err),
-		)
-
-		return nil, err
-	}
-
-	var assignmentTenants []role.Public
-	if err := common.JsonToAny(assigns["one"], assignmentTenants); err != nil {
-		return nil, err
-	}
-
-	fmt.Println(assignmentTenants)
-
-	// save user to write store
-	err = u.repo.User.Update(ctx, *record)
+	auth, err := u.prepareAuth(ctx, *record)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -145,11 +112,79 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 		zap.Any("payload", command),
 	)
 
-	return record, nil
+	return auth, nil
+}
+
+func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domain) (*user.Auth, error) {
+	tenants := make(map[string]ose_jwt.Tenant)
+
+	// Fetch all roles for user
+	assignsFacts, err := u.repo.Assignment.Read(ctx, dto.Request{
+		Queries: []dto.Query{
+			{
+				Name: "one",
+				Filters: []dto.Filter{
+					{
+						Field: "user",
+						Op:    dto.OpEq,
+						Value: command.ID(),
+					},
+				},
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	fact := assignsFacts["one"]
+	var assigns []assignment.Public
+
+	if err := common.JsonToAny(fact, &assigns); err != nil {
+		return nil, err
+	}
+
+	for _, assign := range assigns {
+		one, err := u.repo.Role.ReadOne(ctx, dto.Request{
+			Queries: []dto.Query{
+				{
+					Name: "one",
+					Filters: []dto.Filter{
+						{
+							Field: "_id",
+							Op:    dto.OpEq,
+							Value: assign.Role,
+						},
+					},
+				},
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		tenants[assign.Tenant] = ose_jwt.Tenant{
+			Role:        one.ID(),
+			Tenant:      one.Tenant(),
+			Permissions: one.Permissions(),
+		}
+	}
+
+	accessToken, _, err := u.jwt.IssueAccessToken(command.ID(), tenants, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, _, err := u.jwt.IssueRefreshToken(command.ID(), tenants, nil)
+
+	return &user.Auth{
+		Access:  accessToken,
+		Refresh: refreshToken,
+	}, nil
 }
 
 func newLoginCommandHandler(bs domain.Domain, repo repository.Repository,
-	log logger.Logger, tracer tracing.Tracer) cqrs.CommandHandle[user.LoginCommand, *user.Domain] {
+	log logger.Logger, tracer tracing.Tracer) cqrs.CommandHandle[user.LoginCommand, *user.Auth] {
 	return &loginCommandHandler{
 		repo:   repo,
 		log:    log,

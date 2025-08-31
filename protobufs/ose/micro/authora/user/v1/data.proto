@@ -4,6 +4,7 @@ package ose.micro.authora.user.v1;
 
 import "google/protobuf/timestamp.proto";
 import "ose/micro/common/v1/request.proto";
+import "ose/micro/auth/v1/auth.proto";
 
 option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userpb";
 
@@ -54,6 +55,16 @@ message ChangePasswordRequest {
 message ChangePasswordResponse {
   string message = 1;
   User record = 2;
+}
+
+message LoginRequest {
+  string password = 1;
+  string email = 2;
+}
+
+message LoginResponse {
+  string message = 1;
+  ose.micro.auth.v1.Auth record = 2;
 }
 
 message DeleteRequest {

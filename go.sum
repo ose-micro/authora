@@ -15,6 +15,8 @@ github.com/go-viper/mapstructure/v2 v2.2.1 h1:ZAaOCxANMuZx5RCeg0mBdEZk7DZasvvZIx
 github.com/go-viper/mapstructure/v2 v2.2.1/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
 github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=
 github.com/golang-jwt/jwt v3.2.2+incompatible/go.mod h1:8pz2t5EyA70fFQQSrl6XZXzqecmYZeUEB8OUGHkxJ+I=
+github.com/golang-jwt/jwt/v5 v5.3.0 h1:pv4AsKCKKZuqlgs5sUmn4x8UlGa0kEVt/puTpKx9vvo=
+github.com/golang-jwt/jwt/v5 v5.3.0/go.mod h1:fxCRLWMO43lRc8nhHWY6LGqRcf+1gQWArsqaEUEa5bE=
 github.com/golang/protobuf v1.5.4 h1:i7eJL8qZTpSEXOPTxNKhASYpMn+8e5Q6AdndVa1dWek=
 github.com/golang/protobuf v1.5.4/go.mod h1:lnTiLA8Wa4RWRcIUkrtSVa5nRhsEGBg48fD6rSs7xps=
 github.com/golang/snappy v0.0.4 h1:yAGX7huGHXlcLOEtBnF4w7FQwA26wojNCwOYAEhLjQM=
@@ -51,6 +53,8 @@ github.com/ose-micro/error v0.0.0-20250827220005-c4271c27c5aa h1:K/YNAY/bK+WiWAo
 github.com/ose-micro/error v0.0.0-20250827220005-c4271c27c5aa/go.mod h1:igXeSd2iWCP3r8STfgVEhYvZXpGelb7r3gfkoTUjT/A=
 github.com/ose-micro/grpc v0.1.1 h1:5RPeJliF9VRwQ8eFUgQ6MfdK0t51nMrv2cARvngpCrA=
 github.com/ose-micro/grpc v0.1.1/go.mod h1:cUKD/PBwQfyOtMq0cwWVDXdab/u/EFMbHCCziURqrwY=
+github.com/ose-micro/jwt v0.0.1 h1:dPZxXCwuIn1id9uwUaRDZJwJ/L3AHl3JlXxido4SDes=
+github.com/ose-micro/jwt v0.0.1/go.mod h1:nxHygPVNwq89GbfRDZI2Mpx4I6cSxZhLvof8aedgeso=
 github.com/ose-micro/mongo v0.2.1 h1:ove5aNpjQsPN4cOpEbXCa5za9O8UvLbe6cY6IrZH0aA=
 github.com/ose-micro/mongo v0.2.1/go.mod h1:pEToNe9k5QmuElap6hE7BF7aLRNxvbDBjqE/IJdnXEM=
 github.com/ose-micro/rid v0.0.6 h1:kxwzZDMv4g4sd6JEpCVY9s4FWK9JEg2N03umf+EbVfA=

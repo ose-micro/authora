@@ -24,12 +24,13 @@ var File_ose_micro_authora_user_v1_service_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_user_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"'ose/micro/authora/user/v1/service.proto\x12\x19ose.micro.authora.user.v1\x1a$ose/micro/authora/user/v1/data.proto2\x9b\x03\n" +
+	"'ose/micro/authora/user/v1/service.proto\x12\x19ose.micro.authora.user.v1\x1a$ose/micro/authora/user/v1/data.proto2\xf7\x03\n" +
 	"\vUserService\x12]\n" +
 	"\x06Create\x12(.ose.micro.authora.user.v1.CreateRequest\x1a).ose.micro.authora.user.v1.CreateResponse\x12]\n" +
 	"\x06Update\x12(.ose.micro.authora.user.v1.UpdateRequest\x1a).ose.micro.authora.user.v1.UpdateResponse\x12u\n" +
 	"\x0eChangePassword\x120.ose.micro.authora.user.v1.ChangePasswordRequest\x1a1.ose.micro.authora.user.v1.ChangePasswordResponse\x12W\n" +
-	"\x04Read\x12&.ose.micro.authora.user.v1.ReadRequest\x1a'.ose.micro.authora.user.v1.ReadResponseB\x8e\x02\n" +
+	"\x04Read\x12&.ose.micro.authora.user.v1.ReadRequest\x1a'.ose.micro.authora.user.v1.ReadResponse\x12Z\n" +
+	"\x05Login\x12'.ose.micro.authora.user.v1.LoginRequest\x1a(.ose.micro.authora.user.v1.LoginResponseB\x8e\x02\n" +
 	"\x1dcom.ose.micro.authora.user.v1B\fServiceProtoP\x01ZVgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userv1\xa2\x02\x04OMAU\xaa\x02\x19Ose.Micro.Authora.User.V1\xca\x02\x19Ose\\Micro\\Authora\\User\\V1\xe2\x02%Ose\\Micro\\Authora\\User\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::User::V1b\x06proto3"
 
 var file_ose_micro_authora_user_v1_service_proto_goTypes = []any{
@@ -37,22 +38,26 @@ var file_ose_micro_authora_user_v1_service_proto_goTypes = []any{
 	(*UpdateRequest)(nil),          // 1: ose.micro.authora.user.v1.UpdateRequest
 	(*ChangePasswordRequest)(nil),  // 2: ose.micro.authora.user.v1.ChangePasswordRequest
 	(*ReadRequest)(nil),            // 3: ose.micro.authora.user.v1.ReadRequest
-	(*CreateResponse)(nil),         // 4: ose.micro.authora.user.v1.CreateResponse
-	(*UpdateResponse)(nil),         // 5: ose.micro.authora.user.v1.UpdateResponse
-	(*ChangePasswordResponse)(nil), // 6: ose.micro.authora.user.v1.ChangePasswordResponse
-	(*ReadResponse)(nil),           // 7: ose.micro.authora.user.v1.ReadResponse
+	(*LoginRequest)(nil),           // 4: ose.micro.authora.user.v1.LoginRequest
+	(*CreateResponse)(nil),         // 5: ose.micro.authora.user.v1.CreateResponse
+	(*UpdateResponse)(nil),         // 6: ose.micro.authora.user.v1.UpdateResponse
+	(*ChangePasswordResponse)(nil), // 7: ose.micro.authora.user.v1.ChangePasswordResponse
+	(*ReadResponse)(nil),           // 8: ose.micro.authora.user.v1.ReadResponse
+	(*LoginResponse)(nil),          // 9: ose.micro.authora.user.v1.LoginResponse
 }
 var file_ose_micro_authora_user_v1_service_proto_depIdxs = []int32{
 	0, // 0: ose.micro.authora.user.v1.UserService.Create:input_type -> ose.micro.authora.user.v1.CreateRequest
 	1, // 1: ose.micro.authora.user.v1.UserService.Update:input_type -> ose.micro.authora.user.v1.UpdateRequest
 	2, // 2: ose.micro.authora.user.v1.UserService.ChangePassword:input_type -> ose.micro.authora.user.v1.ChangePasswordRequest
 	3, // 3: ose.micro.authora.user.v1.UserService.Read:input_type -> ose.micro.authora.user.v1.ReadRequest
-	4, // 4: ose.micro.authora.user.v1.UserService.Create:output_type -> ose.micro.authora.user.v1.CreateResponse
-	5, // 5: ose.micro.authora.user.v1.UserService.Update:output_type -> ose.micro.authora.user.v1.UpdateResponse
-	6, // 6: ose.micro.authora.user.v1.UserService.ChangePassword:output_type -> ose.micro.authora.user.v1.ChangePasswordResponse
-	7, // 7: ose.micro.authora.user.v1.UserService.Read:output_type -> ose.micro.authora.user.v1.ReadResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	4, // 4: ose.micro.authora.user.v1.UserService.Login:input_type -> ose.micro.authora.user.v1.LoginRequest
+	5, // 5: ose.micro.authora.user.v1.UserService.Create:output_type -> ose.micro.authora.user.v1.CreateResponse
+	6, // 6: ose.micro.authora.user.v1.UserService.Update:output_type -> ose.micro.authora.user.v1.UpdateResponse
+	7, // 7: ose.micro.authora.user.v1.UserService.ChangePassword:output_type -> ose.micro.authora.user.v1.ChangePasswordResponse
+	8, // 8: ose.micro.authora.user.v1.UserService.Read:output_type -> ose.micro.authora.user.v1.ReadResponse
+	9, // 9: ose.micro.authora.user.v1.UserService.Login:output_type -> ose.micro.authora.user.v1.LoginResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

@@ -9,6 +9,7 @@ require (
 	github.com/ose-micro/cqrs v0.3.3
 	github.com/ose-micro/error v0.0.0-20250827220005-c4271c27c5aa
 	github.com/ose-micro/grpc v0.1.1
+	github.com/ose-micro/jwt v0.0.1
 	github.com/ose-micro/mongo v0.2.1
 	github.com/ose-micro/rid v0.0.6
 	go.mongodb.org/mongo-driver v1.17.4
@@ -27,6 +28,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1 // indirect

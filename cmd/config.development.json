@@ -17,6 +17,14 @@
   "grpc": {
     "port": 20244
   },
+  "jwt": {
+    "prefix": "FMC",
+    "secret": "mI7r9jQpLk3uXy6fHnWb2sEwRtAq8fGhJaL0yUzXk1E=",
+    "issuer": "Fundme.cloud",
+    "access_ttl": "15m",
+    "refresh_ttl": "168h",
+    "purpose_ttl": "30m"
+  },
   "mongo": {
     "host": "localhost",
     "port": 27018,

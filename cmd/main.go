@@ -11,30 +11,33 @@ import (
 	"github.com/ose-micro/core/timestamp"
 	"github.com/ose-micro/core/tracing"
 	"github.com/ose-micro/cqrs/bus/nats"
+	ose_jwt "github.com/ose-micro/jwt"
 	mongodb "github.com/ose-micro/mongo"
 	"go.uber.org/fx"
 )
 
 func loadConfig() (config.Service, logger.Config, tracing.Config, timestamp.Config,
-	mongodb.Config, nats.Config, grpc.Config, error) {
+	mongodb.Config, nats.Config, grpc.Config, ose_jwt.Config, error) {
 
 	var grpcConfig grpc.Config
 	var natsConf nats.Config
 	var mongoConfig mongodb.Config
+	var jwtConfig ose_jwt.Config
 
 	conf, err := config.Load(
 		config.WithExtension("bus", &natsConf),
 		config.WithExtension("mongo", &mongoConfig),
 		config.WithExtension("grpc", &grpcConfig),
+		config.WithExtension("jwt", &jwtConfig),
 	)
 
 	if err != nil {
 		return config.Service{}, logger.Config{}, tracing.Config{}, timestamp.Config{},
-			mongodb.Config{}, nats.Config{}, grpc.Config{}, err
+			mongodb.Config{}, nats.Config{}, grpc.Config{}, ose_jwt.Config{}, err
 	}
 
 	return conf.Core.Service, conf.Core.Service.Logger, conf.Core.Service.Tracer,
-		conf.Core.Service.Timestamp, mongoConfig, natsConf, grpcConfig, nil
+		conf.Core.Service.Timestamp, mongoConfig, natsConf, grpcConfig, jwtConfig, nil
 }
 
 func main() {
@@ -46,6 +49,7 @@ func main() {
 			repository.Inject,
 			domain.Inject,
 			app.Inject,
+			ose_jwt.NewManager,
 		),
 		fx.Invoke(grpc.RunGRPCServer),
 	).Run()

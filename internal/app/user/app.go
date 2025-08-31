@@ -21,14 +21,32 @@ type app struct {
 	log            logger.Logger
 	create         cqrs.CommandHandle[user.CreateCommand, *user.Domain]
 	update         cqrs.CommandHandle[user.UpdateCommand, *user.Domain]
-	login          cqrs.CommandHandle[user.LoginCommand, *user.Domain]
+	login          cqrs.CommandHandle[user.LoginCommand, *user.Auth]
 	changePassword cqrs.CommandHandle[user.ChangePasswordCommand, *user.Domain]
 	read           cqrs.QueryHandle[user.ReadQuery, map[string]any]
 }
 
-func (a app) Login(ctx context.Context, params user.LoginCommand) (*user.Claims, error) {
-	//TODO implement me
-	panic("implement me")
+func (a app) Login(ctx context.Context, command user.LoginCommand) (*user.Auth, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.login.command", trace.WithAttributes(
+		attribute.String("operation", "login"),
+		attribute.String("payload", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	res, err := a.login.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "login"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	return res, nil
 }
 
 func (a app) ChangePassword(ctx context.Context, command user.ChangePasswordCommand) (*user.Domain, error) {
