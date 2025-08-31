@@ -1,8 +1,11 @@
 # ----- Build Stage -----
-FROM golang:1.24.1-alpine AS builder
+FROM golang:1.25 AS builder
+
+# Ensure Go uses correct toolchain automatically
+ENV GOTOOLCHAIN=auto
 
 # Install necessary tools
-RUN apk add --no-cache git
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -13,17 +16,16 @@ RUN go mod download
 # Copy the entire source code
 COPY . .
 
-# Build the app
-RUN go build -o authora ./cmd
+# Build statically linked binary for Alpine
+RUN CGO_ENABLED=0 GOOS=linux go build -o authora ./cmd
 
 # ----- Run Stage -----
 FROM alpine:3.18
 
 ARG PORT=8080
 
-RUN apk add --no-cache tzdata
-
-RUN apk --no-cache add ca-certificates
+# Install runtime dependencies
+RUN apk add --no-cache tzdata ca-certificates
 
 WORKDIR /app
 
