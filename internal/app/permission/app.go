@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/permission"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/permission"
 	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
-	"github.com/ose-micro/cqrs"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -19,9 +19,9 @@ import (
 type app struct {
 	tracer tracing.Tracer
 	log    logger.Logger
-	create cqrs.CommandHandle[permission.CreateCommand, *permission.Domain]
-	update cqrs.CommandHandle[permission.UpdateCommand, *permission.Domain]
-	read   cqrs.QueryHandle[permission.ReadQuery, map[string]any]
+	create domain.CommandHandle[permission.CreateCommand, *permission.Domain]
+	update domain.CommandHandle[permission.UpdateCommand, *permission.Domain]
+	read   domain.QueryHandle[permission.ReadQuery, map[string]any]
 }
 
 func (a app) Read(ctx context.Context, command permission.ReadQuery) (map[string]any, error) {
@@ -98,7 +98,7 @@ func (a app) Delete(ctx context.Context, params permission.UpdateCommand) (*perm
 	panic("implement me")
 }
 
-func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) permission.App {
+func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) permission.App {
 	return &app{
 		tracer: tracer,
 		log:    log,

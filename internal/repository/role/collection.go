@@ -3,7 +3,7 @@ package role
 import (
 	"time"
 
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/core/domain"
 )
 

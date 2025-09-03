@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -22,7 +22,7 @@ type hasRoleCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
 	tracer tracing.Tracer
-	bs     domain.Domain
+	bs     business.Domain
 	jwt    ose_jwt.Manager
 }
 

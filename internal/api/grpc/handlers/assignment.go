@@ -6,7 +6,7 @@ import (
 
 	assignmentv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/assignment/v1"
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/domain/assignment"
+	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"go.opentelemetry.io/otel/attribute"

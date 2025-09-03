@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"github.com/ose-micro/cqrs"

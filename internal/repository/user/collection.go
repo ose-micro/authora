@@ -3,7 +3,7 @@ package user
 import (
 	"time"
 
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/core/domain"
 )
 

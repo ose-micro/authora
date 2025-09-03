@@ -3,7 +3,7 @@ package permission
 import (
 	"time"
 
-	"github.com/ose-micro/authora/internal/domain/permission"
+	"github.com/ose-micro/authora/internal/business/permission"
 	"github.com/ose-micro/core/domain"
 )
 

@@ -1,12 +1,12 @@
 package repository
 
 import (
-	"github.com/ose-micro/authora/internal/domain"
-	assignmentDomain "github.com/ose-micro/authora/internal/domain/assignment"
-	permissionDomain "github.com/ose-micro/authora/internal/domain/permission"
-	roleDomain "github.com/ose-micro/authora/internal/domain/role"
-	tenantDomain "github.com/ose-micro/authora/internal/domain/tenant"
-	userDomain "github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business"
+	assignmentDomain "github.com/ose-micro/authora/internal/business/assignment"
+	permissionDomain "github.com/ose-micro/authora/internal/business/permission"
+	roleDomain "github.com/ose-micro/authora/internal/business/role"
+	tenantDomain "github.com/ose-micro/authora/internal/business/tenant"
+	userDomain "github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository/assignment"
 	"github.com/ose-micro/authora/internal/repository/permission"
 	"github.com/ose-micro/authora/internal/repository/role"
@@ -25,7 +25,7 @@ type Repository struct {
 	Permission permissionDomain.Repo
 }
 
-func Inject(db *mongodb.Client, bs domain.Domain, log logger.Logger, tracer tracing.Tracer) Repository {
+func Inject(db *mongodb.Client, bs business.Domain, log logger.Logger, tracer tracing.Tracer) Repository {
 	return Repository{
 		Tenant:     tenant.NewRepository(db, log, tracer, bs),
 		Role:       role.NewRepository(db, log, tracer, bs),

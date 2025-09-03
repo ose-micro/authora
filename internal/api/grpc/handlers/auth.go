@@ -6,7 +6,7 @@ import (
 
 	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/auth/v1"
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"

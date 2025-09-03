@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain/assignment"
-	"github.com/ose-micro/authora/internal/domain/role"
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business/assignment"
+	"github.com/ose-micro/authora/internal/business/role"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/dto"

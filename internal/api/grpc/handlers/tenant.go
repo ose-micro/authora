@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/domain/tenant"
 	tenantv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/tenant/v1"
+	"github.com/ose-micro/authora/internal/app"
+	"github.com/ose-micro/authora/internal/business/tenant"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"go.opentelemetry.io/otel/attribute"

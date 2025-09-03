@@ -11,8 +11,13 @@
       "sampleRatio": 0
     }
   },
-  "bus": {
-    "url": ""
+  "nats": {
+    "url": "nats://switchback.proxy.rlwy.net:40255",
+    "name": "authora",
+    "user": "nats",
+    "password": "m67r9jQpLk3uXy6fHnWb2sEwRtAq8fGhJaL0yUzXk5E",
+    "timeout": "2s",
+    "max_reconnect": -1
   },
   "grpc": {
     "port": 8080

@@ -1,18 +1,20 @@
 package main
 
 import (
+	"github.com/ose-micro/authora/internal/api/bus"
 	"github.com/ose-micro/authora/internal/api/grpc"
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/domain"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/events"
 	"github.com/ose-micro/authora/internal/repository"
 	ose "github.com/ose-micro/core"
 	"github.com/ose-micro/core/config"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/timestamp"
 	"github.com/ose-micro/core/tracing"
-	"github.com/ose-micro/cqrs/bus/nats"
 	ose_jwt "github.com/ose-micro/jwt"
 	mongodb "github.com/ose-micro/mongo"
+	"github.com/ose-micro/nats"
 	"go.uber.org/fx"
 )
 
@@ -25,7 +27,7 @@ func loadConfig() (config.Service, logger.Config, tracing.Config, timestamp.Conf
 	var jwtConfig ose_jwt.Config
 
 	conf, err := config.Load(
-		config.WithExtension("bus", &natsConf),
+		config.WithExtension("nats", &natsConf),
 		config.WithExtension("mongo", &mongoConfig),
 		config.WithExtension("grpc", &grpcConfig),
 		config.WithExtension("jwt", &jwtConfig),
@@ -47,10 +49,12 @@ func main() {
 			mongodb.New,
 			nats.New,
 			repository.Inject,
-			domain.Inject,
+			business.Inject,
 			app.Inject,
 			ose_jwt.NewManager,
+			events.NewEvents,
 		),
+		fx.Invoke(bus.InvokeConsumers),
 		fx.Invoke(grpc.RunGRPCServer),
 	).Run()
 }

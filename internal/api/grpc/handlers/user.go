@@ -7,7 +7,7 @@ import (
 	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/auth/v1"
 	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -73,6 +73,8 @@ func (h *UserHandler) Create(ctx context.Context, request *userv1.CreateRequest)
 		FamilyName: request.FamilyName,
 		Email:      request.Email,
 		Password:   request.Password,
+		Role:       request.Role,
+		Tenant:     request.Tenant,
 		Metadata: func() map[string]interface{} {
 			if request.Metadata != nil {
 				metadata := map[string]interface{}{}

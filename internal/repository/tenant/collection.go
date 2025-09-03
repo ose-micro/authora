@@ -3,7 +3,7 @@ package tenant
 import (
 	"time"
 
-	"github.com/ose-micro/authora/internal/domain/tenant"
+	"github.com/ose-micro/authora/internal/business/tenant"
 	"github.com/ose-micro/core/domain"
 )
 

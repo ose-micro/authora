@@ -6,7 +6,7 @@ import (
 
 	rolev1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/role/v1"
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"go.opentelemetry.io/otel/attribute"

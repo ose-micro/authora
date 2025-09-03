@@ -146,7 +146,9 @@ type CreateRequest struct {
 	FamilyName    string                 `protobuf:"bytes,2,opt,name=family_name,json=familyName,proto3" json:"family_name,omitempty"`
 	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 	Password      string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
-	Metadata      map[string]string      `protobuf:"bytes,5,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Role          string                 `protobuf:"bytes,5,opt,name=role,proto3" json:"role,omitempty"`
+	Tenant        string                 `protobuf:"bytes,6,opt,name=tenant,proto3" json:"tenant,omitempty"`
+	Metadata      map[string]string      `protobuf:"bytes,7,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -205,6 +207,20 @@ func (x *CreateRequest) GetEmail() string {
 func (x *CreateRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
+	}
+	return ""
+}
+
+func (x *CreateRequest) GetRole() string {
+	if x != nil {
+		return x.Role
+	}
+	return ""
+}
+
+func (x *CreateRequest) GetTenant() string {
+	if x != nil {
+		return x.Tenant
 	}
 	return ""
 }
@@ -828,7 +844,7 @@ var File_ose_micro_authora_user_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"$ose/micro/authora/user/v1/data.proto\x12\x19ose.micro.authora.user.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!ose/micro/common/v1/request.proto\x1a\x1cose/micro/auth/v1/auth.proto\"\xdd\x03\n" +
+	"$ose/micro/authora/user/v1/data.proto\x12\x19ose.micro.authora.user.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cose/micro/auth/v1/auth.proto\x1a!ose/micro/common/v1/request.proto\"\xdd\x03\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
 	"\vgiven_names\x18\x02 \x01(\tR\n" +
@@ -848,15 +864,17 @@ const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x94\x02\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xc0\x02\n" +
 	"\rCreateRequest\x12\x1f\n" +
 	"\vgiven_names\x18\x01 \x01(\tR\n" +
 	"givenNames\x12\x1f\n" +
 	"\vfamily_name\x18\x02 \x01(\tR\n" +
 	"familyName\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x04 \x01(\tR\bpassword\x12R\n" +
-	"\bmetadata\x18\x05 \x03(\v26.ose.micro.authora.user.v1.CreateRequest.MetadataEntryR\bmetadata\x1a;\n" +
+	"\bpassword\x18\x04 \x01(\tR\bpassword\x12\x12\n" +
+	"\x04role\x18\x05 \x01(\tR\x04role\x12\x16\n" +
+	"\x06tenant\x18\x06 \x01(\tR\x06tenant\x12R\n" +
+	"\bmetadata\x18\a \x03(\v26.ose.micro.authora.user.v1.CreateRequest.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"c\n" +

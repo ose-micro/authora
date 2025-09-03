@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
@@ -24,7 +24,7 @@ type createCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
 	tracer tracing.Tracer
-	bs     domain.Domain
+	bs     business.Domain
 }
 
 // Handle implements cqrs.CommandHandle.
@@ -174,7 +174,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 	return record, nil
 }
 
-func newCreateCommandHandler(bs domain.Domain, repo repository.Repository, log logger.Logger,
+func newCreateCommandHandler(bs business.Domain, repo repository.Repository, log logger.Logger,
 	tracer tracing.Tracer) cqrs.CommandHandle[role.CreateCommand, *role.Domain] {
 	return &createCommandHandler{
 		repo:   repo,

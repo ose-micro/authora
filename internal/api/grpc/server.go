@@ -13,9 +13,9 @@ import (
 	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
 	"github.com/ose-micro/authora/internal/api/grpc/handlers"
 	"github.com/ose-micro/authora/internal/app"
+	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
-	"github.com/ose-micro/cqrs/bus"
 	osegrpc "github.com/ose-micro/grpc"
 	mongodb "github.com/ose-micro/mongo"
 	"go.uber.org/fx"
@@ -28,7 +28,7 @@ type Config struct {
 }
 
 func RunGRPCServer(lc fx.Lifecycle, conf Config, log logger.Logger, tracer tracing.Tracer, apps app.Apps, mdb *mongodb.Client,
-	bs bus.Bus) (*osegrpc.Server, error) {
+	bs domain.Bus) (*osegrpc.Server, error) {
 	svc, err := osegrpc.New(osegrpc.Params{
 		Logger: log,
 		Tracer: tracer,

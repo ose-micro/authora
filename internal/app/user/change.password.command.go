@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
@@ -22,7 +22,7 @@ type changePasswordCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
 	tracer tracing.Tracer
-	bs     domain.Domain
+	bs     business.Domain
 }
 
 // Handle implements cqrs.CommandHandle.
@@ -110,7 +110,7 @@ func (u changePasswordCommandHandler) Handle(ctx context.Context, command user.C
 	return record, nil
 }
 
-func newChangePasswordCommandHandler(bs domain.Domain, repo repository.Repository,
+func newChangePasswordCommandHandler(bs business.Domain, repo repository.Repository,
 	log logger.Logger, tracer tracing.Tracer) cqrs.CommandHandle[user.ChangePasswordCommand, *user.Domain] {
 	return &changePasswordCommandHandler{
 		repo:   repo,

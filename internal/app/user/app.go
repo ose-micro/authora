@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
-	"github.com/ose-micro/cqrs"
 	ose_jwt "github.com/ose-micro/jwt"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -20,16 +20,16 @@ import (
 type app struct {
 	tracer              tracing.Tracer
 	log                 logger.Logger
-	create              cqrs.CommandHandle[user.CreateCommand, *user.Domain]
-	update              cqrs.CommandHandle[user.UpdateCommand, *user.Domain]
-	login               cqrs.CommandHandle[user.LoginCommand, *user.Auth]
-	hasRole             cqrs.CommandHandle[user.HasRoleCommand, *bool]
-	hasPermission       cqrs.CommandHandle[user.HasPermissionCommand, *bool]
-	parseClaims         cqrs.CommandHandle[user.TokenCommand, *ose_jwt.Claims]
-	requestPurposeToken cqrs.CommandHandle[user.PurposeTokenCommand, *string]
-	requestAccessToken  cqrs.CommandHandle[user.TokenCommand, *string]
-	changePassword      cqrs.CommandHandle[user.ChangePasswordCommand, *user.Domain]
-	read                cqrs.QueryHandle[user.ReadQuery, map[string]any]
+	create              domain.CommandHandle[user.CreateCommand, *user.Domain]
+	update              domain.CommandHandle[user.UpdateCommand, *user.Domain]
+	login               domain.CommandHandle[user.LoginCommand, *user.Auth]
+	hasRole             domain.CommandHandle[user.HasRoleCommand, *bool]
+	hasPermission       domain.CommandHandle[user.HasPermissionCommand, *bool]
+	parseClaims         domain.CommandHandle[user.TokenCommand, *ose_jwt.Claims]
+	requestPurposeToken domain.CommandHandle[user.PurposeTokenCommand, *string]
+	requestAccessToken  domain.CommandHandle[user.TokenCommand, *string]
+	changePassword      domain.CommandHandle[user.ChangePasswordCommand, *user.Domain]
+	read                domain.QueryHandle[user.ReadQuery, map[string]any]
 }
 
 func (a app) RequestAccessToken(ctx context.Context, command user.TokenCommand) (*string, error) {
@@ -267,12 +267,12 @@ func (a app) Delete(ctx context.Context, params user.UpdateCommand) (*user.Domai
 	panic("implement me")
 }
 
-func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository,
-	jwt ose_jwt.Manager) user.App {
+func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository,
+	jwt ose_jwt.Manager, bus domain.Bus) user.App {
 	return &app{
 		tracer:              tracer,
 		log:                 log,
-		create:              newCreateCommandHandler(bs, repo, log, tracer),
+		create:              newCreateCommandHandler(bs, repo, log, tracer, bus),
 		update:              newUpdateCommandHandler(bs, repo, log, tracer),
 		read:                newReadQueryHandler(repo.User, log, tracer),
 		changePassword:      newChangePasswordCommandHandler(bs, repo, log, tracer),

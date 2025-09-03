@@ -11,8 +11,13 @@
       "sampleRatio": 1.0
     }
   },
-  "bus": {
-    "url": "nats://yamabiko.proxy.rlwy.net:56280"
+  "nats": {
+    "url": "nats://localhost:4222",
+    "name": "authora",
+    "user": "myuser",
+    "password": "mypassword",
+    "timeout": "2s",
+    "max_reconnect": -1
   },
   "grpc": {
     "port": 20244

@@ -3,8 +3,8 @@ syntax = "proto3";
 package ose.micro.authora.user.v1;
 
 import "google/protobuf/timestamp.proto";
-import "ose/micro/common/v1/request.proto";
 import "ose/micro/auth/v1/auth.proto";
+import "ose/micro/common/v1/request.proto";
 
 option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userpb";
 
@@ -26,7 +26,9 @@ message CreateRequest {
   string family_name = 2;
   string email = 3;
   string password = 4;
-  map<string, string> metadata = 5;
+  string role = 5;
+  string tenant = 6;
+  map<string, string> metadata = 7;
 }
 
 message CreateResponse {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/assignment"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
@@ -22,7 +22,7 @@ type updateCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
 	tracer tracing.Tracer
-	bs     domain.Domain
+	bs     business.Domain
 }
 
 // Handle implements cqrs.CommandHandle.
@@ -100,7 +100,7 @@ func (u updateCommandHandler) Handle(ctx context.Context, command assignment.Upd
 	return record, nil
 }
 
-func newUpdateCommandHandler(bs domain.Domain, repo repository.Repository,
+func newUpdateCommandHandler(bs business.Domain, repo repository.Repository,
 	log logger.Logger, tracer tracing.Tracer) cqrs.CommandHandle[assignment.UpdateCommand, *assignment.Domain] {
 	return &updateCommandHandler{
 		repo:   repo,

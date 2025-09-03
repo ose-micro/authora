@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/role"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
-	"github.com/ose-micro/cqrs"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -19,9 +19,9 @@ import (
 type app struct {
 	tracer tracing.Tracer
 	log    logger.Logger
-	create cqrs.CommandHandle[role.CreateCommand, *role.Domain]
-	update cqrs.CommandHandle[role.UpdateCommand, *role.Domain]
-	read   cqrs.QueryHandle[role.ReadQuery, map[string]any]
+	create domain.CommandHandle[role.CreateCommand, *role.Domain]
+	update domain.CommandHandle[role.UpdateCommand, *role.Domain]
+	read   domain.QueryHandle[role.ReadQuery, map[string]any]
 }
 
 func (a app) Read(ctx context.Context, command role.ReadQuery) (map[string]any, error) {
@@ -98,7 +98,7 @@ func (a app) Delete(ctx context.Context, params role.UpdateCommand) (*role.Domai
 	panic("implement me")
 }
 
-func NewApp(bs domain.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) role.App {
+func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) role.App {
 	return &app{
 		tracer: tracer,
 		log:    log,

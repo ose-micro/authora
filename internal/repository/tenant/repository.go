@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/tenant"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/tenant"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
@@ -24,7 +24,7 @@ type repository struct {
 	collection *mongo.Collection
 	log        logger.Logger
 	tracer     tracing.Tracer
-	bs         domain.Domain
+	bs         business.Domain
 }
 
 func (r *repository) Delete(ctx context.Context, payload tenant.Domain) error {
@@ -223,7 +223,7 @@ func (r *repository) toDomain(payload tenant.Public) *tenant.Domain {
 	return result
 }
 
-func NewRepository(db *mongodb.Client, log logger.Logger, tracer tracing.Tracer, bs domain.Domain) tenant.Repo {
+func NewRepository(db *mongodb.Client, log logger.Logger, tracer tracing.Tracer, bs business.Domain) tenant.Repo {
 	return &repository{
 		log:        log,
 		tracer:     tracer,

@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ose-micro/authora/internal/domain"
-	"github.com/ose-micro/authora/internal/domain/user"
+	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -24,7 +25,8 @@ type createCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
 	tracer tracing.Tracer
-	bs     domain.Domain
+	bs     business.Domain
+	bus    domain.Bus
 }
 
 // Handle implements cqrs.CommandHandle.
@@ -43,6 +45,61 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
+			zap.String("trace_id", traceId),
+			zap.String("operation", CreateOperation),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	if _, err := c.repo.Tenant.ReadOne(ctx, dto.Request{
+		Queries: []dto.Query{
+			{
+				Name: "one",
+				Filters: []dto.Filter{
+					{
+						Field: "_id",
+						Op:    dto.OpEq,
+						Value: command.Tenant,
+					},
+				},
+			},
+		},
+	}); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		c.log.Error("user tenant not found",
+			zap.String("trace_id", traceId),
+			zap.String("operation", CreateOperation),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	if _, err := c.repo.Role.ReadOne(ctx, dto.Request{
+		Queries: []dto.Query{
+			{
+				Name: "one",
+				Filters: []dto.Filter{
+					{
+						Field: "_id",
+						Op:    dto.OpEq,
+						Value: command.Role,
+					},
+					{
+						Field: "tenant",
+						Op:    dto.OpEq,
+						Value: command.Tenant,
+					},
+				},
+			},
+		},
+	}); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		c.log.Error("user role not found",
 			zap.String("trace_id", traceId),
 			zap.String("operation", CreateOperation),
 			zap.Error(err),
@@ -108,6 +165,19 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 		return nil, err
 	}
 
+	err = c.publishEvent(*record.Public(), command.Role, command.Tenant)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		c.log.Error("failed to publish event",
+			zap.String("trace_id", traceId),
+			zap.String("operation", CreateOperation),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
 	c.log.Info("create process complete successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", CreateOperation),
@@ -117,12 +187,32 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 	return record, nil
 }
 
-func newCreateCommandHandler(bs domain.Domain, repo repository.Repository, log logger.Logger,
-	tracer tracing.Tracer) cqrs.CommandHandle[user.CreateCommand, *user.Domain] {
+func (c createCommandHandler) publishEvent(payload user.Public, role, tenant string) error {
+	err := c.bus.Publish(user.CreatedEvent, user.DefaultEvent{
+		ID:         payload.Id,
+		GivenNames: payload.GivenNames,
+		FamilyName: payload.FamilyName,
+		Email:      payload.Email,
+		Password:   payload.Password,
+		Role:       role,
+		Tenant:     tenant,
+		Metadata:   payload.Metadata,
+		CreatedAt:  payload.CreatedAt,
+	})
+	if err != nil {
+		return ose_error.New(ose_error.ErrInternal, err.Error())
+	}
+
+	return nil
+}
+
+func newCreateCommandHandler(bs business.Domain, repo repository.Repository, log logger.Logger,
+	tracer tracing.Tracer, bus domain.Bus) cqrs.CommandHandle[user.CreateCommand, *user.Domain] {
 	return &createCommandHandler{
 		repo:   repo,
 		log:    log,
 		tracer: tracer,
 		bs:     bs,
+		bus:    bus,
 	}
 }
