@@ -47,7 +47,7 @@ func (h *RoleHandler) response(param role.Public) *rolev1.Role {
 func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest) (*rolev1.CreateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.role.create.handler", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -75,7 +75,7 @@ func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest)
 	h.log.Info("role create process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "create"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	return &rolev1.CreateResponse{
@@ -86,7 +86,7 @@ func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest)
 func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest) (*rolev1.UpdateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.role.update.handler", trace.WithAttributes(
 		attribute.String("operation", "update"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -115,7 +115,7 @@ func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest)
 	h.log.Info("role update process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	return &rolev1.UpdateResponse{
@@ -126,7 +126,7 @@ func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest)
 func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*rolev1.ReadResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.role.read.handler", trace.WithAttributes(
 		attribute.String("operation", "read"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 

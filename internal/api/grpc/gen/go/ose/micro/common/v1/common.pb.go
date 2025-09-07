@@ -21,30 +21,34 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Location struct {
+type Address struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Region        string                 `protobuf:"bytes,1,opt,name=region,proto3" json:"region,omitempty"`
-	District      string                 `protobuf:"bytes,2,opt,name=district,proto3" json:"district,omitempty"`
-	Chiefdom      string                 `protobuf:"bytes,3,opt,name=chiefdom,proto3" json:"chiefdom,omitempty"`
-	Street        string                 `protobuf:"bytes,4,opt,name=street,proto3" json:"street,omitempty"`
+	CountryCode   string                 `protobuf:"bytes,1,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"`
+	City          string                 `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
+	State         string                 `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	PostalCode    string                 `protobuf:"bytes,4,opt,name=postal_code,json=postalCode,proto3" json:"postal_code,omitempty"`
+	Latitude      float32                `protobuf:"fixed32,5,opt,name=latitude,proto3" json:"latitude,omitempty"`
+	Longitude     float32                `protobuf:"fixed32,6,opt,name=longitude,proto3" json:"longitude,omitempty"`
+	Line1         string                 `protobuf:"bytes,7,opt,name=line1,proto3" json:"line1,omitempty"`
+	Line2         string                 `protobuf:"bytes,8,opt,name=line2,proto3" json:"line2,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Location) Reset() {
-	*x = Location{}
+func (x *Address) Reset() {
+	*x = Address{}
 	mi := &file_ose_micro_common_v1_common_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Location) String() string {
+func (x *Address) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Location) ProtoMessage() {}
+func (*Address) ProtoMessage() {}
 
-func (x *Location) ProtoReflect() protoreflect.Message {
+func (x *Address) ProtoReflect() protoreflect.Message {
 	mi := &file_ose_micro_common_v1_common_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -56,35 +60,63 @@ func (x *Location) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Location.ProtoReflect.Descriptor instead.
-func (*Location) Descriptor() ([]byte, []int) {
+// Deprecated: Use Address.ProtoReflect.Descriptor instead.
+func (*Address) Descriptor() ([]byte, []int) {
 	return file_ose_micro_common_v1_common_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Location) GetRegion() string {
+func (x *Address) GetCountryCode() string {
 	if x != nil {
-		return x.Region
+		return x.CountryCode
 	}
 	return ""
 }
 
-func (x *Location) GetDistrict() string {
+func (x *Address) GetCity() string {
 	if x != nil {
-		return x.District
+		return x.City
 	}
 	return ""
 }
 
-func (x *Location) GetChiefdom() string {
+func (x *Address) GetState() string {
 	if x != nil {
-		return x.Chiefdom
+		return x.State
 	}
 	return ""
 }
 
-func (x *Location) GetStreet() string {
+func (x *Address) GetPostalCode() string {
 	if x != nil {
-		return x.Street
+		return x.PostalCode
+	}
+	return ""
+}
+
+func (x *Address) GetLatitude() float32 {
+	if x != nil {
+		return x.Latitude
+	}
+	return 0
+}
+
+func (x *Address) GetLongitude() float32 {
+	if x != nil {
+		return x.Longitude
+	}
+	return 0
+}
+
+func (x *Address) GetLine1() string {
+	if x != nil {
+		return x.Line1
+	}
+	return ""
+}
+
+func (x *Address) GetLine2() string {
+	if x != nil {
+		return x.Line2
 	}
 	return ""
 }
@@ -141,78 +173,27 @@ func (x *Reference) GetMetadata() map[string]string {
 	return nil
 }
 
-type Permission struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      string                 `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
-	Action        string                 `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Permission) Reset() {
-	*x = Permission{}
-	mi := &file_ose_micro_common_v1_common_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Permission) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Permission) ProtoMessage() {}
-
-func (x *Permission) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_common_v1_common_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Permission.ProtoReflect.Descriptor instead.
-func (*Permission) Descriptor() ([]byte, []int) {
-	return file_ose_micro_common_v1_common_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *Permission) GetResource() string {
-	if x != nil {
-		return x.Resource
-	}
-	return ""
-}
-
-func (x *Permission) GetAction() string {
-	if x != nil {
-		return x.Action
-	}
-	return ""
-}
-
 var File_ose_micro_common_v1_common_proto protoreflect.FileDescriptor
 
 const file_ose_micro_common_v1_common_proto_rawDesc = "" +
 	"\n" +
-	" ose/micro/common/v1/common.proto\x12\x13ose.micro.common.v1\"r\n" +
-	"\bLocation\x12\x16\n" +
-	"\x06region\x18\x01 \x01(\tR\x06region\x12\x1a\n" +
-	"\bdistrict\x18\x02 \x01(\tR\bdistrict\x12\x1a\n" +
-	"\bchiefdom\x18\x03 \x01(\tR\bchiefdom\x12\x16\n" +
-	"\x06street\x18\x04 \x01(\tR\x06street\"\xa2\x01\n" +
+	" ose/micro/common/v1/common.proto\x12\x13ose.micro.common.v1\"\xdd\x01\n" +
+	"\aAddress\x12!\n" +
+	"\fcountry_code\x18\x01 \x01(\tR\vcountryCode\x12\x12\n" +
+	"\x04city\x18\x02 \x01(\tR\x04city\x12\x14\n" +
+	"\x05state\x18\x03 \x01(\tR\x05state\x12\x1f\n" +
+	"\vpostal_code\x18\x04 \x01(\tR\n" +
+	"postalCode\x12\x1a\n" +
+	"\blatitude\x18\x05 \x01(\x02R\blatitude\x12\x1c\n" +
+	"\tlongitude\x18\x06 \x01(\x02R\tlongitude\x12\x14\n" +
+	"\x05line1\x18\a \x01(\tR\x05line1\x12\x14\n" +
+	"\x05line2\x18\b \x01(\tR\x05line2\"\xa2\x01\n" +
 	"\tReference\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12H\n" +
 	"\bmetadata\x18\x02 \x03(\v2,.ose.micro.common.v1.Reference.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"@\n" +
-	"\n" +
-	"Permission\x12\x1a\n" +
-	"\bresource\x18\x01 \x01(\tR\bresource\x12\x16\n" +
-	"\x06action\x18\x02 \x01(\tR\x06actionB\xe9\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xe9\x01\n" +
 	"\x17com.ose.micro.common.v1B\vCommonProtoP\x01ZRgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1;commonv1\xa2\x02\x03OMC\xaa\x02\x13Ose.Micro.Common.V1\xca\x02\x13Ose\\Micro\\Common\\V1\xe2\x02\x1fOse\\Micro\\Common\\V1\\GPBMetadata\xea\x02\x16Ose::Micro::Common::V1b\x06proto3"
 
 var (
@@ -227,15 +208,14 @@ func file_ose_micro_common_v1_common_proto_rawDescGZIP() []byte {
 	return file_ose_micro_common_v1_common_proto_rawDescData
 }
 
-var file_ose_micro_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_ose_micro_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_ose_micro_common_v1_common_proto_goTypes = []any{
-	(*Location)(nil),   // 0: ose.micro.common.v1.Location
-	(*Reference)(nil),  // 1: ose.micro.common.v1.Reference
-	(*Permission)(nil), // 2: ose.micro.common.v1.Permission
-	nil,                // 3: ose.micro.common.v1.Reference.MetadataEntry
+	(*Address)(nil),   // 0: ose.micro.common.v1.Address
+	(*Reference)(nil), // 1: ose.micro.common.v1.Reference
+	nil,               // 2: ose.micro.common.v1.Reference.MetadataEntry
 }
 var file_ose_micro_common_v1_common_proto_depIdxs = []int32{
-	3, // 0: ose.micro.common.v1.Reference.metadata:type_name -> ose.micro.common.v1.Reference.MetadataEntry
+	2, // 0: ose.micro.common.v1.Reference.metadata:type_name -> ose.micro.common.v1.Reference.MetadataEntry
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -254,7 +234,7 @@ func file_ose_micro_common_v1_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ose_micro_common_v1_common_proto_rawDesc), len(file_ose_micro_common_v1_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

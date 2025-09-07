@@ -26,12 +26,12 @@ type parseClaimCommandHandler struct {
 func (u parseClaimCommandHandler) Handle(ctx context.Context, command user.TokenCommand) (*ose_jwt.Claims, error) {
 	ctx, span := u.tracer.Start(ctx, "app.user.parse_claim.command.handler", trace.WithAttributes(
 		attribute.String("operation", "parse_claim"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	// validate command payload
+	// validate command dto
 	if err := command.Validate(); err != nil {
 		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
 		span.RecordError(err)

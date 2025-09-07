@@ -29,12 +29,12 @@ type updateCommandHandler struct {
 func (u updateCommandHandler) Handle(ctx context.Context, command assignment.UpdateCommand) (*assignment.Domain, error) {
 	ctx, span := u.tracer.Start(ctx, "app.assignment.update.command.handler", trace.WithAttributes(
 		attribute.String("operation", "update"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	// validate command payload
+	// validate command dto
 	if err := command.Validate(); err != nil {
 		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
 		span.RecordError(err)
@@ -94,7 +94,7 @@ func (u updateCommandHandler) Handle(ctx context.Context, command assignment.Upd
 	u.log.Info("update process complete successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
-		zap.Any("payload", command),
+		zap.Any("dto", command),
 	)
 
 	return record, nil

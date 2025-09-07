@@ -22,7 +22,7 @@ type defaultEvent struct {
 func (d defaultEvent) OnBoard(ctx context.Context, event user.DefaultEvent) (*user.Domain, error) {
 	ctx, span := d.tracer.Start(ctx, "events.user.onboard.handler", trace.WithAttributes(
 		attribute.String("operation", "onboard"),
-		attribute.String("payload", fmt.Sprintf("%v", event)),
+		attribute.String("dto", fmt.Sprintf("%v", event)),
 	))
 	defer span.End()
 

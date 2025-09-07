@@ -7,8 +7,7 @@
 package userv1
 
 import (
-	v1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/auth/v1"
-	v11 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
+	v1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -754,7 +753,7 @@ func (x *Users) GetData() []*User {
 
 type ReadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Request       *v11.Request           `protobuf:"bytes,1,opt,name=request,proto3" json:"request,omitempty"`
+	Request       *v1.Request            `protobuf:"bytes,1,opt,name=request,proto3" json:"request,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -789,7 +788,7 @@ func (*ReadRequest) Descriptor() ([]byte, []int) {
 	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ReadRequest) GetRequest() *v11.Request {
+func (x *ReadRequest) GetRequest() *v1.Request {
 	if x != nil {
 		return x.Request
 	}
@@ -844,7 +843,7 @@ var File_ose_micro_authora_user_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"$ose/micro/authora/user/v1/data.proto\x12\x19ose.micro.authora.user.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cose/micro/auth/v1/auth.proto\x1a!ose/micro/common/v1/request.proto\"\xdd\x03\n" +
+	"$ose/micro/authora/user/v1/data.proto\x12\x19ose.micro.authora.user.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a ose/micro/common/v1/claims.proto\x1a!ose/micro/common/v1/request.proto\"\xdd\x03\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
 	"\vgiven_names\x18\x02 \x01(\tR\n" +
@@ -903,10 +902,10 @@ const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\x06record\x18\x02 \x01(\v2\x1f.ose.micro.authora.user.v1.UserR\x06record\"@\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\bpassword\x18\x01 \x01(\tR\bpassword\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\"Z\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\"\\\n" +
 	"\rLoginResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x12/\n" +
-	"\x06record\x18\x02 \x01(\v2\x17.ose.micro.auth.v1.AuthR\x06record\"\x1f\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x121\n" +
+	"\x06record\x18\x02 \x01(\v2\x19.ose.micro.common.v1.AuthR\x06record\"\x1f\n" +
 	"\rDeleteRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"*\n" +
 	"\x0eDeleteResponse\x12\x18\n" +
@@ -955,8 +954,8 @@ var file_ose_micro_authora_user_v1_data_proto_goTypes = []any{
 	nil,                            // 16: ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
 	nil,                            // 17: ose.micro.authora.user.v1.ReadResponse.ResultEntry
 	(*timestamppb.Timestamp)(nil),  // 18: google.protobuf.Timestamp
-	(*v1.Auth)(nil),                // 19: ose.micro.auth.v1.Auth
-	(*v11.Request)(nil),            // 20: ose.micro.common.v1.Request
+	(*v1.Auth)(nil),                // 19: ose.micro.common.v1.Auth
+	(*v1.Request)(nil),             // 20: ose.micro.common.v1.Request
 }
 var file_ose_micro_authora_user_v1_data_proto_depIdxs = []int32{
 	14, // 0: ose.micro.authora.user.v1.User.metadata:type_name -> ose.micro.authora.user.v1.User.MetadataEntry
@@ -968,7 +967,7 @@ var file_ose_micro_authora_user_v1_data_proto_depIdxs = []int32{
 	16, // 6: ose.micro.authora.user.v1.UpdateRequest.metadata:type_name -> ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
 	0,  // 7: ose.micro.authora.user.v1.UpdateResponse.record:type_name -> ose.micro.authora.user.v1.User
 	0,  // 8: ose.micro.authora.user.v1.ChangePasswordResponse.record:type_name -> ose.micro.authora.user.v1.User
-	19, // 9: ose.micro.authora.user.v1.LoginResponse.record:type_name -> ose.micro.auth.v1.Auth
+	19, // 9: ose.micro.authora.user.v1.LoginResponse.record:type_name -> ose.micro.common.v1.Auth
 	0,  // 10: ose.micro.authora.user.v1.Users.data:type_name -> ose.micro.authora.user.v1.User
 	20, // 11: ose.micro.authora.user.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
 	17, // 12: ose.micro.authora.user.v1.ReadResponse.result:type_name -> ose.micro.authora.user.v1.ReadResponse.ResultEntry

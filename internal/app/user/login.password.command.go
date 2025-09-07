@@ -35,12 +35,12 @@ type loginCommandHandler struct {
 func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginCommand) (*user.Auth, error) {
 	ctx, span := u.tracer.Start(ctx, "app.user.login.command.handler", trace.WithAttributes(
 		attribute.String("operation", "login"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	// validate command payload
+	// validate command dto
 	if err := command.Validate(); err != nil {
 		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
 		span.RecordError(err)
@@ -110,7 +110,7 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 	u.log.Info("login process complete successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "login"),
-		zap.Any("payload", command),
+		zap.Any("dto", command),
 	)
 
 	return auth, nil

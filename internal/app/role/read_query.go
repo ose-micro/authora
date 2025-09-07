@@ -24,7 +24,7 @@ type readQueryHandler struct {
 func (r *readQueryHandler) Handle(ctx context.Context, query role.ReadQuery) (map[string]any, error) {
 	ctx, span := r.tracer.Start(ctx, "app.role.read.query.handler", trace.WithAttributes(
 		attribute.String("operation", "read"),
-		attribute.String("payload", fmt.Sprintf("%v", query)),
+		attribute.String("dto", fmt.Sprintf("%v", query)),
 	))
 	defer span.End()
 
@@ -47,7 +47,7 @@ func (r *readQueryHandler) Handle(ctx context.Context, query role.ReadQuery) (ma
 	r.log.Info("read process complete successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "read"),
-		zap.Any("payload", fmt.Sprintf("%v", query)),
+		zap.Any("dto", fmt.Sprintf("%v", query)),
 	)
 	return records, nil
 }

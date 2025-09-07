@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package ose.micro.authora.auth.v1;
 
-import "ose/micro/auth/v1/auth.proto";
 import "ose/micro/common/v1/common.proto";
+import "ose/micro/common/v1/claims.proto";
 
 option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/auth/v1;authpb";
 
@@ -23,7 +23,7 @@ message ParseClaimRequest {
 
 message ParseClaimResponse {
   string message = 1;
-  ose.micro.auth.v1.Claims claim = 2;
+  ose.micro.common.v1.Claims claim = 2;
 }
 
 message RequestPurposeTokenRequest {

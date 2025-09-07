@@ -19,7 +19,7 @@ func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, lo
 	return bus.Subscribe(user.OnboardedEvent, "user", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.tenant.onboard.handler", trace.WithAttributes(
 			attribute.String("operation", "onboard"),
-			attribute.String("payload", fmt.Sprintf("%v", data)),
+			attribute.String("dto", fmt.Sprintf("%v", data)),
 		))
 		defer span.End()
 

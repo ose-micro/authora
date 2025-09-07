@@ -47,7 +47,7 @@ func (h *AssignmentHandler) response(param assignment.Public) *assignmentv1.Assi
 func (h *AssignmentHandler) Create(ctx context.Context, request *assignmentv1.CreateRequest) (*assignmentv1.CreateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.assignment.create.handler", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -74,7 +74,7 @@ func (h *AssignmentHandler) Create(ctx context.Context, request *assignmentv1.Cr
 	h.log.Info("assignment create process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "create"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	return &assignmentv1.CreateResponse{
@@ -85,7 +85,7 @@ func (h *AssignmentHandler) Create(ctx context.Context, request *assignmentv1.Cr
 func (h *AssignmentHandler) Update(ctx context.Context, request *assignmentv1.UpdateRequest) (*assignmentv1.UpdateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.assignment.update.handler", trace.WithAttributes(
 		attribute.String("operation", "update"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -111,7 +111,7 @@ func (h *AssignmentHandler) Update(ctx context.Context, request *assignmentv1.Up
 	h.log.Info("assignment update process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	return &assignmentv1.UpdateResponse{
@@ -122,7 +122,7 @@ func (h *AssignmentHandler) Update(ctx context.Context, request *assignmentv1.Up
 func (h *AssignmentHandler) Read(ctx context.Context, request *assignmentv1.ReadRequest) (*assignmentv1.ReadResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.assignment.read.handler", trace.WithAttributes(
 		attribute.String("operation", "read"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 

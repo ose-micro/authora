@@ -45,7 +45,7 @@ func (h *TenantHandler) response(param tenant.Public) *tenantv1.Tenant {
 func (h *TenantHandler) Create(ctx context.Context, request *tenantv1.CreateRequest) (*tenantv1.CreateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.tenant.create.handler", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -80,7 +80,7 @@ func (h *TenantHandler) Create(ctx context.Context, request *tenantv1.CreateRequ
 	h.log.Info("tenant create process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "create"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	return &tenantv1.CreateResponse{
@@ -91,7 +91,7 @@ func (h *TenantHandler) Create(ctx context.Context, request *tenantv1.CreateRequ
 func (h *TenantHandler) Update(ctx context.Context, request *tenantv1.UpdateRequest) (*tenantv1.UpdateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.tenant.update.handler", trace.WithAttributes(
 		attribute.String("operation", "update"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -117,7 +117,7 @@ func (h *TenantHandler) Update(ctx context.Context, request *tenantv1.UpdateRequ
 	h.log.Info("tenant update process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	return &tenantv1.UpdateResponse{
@@ -128,7 +128,7 @@ func (h *TenantHandler) Update(ctx context.Context, request *tenantv1.UpdateRequ
 func (h *TenantHandler) Read(ctx context.Context, request *tenantv1.ReadRequest) (*tenantv1.ReadResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.tenant.read.handler", trace.WithAttributes(
 		attribute.String("operation", "READ"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 

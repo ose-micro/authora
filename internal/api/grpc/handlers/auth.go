@@ -29,7 +29,7 @@ type (
 func (h *AuthHandler) HasRole(ctx context.Context, request *authv1.HasRoleRequest) (*authv1.HasRoleResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.create.handler", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -74,7 +74,7 @@ func (h *AuthHandler) HasRole(ctx context.Context, request *authv1.HasRoleReques
 func (h *AuthHandler) HasPermission(ctx context.Context, request *authv1.HasPermissionRequest) (*authv1.HasPermissionResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.create.handler", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -128,7 +128,7 @@ func (h *AuthHandler) HasPermission(ctx context.Context, request *authv1.HasPerm
 func (h *AuthHandler) RequestPurposeToken(ctx context.Context, request *authv1.RequestPurposeTokenRequest) (*authv1.RequestPurposeTokenResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.request_purpose_token.handler", trace.WithAttributes(
 		attribute.String("operation", "request_purpose_token"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -159,7 +159,7 @@ func (h *AuthHandler) RequestPurposeToken(ctx context.Context, request *authv1.R
 func (h *AuthHandler) RequestAccessToken(ctx context.Context, request *authv1.RequestAccessTokenRequest) (*authv1.RequestAccessTokenResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.request_access_token.handler", trace.WithAttributes(
 		attribute.String("operation", "request_access_token"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -189,7 +189,7 @@ func (h *AuthHandler) RequestAccessToken(ctx context.Context, request *authv1.Re
 func (h *AuthHandler) ParseClaim(ctx context.Context, request *authv1.ParseClaimRequest) (*authv1.ParseClaimResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.auth.parse_claim.handler", trace.WithAttributes(
 		attribute.String("operation", "parse_claim"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 

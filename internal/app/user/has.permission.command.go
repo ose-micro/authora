@@ -26,12 +26,12 @@ type hasPermissionCommandHandler struct {
 func (u hasPermissionCommandHandler) Handle(ctx context.Context, command user.HasPermissionCommand) (*bool, error) {
 	ctx, span := u.tracer.Start(ctx, "app.user.has_permission.command.handler", trace.WithAttributes(
 		attribute.String("operation", "has_permission"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	// validate command payload
+	// validate command dto
 	if err := command.Validate(); err != nil {
 		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
 		span.RecordError(err)

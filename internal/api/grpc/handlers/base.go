@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/auth/v1"
 	commonv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/dto"
@@ -192,24 +191,24 @@ func buildPermissionsProto(list []common.Permission) []*commonv1.Permission {
 	return permissions
 }
 
-func buildClaim(claims ose_jwt.Claims) *authv1.Claims {
-	var kind authv1.TokenKind
+func buildClaim(claims ose_jwt.Claims) *commonv1.Claims {
+	var kind commonv1.TokenKind
 
 	switch claims.Kind {
 	case ose_jwt.PurposeToken:
-		kind = authv1.TokenKind_TokenKind_PurposeToken
+		kind = commonv1.TokenKind_TokenKind_PurposeToken
 	case ose_jwt.RefreshToken:
-		kind = authv1.TokenKind_TokenKind_RefreshToken
+		kind = commonv1.TokenKind_TokenKind_RefreshToken
 	case ose_jwt.AccessToken:
-		kind = authv1.TokenKind_TokenKind_AccessToken
+		kind = commonv1.TokenKind_TokenKind_AccessToken
 	}
 
-	tenants := make([]*authv1.Tenant, 0)
-	for _, t := range claims.Tenants {
-		tenants = append(tenants, buildTenant(t))
+	tenants := make(map[string]*commonv1.Tenant)
+	for k, t := range claims.Tenants {
+		tenants[k] = buildTenant(t)
 	}
 
-	return &authv1.Claims{
+	return &commonv1.Claims{
 		Sub:       claims.Sub,
 		Kind:      kind,
 		Tenants:   tenants,
@@ -220,8 +219,8 @@ func buildClaim(claims ose_jwt.Claims) *authv1.Claims {
 	}
 }
 
-func buildTenant(tenant ose_jwt.Tenant) *authv1.Tenant {
-	return &authv1.Tenant{
+func buildTenant(tenant ose_jwt.Tenant) *commonv1.Tenant {
+	return &commonv1.Tenant{
 		Role:        tenant.Role,
 		Tenant:      tenant.Tenant,
 		Permissions: buildPermissionsProto(tenant.Permissions),

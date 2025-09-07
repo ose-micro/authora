@@ -29,12 +29,12 @@ type changePasswordCommandHandler struct {
 func (u changePasswordCommandHandler) Handle(ctx context.Context, command user.ChangePasswordCommand) (*user.Domain, error) {
 	ctx, span := u.tracer.Start(ctx, "app.user.change_password.command.handler", trace.WithAttributes(
 		attribute.String("operation", "change_password"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	// validate command payload
+	// validate command dto
 	if err := command.Validate(); err != nil {
 		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
 		span.RecordError(err)
@@ -104,7 +104,7 @@ func (u changePasswordCommandHandler) Handle(ctx context.Context, command user.C
 	u.log.Info("change_password process complete successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "change_password"),
-		zap.Any("payload", command),
+		zap.Any("dto", command),
 	)
 
 	return record, nil

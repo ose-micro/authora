@@ -7,8 +7,7 @@
 package authv1
 
 import (
-	v1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/auth/v1"
-	v11 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
+	v1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -411,7 +410,7 @@ type HasPermissionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
 	Tenant        string                 `protobuf:"bytes,2,opt,name=tenant,proto3" json:"tenant,omitempty"`
-	Permission    *v11.Permission        `protobuf:"bytes,3,opt,name=permission,proto3" json:"permission,omitempty"`
+	Permission    *v1.Permission         `protobuf:"bytes,3,opt,name=permission,proto3" json:"permission,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -460,7 +459,7 @@ func (x *HasPermissionRequest) GetTenant() string {
 	return ""
 }
 
-func (x *HasPermissionRequest) GetPermission() *v11.Permission {
+func (x *HasPermissionRequest) GetPermission() *v1.Permission {
 	if x != nil {
 		return x.Permission
 	}
@@ -515,7 +514,7 @@ var File_ose_micro_authora_auth_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_auth_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"$ose/micro/authora/auth/v1/data.proto\x12\x19ose.micro.authora.auth.v1\x1a\x1cose/micro/auth/v1/auth.proto\x1a ose/micro/common/v1/common.proto\"R\n" +
+	"$ose/micro/authora/auth/v1/data.proto\x12\x19ose.micro.authora.auth.v1\x1a ose/micro/common/v1/common.proto\x1a ose/micro/common/v1/claims.proto\"R\n" +
 	"\x0eHasRoleRequest\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x16\n" +
 	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x12\n" +
@@ -523,10 +522,10 @@ const file_ose_micro_authora_auth_v1_data_proto_rawDesc = "" +
 	"\x0fHasRoleResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\")\n" +
 	"\x11ParseClaimRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"_\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"a\n" +
 	"\x12ParseClaimResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x12/\n" +
-	"\x05claim\x18\x02 \x01(\v2\x19.ose.micro.auth.v1.ClaimsR\x05claim\"F\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x121\n" +
+	"\x05claim\x18\x02 \x01(\v2\x1b.ose.micro.common.v1.ClaimsR\x05claim\"F\n" +
 	"\x1aRequestPurposeTokenRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\apurpose\x18\x02 \x01(\tR\apurpose\"3\n" +
@@ -570,11 +569,11 @@ var file_ose_micro_authora_auth_v1_data_proto_goTypes = []any{
 	(*RequestAccessTokenResponse)(nil),  // 7: ose.micro.authora.auth.v1.RequestAccessTokenResponse
 	(*HasPermissionRequest)(nil),        // 8: ose.micro.authora.auth.v1.HasPermissionRequest
 	(*HasPermissionResponse)(nil),       // 9: ose.micro.authora.auth.v1.HasPermissionResponse
-	(*v1.Claims)(nil),                   // 10: ose.micro.auth.v1.Claims
-	(*v11.Permission)(nil),              // 11: ose.micro.common.v1.Permission
+	(*v1.Claims)(nil),                   // 10: ose.micro.common.v1.Claims
+	(*v1.Permission)(nil),               // 11: ose.micro.common.v1.Permission
 }
 var file_ose_micro_authora_auth_v1_data_proto_depIdxs = []int32{
-	10, // 0: ose.micro.authora.auth.v1.ParseClaimResponse.claim:type_name -> ose.micro.auth.v1.Claims
+	10, // 0: ose.micro.authora.auth.v1.ParseClaimResponse.claim:type_name -> ose.micro.common.v1.Claims
 	11, // 1: ose.micro.authora.auth.v1.HasPermissionRequest.permission:type_name -> ose.micro.common.v1.Permission
 	2,  // [2:2] is the sub-list for method output_type
 	2,  // [2:2] is the sub-list for method input_type

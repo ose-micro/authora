@@ -3,7 +3,7 @@ syntax = "proto3";
 package ose.micro.authora.user.v1;
 
 import "google/protobuf/timestamp.proto";
-import "ose/micro/auth/v1/auth.proto";
+import "ose/micro/common/v1/claims.proto";
 import "ose/micro/common/v1/request.proto";
 
 option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userpb";
@@ -66,7 +66,7 @@ message LoginRequest {
 
 message LoginResponse {
   string message = 1;
-  ose.micro.auth.v1.Auth record = 2;
+  ose.micro.common.v1.Auth record = 2;
 }
 
 message DeleteRequest {

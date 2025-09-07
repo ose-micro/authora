@@ -35,7 +35,7 @@ type app struct {
 func (a app) RequestAccessToken(ctx context.Context, command user.TokenCommand) (*string, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.request.access.token.command", trace.WithAttributes(
 		attribute.String("operation", "access_token"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -58,7 +58,7 @@ func (a app) RequestAccessToken(ctx context.Context, command user.TokenCommand) 
 func (a app) RequestPurposeToken(ctx context.Context, command user.PurposeTokenCommand) (*string, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.request.purpose.token.command", trace.WithAttributes(
 		attribute.String("operation", "purpose_token"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -81,7 +81,7 @@ func (a app) RequestPurposeToken(ctx context.Context, command user.PurposeTokenC
 func (a app) HasRole(ctx context.Context, command user.HasRoleCommand) (bool, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.has_role.command", trace.WithAttributes(
 		attribute.String("operation", "has_role"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -104,7 +104,7 @@ func (a app) HasRole(ctx context.Context, command user.HasRoleCommand) (bool, er
 func (a app) HasPermission(ctx context.Context, command user.HasPermissionCommand) (bool, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.has_permission.command", trace.WithAttributes(
 		attribute.String("operation", "has_permission"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -127,7 +127,7 @@ func (a app) HasPermission(ctx context.Context, command user.HasPermissionComman
 func (a app) ParseClaims(ctx context.Context, command user.TokenCommand) (*ose_jwt.Claims, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.parse_claims.command", trace.WithAttributes(
 		attribute.String("operation", "parse_claims"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -150,7 +150,7 @@ func (a app) ParseClaims(ctx context.Context, command user.TokenCommand) (*ose_j
 func (a app) Login(ctx context.Context, command user.LoginCommand) (*user.Auth, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.login.command", trace.WithAttributes(
 		attribute.String("operation", "login"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -173,7 +173,7 @@ func (a app) Login(ctx context.Context, command user.LoginCommand) (*user.Auth, 
 func (a app) ChangePassword(ctx context.Context, command user.ChangePasswordCommand) (*user.Domain, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.change_password.command", trace.WithAttributes(
 		attribute.String("operation", "change_password"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -196,7 +196,7 @@ func (a app) ChangePassword(ctx context.Context, command user.ChangePasswordComm
 func (a app) Read(ctx context.Context, command user.ReadQuery) (map[string]any, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.read.command", trace.WithAttributes(
 		attribute.String("operation", "read"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -219,7 +219,7 @@ func (a app) Read(ctx context.Context, command user.ReadQuery) (map[string]any, 
 func (a app) Create(ctx context.Context, command user.CreateCommand) (*user.Domain, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.create.command", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -242,7 +242,7 @@ func (a app) Create(ctx context.Context, command user.CreateCommand) (*user.Doma
 func (a app) Update(ctx context.Context, command user.UpdateCommand) (*user.Domain, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.update.command", trace.WithAttributes(
 		attribute.String("operation", "update"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 

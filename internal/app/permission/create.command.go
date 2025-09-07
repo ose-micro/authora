@@ -30,12 +30,12 @@ type createCommandHandler struct {
 func (c createCommandHandler) Handle(ctx context.Context, command permission.CreateCommand) (*permission.Domain, error) {
 	ctx, span := c.tracer.Start(ctx, "app.permission.create.command.handler", trace.WithAttributes(
 		attribute.String("operation", CreateOperation),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	// validate command payload
+	// validate command dto
 	if err := command.Validate(); err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -102,7 +102,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command permission.Cre
 	c.log.Info("create process complete successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", CreateOperation),
-		zap.Any("payload", command),
+		zap.Any("dto", command),
 	)
 
 	return record, nil

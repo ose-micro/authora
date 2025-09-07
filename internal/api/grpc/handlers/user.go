@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/auth/v1"
 	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
+	commonv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
 	"github.com/ose-micro/authora/internal/app"
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/common"
@@ -63,7 +63,7 @@ func (h *UserHandler) response(param user.Public) (*userv1.User, error) {
 func (h *UserHandler) Create(ctx context.Context, request *userv1.CreateRequest) (*userv1.CreateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.create.handler", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -103,7 +103,7 @@ func (h *UserHandler) Create(ctx context.Context, request *userv1.CreateRequest)
 	h.log.Info("user create process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "create"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	result, err := h.response(*record.Public())
@@ -124,7 +124,7 @@ func (h *UserHandler) Create(ctx context.Context, request *userv1.CreateRequest)
 func (h *UserHandler) Update(ctx context.Context, request *userv1.UpdateRequest) (*userv1.UpdateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.update.handler", trace.WithAttributes(
 		attribute.String("operation", "update"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -161,7 +161,7 @@ func (h *UserHandler) Update(ctx context.Context, request *userv1.UpdateRequest)
 	h.log.Info("user update process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	result, err := h.response(*record.Public())
@@ -184,7 +184,7 @@ func (h *UserHandler) Update(ctx context.Context, request *userv1.UpdateRequest)
 func (h *UserHandler) ChangePassword(ctx context.Context, request *userv1.ChangePasswordRequest) (*userv1.ChangePasswordResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.change_password.handler", trace.WithAttributes(
 		attribute.String("operation", "change_password"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -211,7 +211,7 @@ func (h *UserHandler) ChangePassword(ctx context.Context, request *userv1.Change
 	h.log.Info("user update process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	result, _ := h.response(*record.Public())
@@ -224,7 +224,7 @@ func (h *UserHandler) ChangePassword(ctx context.Context, request *userv1.Change
 func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (*userv1.LoginResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.login.handler", trace.WithAttributes(
 		attribute.String("operation", "login"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
@@ -250,12 +250,12 @@ func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (
 	h.log.Info("user update process successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "update"),
-		zap.Any("payload", request),
+		zap.Any("dto", request),
 	)
 
 	return &userv1.LoginResponse{
 		Message: "success",
-		Record: &authv1.Auth{
+		Record: &commonv1.Auth{
 			Access:  res.Access,
 			Refresh: res.Refresh,
 		},
@@ -265,7 +265,7 @@ func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (
 func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*userv1.ReadResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.read.handler", trace.WithAttributes(
 		attribute.String("operation", "read"),
-		attribute.String("payload", fmt.Sprintf("%v", request)),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 

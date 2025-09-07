@@ -19,7 +19,7 @@ func newAssignmentConsumer(bus bus.Bus, event events.Events, tracer tracing.Trac
 	return bus.Subscribe(user.CreatedEvent, "assignment", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.assignment.created.handler", trace.WithAttributes(
 			attribute.String("operation", "created"),
-			attribute.String("payload", fmt.Sprintf("%v", data)),
+			attribute.String("dto", fmt.Sprintf("%v", data)),
 		))
 		defer span.End()
 

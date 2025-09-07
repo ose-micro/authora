@@ -27,7 +27,7 @@ type app struct {
 func (a app) Read(ctx context.Context, command assignment.ReadQuery) (map[string]any, error) {
 	ctx, span := a.tracer.Start(ctx, "app.assignment.read.command", trace.WithAttributes(
 		attribute.String("operation", "read"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -50,7 +50,7 @@ func (a app) Read(ctx context.Context, command assignment.ReadQuery) (map[string
 func (a app) Create(ctx context.Context, command assignment.CreateCommand) (*assignment.Domain, error) {
 	ctx, span := a.tracer.Start(ctx, "app.assignment.create.command", trace.WithAttributes(
 		attribute.String("operation", "create"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
@@ -73,7 +73,7 @@ func (a app) Create(ctx context.Context, command assignment.CreateCommand) (*ass
 func (a app) Update(ctx context.Context, command assignment.UpdateCommand) (*assignment.Domain, error) {
 	ctx, span := a.tracer.Start(ctx, "app.assignment.update.command", trace.WithAttributes(
 		attribute.String("operation", "update"),
-		attribute.String("payload", fmt.Sprintf("%v", command)),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 

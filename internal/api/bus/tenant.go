@@ -20,7 +20,7 @@ func newTenantConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, 
 	return bus.Subscribe(tenant.OnboardedEvent, "tenant", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "bus.tenant.onboard.handler", trace.WithAttributes(
 			attribute.String("operation", "onboard"),
-			attribute.String("payload", fmt.Sprintf("%v", data)),
+			attribute.String("dto", fmt.Sprintf("%v", data)),
 		))
 		defer span.End()
 
