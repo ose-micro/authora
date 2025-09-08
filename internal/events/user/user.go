@@ -19,6 +19,33 @@ type defaultEvent struct {
 	tracer tracing.Tracer
 }
 
+func (d defaultEvent) ChangeStatus(ctx context.Context, event user.DefaultEvent) (bool, error) {
+	ctx, span := d.tracer.Start(ctx, "events.user.change_state.handler", trace.WithAttributes(
+		attribute.String("operation", "change_state"),
+		attribute.String("dto", fmt.Sprintf("%v", event)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+
+	create, err := d.app.ChangeStatus(ctx, user.StatusCommand{
+		Id:    event.ID,
+		State: event.Status.State,
+	})
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		d.log.Error("failed to process events",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "change_state"),
+			zap.Error(err),
+		)
+		return false, err
+	}
+
+	return create, nil
+}
+
 func (d defaultEvent) OnBoard(ctx context.Context, event user.DefaultEvent) (*user.Domain, error) {
 	ctx, span := d.tracer.Start(ctx, "events.user.onboard.handler", trace.WithAttributes(
 		attribute.String("operation", "onboard"),
@@ -32,6 +59,7 @@ func (d defaultEvent) OnBoard(ctx context.Context, event user.DefaultEvent) (*us
 		GivenNames: event.GivenNames,
 		FamilyName: event.FamilyName,
 		Email:      event.Email,
+		Role:       event.Role,
 		Password:   event.Password,
 		Metadata:   event.Metadata,
 	})

@@ -14,7 +14,6 @@ type CreateCommand struct {
 	Email      string
 	Password   string
 	Role       string
-	Tenant     string
 	Metadata   map[string]interface{}
 }
 
@@ -47,10 +46,6 @@ func (c CreateCommand) Validate() error {
 
 	if c.Role == "" {
 		fields = append(fields, "role is required")
-	}
-
-	if c.Tenant == "" {
-		fields = append(fields, "tenant is required")
 	}
 
 	if len(fields) > 0 {

@@ -27,8 +27,7 @@ message CreateRequest {
   string email = 3;
   string password = 4;
   string role = 5;
-  string tenant = 6;
-  map<string, string> metadata = 7;
+  map<string, string> metadata = 6;
 }
 
 message CreateResponse {

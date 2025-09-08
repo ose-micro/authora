@@ -26,6 +26,7 @@ func (i initializer) New(param Params) (*Domain, error) {
 		email:      param.Email,
 		metadata:   param.Metadata,
 		password:   password,
+		Status:     Invited(),
 	}, nil
 }
 
@@ -46,6 +47,7 @@ func (i initializer) Existing(param Params) (*Domain, error) {
 		email:      param.Email,
 		metadata:   param.Metadata,
 		password:   param.Password,
+		Status:     param.Status,
 	}, nil
 }
 

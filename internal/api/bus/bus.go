@@ -18,7 +18,7 @@ func InvokeConsumers(lc fx.Lifecycle, event *events.Events, bus domain.Bus, tran
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
 			go func() {
-				eventList := []string{"events.user_created", "events.user_onboard", "events.tenant_onboard"}
+				eventList := []string{"events.user_created", "events.user_onboard", "events.tenant_onboard", user.ChangeStateEvent}
 				err := bus.EnsureStream("EVENT", eventList...)
 				if err != nil {
 					log.Fatal("nats stream failed", zap.Error(err))

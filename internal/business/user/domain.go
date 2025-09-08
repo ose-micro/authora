@@ -12,6 +12,7 @@ import (
 
 const CreatedEvent string = "events.user_created"
 const OnboardedEvent string = "events.user_onboard"
+const ChangeStateEvent string = "events.user_change_state"
 
 type Domain struct {
 	*domain.Aggregate
@@ -20,6 +21,7 @@ type Domain struct {
 	email      string
 	password   string
 	metadata   map[string]interface{}
+	Status
 }
 
 type Params struct {
@@ -29,6 +31,7 @@ type Params struct {
 	Email      string
 	Password   string
 	Metadata   map[string]interface{}
+	Status     Status
 }
 
 type Public struct {
@@ -39,6 +42,7 @@ type Public struct {
 	Password   string                 `json:"password"`
 	Metadata   map[string]interface{} `json:"metadata"`
 	Version    int32                  `json:"version"`
+	Status     Status                 `json:"status"`
 	CreatedAt  time.Time              `json:"created_at"`
 	UpdatedAt  time.Time              `json:"updated_at"`
 	DeletedAt  *time.Time             `json:"deleted_at"`

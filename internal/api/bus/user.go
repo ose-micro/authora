@@ -16,8 +16,8 @@ import (
 )
 
 func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
-	return bus.Subscribe(user.OnboardedEvent, "user", func(ctx context.Context, data any) error {
-		ctx, span := tracer.Start(ctx, "event.tenant.onboard.handler", trace.WithAttributes(
+	if err := bus.Subscribe(user.OnboardedEvent, "user_onboard", func(ctx context.Context, data any) error {
+		ctx, span := tracer.Start(ctx, "event.user.onboard.handler", trace.WithAttributes(
 			attribute.String("operation", "onboard"),
 			attribute.String("dto", fmt.Sprintf("%v", data)),
 		))
@@ -44,5 +44,41 @@ func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, lo
 		}
 
 		return nil
-	})
+	}); err != nil {
+		return err
+	}
+
+	if err := bus.Subscribe(user.ChangeStateEvent, "user_change_state", func(ctx context.Context, data any) error {
+		ctx, span := tracer.Start(ctx, "event.user.change_state.handler", trace.WithAttributes(
+			attribute.String("operation", "change_state"),
+			attribute.String("dto", fmt.Sprintf("%v", data)),
+		))
+		defer span.End()
+
+		traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+
+		msg, err := toUserEvent(data)
+		if err != nil {
+			return err
+		}
+		_, err = event.User.ChangeStatus(ctx, msg)
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+			log.Error("failed to broadcast event",
+				zap.Any("msg", msg),
+				zap.String("trace_id", traceId),
+				zap.String("operation", "change_state"),
+				zap.Error(err),
+			)
+
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	return nil
 }

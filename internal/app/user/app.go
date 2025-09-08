@@ -24,12 +24,35 @@ type app struct {
 	update              domain.CommandHandle[user.UpdateCommand, *user.Domain]
 	login               domain.CommandHandle[user.LoginCommand, *user.Auth]
 	hasRole             domain.CommandHandle[user.HasRoleCommand, *bool]
+	changeStatus        domain.CommandHandle[user.StatusCommand, *bool]
 	hasPermission       domain.CommandHandle[user.HasPermissionCommand, *bool]
 	parseClaims         domain.CommandHandle[user.TokenCommand, *ose_jwt.Claims]
 	requestPurposeToken domain.CommandHandle[user.PurposeTokenCommand, *string]
 	requestAccessToken  domain.CommandHandle[user.TokenCommand, *string]
 	changePassword      domain.CommandHandle[user.ChangePasswordCommand, *user.Domain]
 	read                domain.QueryHandle[user.ReadQuery, map[string]any]
+}
+
+func (a app) ChangeStatus(ctx context.Context, command user.StatusCommand) (bool, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.change_status.command", trace.WithAttributes(
+		attribute.String("operation", "change_status"),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	if _, err := a.changeStatus.Handle(ctx, command); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "change_status"),
+			zap.Error(err),
+		)
+		return false, err
+	}
+
+	return true, nil
 }
 
 func (a app) RequestAccessToken(ctx context.Context, command user.TokenCommand) (*string, error) {
@@ -274,12 +297,14 @@ func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo r
 		log:                 log,
 		create:              newCreateCommandHandler(bs, repo, log, tracer, bus),
 		update:              newUpdateCommandHandler(bs, repo, log, tracer),
-		read:                newReadQueryHandler(repo.User, log, tracer),
-		changePassword:      newChangePasswordCommandHandler(bs, repo, log, tracer),
 		login:               newLoginCommandHandler(bs, repo, log, tracer, jwt),
 		hasRole:             newHasRoleCommandHandler(log, tracer, jwt),
+		changeStatus:        newChangeStausCommandHandler(bs, repo, log, tracer),
 		hasPermission:       newHasPermissionCommandHandler(log, tracer, jwt),
 		parseClaims:         newParseClaimCommandHandler(log, tracer, jwt),
 		requestPurposeToken: newRequestPurposeTokenCommandHandler(log, tracer, jwt, repo),
+		requestAccessToken:  newRequestAccessTokenCommandHandler(log, tracer, jwt, repo),
+		changePassword:      newChangePasswordCommandHandler(bs, repo, log, tracer),
+		read:                newReadQueryHandler(repo.User, log, tracer),
 	}
 }

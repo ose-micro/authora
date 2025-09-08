@@ -74,7 +74,6 @@ func (h *UserHandler) Create(ctx context.Context, request *userv1.CreateRequest)
 		Email:      request.Email,
 		Password:   request.Password,
 		Role:       request.Role,
-		Tenant:     request.Tenant,
 		Metadata: func() map[string]interface{} {
 			if request.Metadata != nil {
 				metadata := map[string]interface{}{}

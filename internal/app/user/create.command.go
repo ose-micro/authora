@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/ose-micro/authora/internal/business"
+	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/core/domain"
@@ -53,32 +54,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 		return nil, err
 	}
 
-	if _, err := c.repo.Tenant.ReadOne(ctx, dto.Request{
-		Queries: []dto.Query{
-			{
-				Name: "one",
-				Filters: []dto.Filter{
-					{
-						Field: "_id",
-						Op:    dto.OpEq,
-						Value: command.Tenant,
-					},
-				},
-			},
-		},
-	}); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, err.Error())
-		c.log.Error("user tenant not found",
-			zap.String("trace_id", traceId),
-			zap.String("operation", CreateOperation),
-			zap.Error(err),
-		)
-
-		return nil, err
-	}
-
-	if _, err := c.repo.Role.ReadOne(ctx, dto.Request{
+	role, err := c.repo.Role.ReadOne(ctx, dto.Request{
 		Queries: []dto.Query{
 			{
 				Name: "one",
@@ -88,15 +64,12 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 						Op:    dto.OpEq,
 						Value: command.Role,
 					},
-					{
-						Field: "tenant",
-						Op:    dto.OpEq,
-						Value: command.Tenant,
-					},
 				},
 			},
 		},
-	}); err != nil {
+	})
+
+	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("user role not found",
@@ -165,7 +138,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 		return nil, err
 	}
 
-	err = c.publishEvent(*record.Public(), command.Role, command.Tenant)
+	err = c.publishEvent(*record.Public(), *role)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -187,15 +160,15 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 	return record, nil
 }
 
-func (c createCommandHandler) publishEvent(payload user.Public, role, tenant string) error {
+func (c createCommandHandler) publishEvent(payload user.Public, role role.Domain) error {
 	err := c.bus.Publish(user.CreatedEvent, user.DefaultEvent{
 		ID:         payload.Id,
 		GivenNames: payload.GivenNames,
 		FamilyName: payload.FamilyName,
 		Email:      payload.Email,
 		Password:   payload.Password,
-		Role:       role,
-		Tenant:     tenant,
+		Role:       role.ID(),
+		Tenant:     role.Tenant(),
 		Metadata:   payload.Metadata,
 		CreatedAt:  payload.CreatedAt,
 	})

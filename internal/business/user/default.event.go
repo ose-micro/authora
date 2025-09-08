@@ -15,11 +15,12 @@ type DefaultEvent struct {
 	Metadata   map[string]interface{} `json:"metadata"`
 	Role       string                 `json:"role"`
 	Tenant     string                 `json:"tenant"`
+	Status     Status                 `json:"status"`
 	CreatedAt  time.Time              `json:"created_at"`
 }
 
 func (e DefaultEvent) EventName() string {
-	return OnboardedEvent
+	return "default_event"
 }
 
 func (e DefaultEvent) OccurredAt() time.Time {
