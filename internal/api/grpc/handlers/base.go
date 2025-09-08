@@ -3,8 +3,11 @@ package handlers
 import (
 	"fmt"
 	"strconv"
+	"time"
 
+	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
 	commonv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
+	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/core/dto"
 	ose_jwt "github.com/ose-micro/jwt"
@@ -225,4 +228,26 @@ func buildTenant(tenant ose_jwt.Tenant) *commonv1.Tenant {
 		Tenant:      tenant.Tenant,
 		Permissions: buildPermissionsProto(tenant.Permissions),
 	}
+}
+
+func buildUserStatus(status user.Status) *userv1.Status {
+	var prev userv1.State
+	if status.Previous != nil { // 0 is default proto enum = none
+		tmp := userv1.State(*status.Previous)
+		prev = tmp
+	}
+
+	return &userv1.Status{
+		State:    userv1.State(status.State),
+		Previous: prev,
+		OccurOn:  timestamppb.New(status.OccurOn),
+	}
+}
+
+func buildDeletedAt(deletedAt *time.Time) *timestamppb.Timestamp {
+	if deletedAt != nil {
+		return timestamppb.New(*deletedAt)
+	}
+
+	return nil
 }

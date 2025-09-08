@@ -15,8 +15,8 @@ import (
 	"go.uber.org/zap"
 )
 
-func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
-	if err := bus.Subscribe(user.OnboardedEvent, "user_onboard", func(ctx context.Context, data any) error {
+func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) {
+	err := bus.Subscribe(user.OnboardedEvent, "user_onboard", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.onboard.handler", trace.WithAttributes(
 			attribute.String("operation", "onboard"),
 			attribute.String("dto", fmt.Sprintf("%v", data)),
@@ -44,8 +44,9 @@ func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, lo
 		}
 
 		return nil
-	}); err != nil {
-		return err
+	})
+	if err != nil {
+		return
 	}
 
 	if err := bus.Subscribe(user.ChangeStateEvent, "user_change_state", func(ctx context.Context, data any) error {
@@ -77,8 +78,6 @@ func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, lo
 
 		return nil
 	}); err != nil {
-		return err
+		return
 	}
-
-	return nil
 }

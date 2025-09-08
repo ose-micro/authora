@@ -34,13 +34,7 @@ func (h *RoleHandler) response(param role.Public) *rolev1.Role {
 		Version:     param.Version,
 		CreatedAt:   timestamppb.New(param.CreatedAt),
 		UpdatedAt:   timestamppb.New(param.UpdatedAt),
-		DeletedAt: func() *timestamppb.Timestamp {
-			if param.DeletedAt != nil {
-				return timestamppb.New(*param.DeletedAt)
-			}
-
-			return nil
-		}(),
+		DeletedAt:   buildDeletedAt(param.DeletedAt),
 	}
 }
 

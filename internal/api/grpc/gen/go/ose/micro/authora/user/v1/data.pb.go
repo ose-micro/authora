@@ -23,6 +23,142 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type State int32
+
+const (
+	State_STATE_UNSPECIFIED          State = 0
+	State_STATE_INVITED              State = 1
+	State_STATE_PENDING_VERIFICATION State = 2
+	State_STATE_INACTIVE             State = 3
+	State_STATE_ACTIVE               State = 4
+	State_STATE_DORMANT              State = 5
+	State_STATE_SUSPENDED            State = 6
+	State_STATE_LOCKED               State = 7
+	State_STATE_BANNED               State = 8
+	State_STATE_DEACTIVATED          State = 9
+	State_STATE_ARCHIVED             State = 10
+	State_STATE_DELETED              State = 11
+)
+
+// Enum value maps for State.
+var (
+	State_name = map[int32]string{
+		0:  "STATE_UNSPECIFIED",
+		1:  "STATE_INVITED",
+		2:  "STATE_PENDING_VERIFICATION",
+		3:  "STATE_INACTIVE",
+		4:  "STATE_ACTIVE",
+		5:  "STATE_DORMANT",
+		6:  "STATE_SUSPENDED",
+		7:  "STATE_LOCKED",
+		8:  "STATE_BANNED",
+		9:  "STATE_DEACTIVATED",
+		10: "STATE_ARCHIVED",
+		11: "STATE_DELETED",
+	}
+	State_value = map[string]int32{
+		"STATE_UNSPECIFIED":          0,
+		"STATE_INVITED":              1,
+		"STATE_PENDING_VERIFICATION": 2,
+		"STATE_INACTIVE":             3,
+		"STATE_ACTIVE":               4,
+		"STATE_DORMANT":              5,
+		"STATE_SUSPENDED":            6,
+		"STATE_LOCKED":               7,
+		"STATE_BANNED":               8,
+		"STATE_DEACTIVATED":          9,
+		"STATE_ARCHIVED":             10,
+		"STATE_DELETED":              11,
+	}
+)
+
+func (x State) Enum() *State {
+	p := new(State)
+	*p = x
+	return p
+}
+
+func (x State) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (State) Descriptor() protoreflect.EnumDescriptor {
+	return file_ose_micro_authora_user_v1_data_proto_enumTypes[0].Descriptor()
+}
+
+func (State) Type() protoreflect.EnumType {
+	return &file_ose_micro_authora_user_v1_data_proto_enumTypes[0]
+}
+
+func (x State) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use State.Descriptor instead.
+func (State) EnumDescriptor() ([]byte, []int) {
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{0}
+}
+
+type Status struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	State         State                  `protobuf:"varint,1,opt,name=state,proto3,enum=ose.micro.authora.user.v1.State" json:"state,omitempty"`
+	Previous      State                  `protobuf:"varint,2,opt,name=previous,proto3,enum=ose.micro.authora.user.v1.State" json:"previous,omitempty"` // optional previous state
+	OccurOn       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=occur_on,json=occurOn,proto3" json:"occur_on,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Status) Reset() {
+	*x = Status{}
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Status) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Status) ProtoMessage() {}
+
+func (x *Status) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Status.ProtoReflect.Descriptor instead.
+func (*Status) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Status) GetState() State {
+	if x != nil {
+		return x.State
+	}
+	return State_STATE_UNSPECIFIED
+}
+
+func (x *Status) GetPrevious() State {
+	if x != nil {
+		return x.Previous
+	}
+	return State_STATE_UNSPECIFIED
+}
+
+func (x *Status) GetOccurOn() *timestamppb.Timestamp {
+	if x != nil {
+		return x.OccurOn
+	}
+	return nil
+}
+
 type User struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -32,16 +168,17 @@ type User struct {
 	Password      string                 `protobuf:"bytes,5,opt,name=password,proto3" json:"password,omitempty"`
 	Metadata      map[string]string      `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	Version       int32                  `protobuf:"varint,7,opt,name=version,proto3" json:"version,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	Status        *Status                `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[0]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -53,7 +190,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[0]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -66,7 +203,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{0}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *User) GetId() string {
@@ -118,6 +255,13 @@ func (x *User) GetVersion() int32 {
 	return 0
 }
 
+func (x *User) GetStatus() *Status {
+	if x != nil {
+		return x.Status
+	}
+	return nil
+}
+
 func (x *User) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
@@ -153,7 +297,7 @@ type CreateRequest struct {
 
 func (x *CreateRequest) Reset() {
 	*x = CreateRequest{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[1]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -165,7 +309,7 @@ func (x *CreateRequest) String() string {
 func (*CreateRequest) ProtoMessage() {}
 
 func (x *CreateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[1]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -178,7 +322,7 @@ func (x *CreateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRequest.ProtoReflect.Descriptor instead.
 func (*CreateRequest) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{1}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateRequest) GetGivenNames() string {
@@ -233,7 +377,7 @@ type CreateResponse struct {
 
 func (x *CreateResponse) Reset() {
 	*x = CreateResponse{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[2]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -245,7 +389,7 @@ func (x *CreateResponse) String() string {
 func (*CreateResponse) ProtoMessage() {}
 
 func (x *CreateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[2]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -258,7 +402,7 @@ func (x *CreateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateResponse.ProtoReflect.Descriptor instead.
 func (*CreateResponse) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{2}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreateResponse) GetMessage() string {
@@ -287,7 +431,7 @@ type UpdateRequest struct {
 
 func (x *UpdateRequest) Reset() {
 	*x = UpdateRequest{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[3]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -299,7 +443,7 @@ func (x *UpdateRequest) String() string {
 func (*UpdateRequest) ProtoMessage() {}
 
 func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[3]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -312,7 +456,7 @@ func (x *UpdateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRequest.ProtoReflect.Descriptor instead.
 func (*UpdateRequest) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{3}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UpdateRequest) GetId() string {
@@ -353,7 +497,7 @@ type UpdateResponse struct {
 
 func (x *UpdateResponse) Reset() {
 	*x = UpdateResponse{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[4]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -365,7 +509,7 @@ func (x *UpdateResponse) String() string {
 func (*UpdateResponse) ProtoMessage() {}
 
 func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[4]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -378,7 +522,7 @@ func (x *UpdateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateResponse.ProtoReflect.Descriptor instead.
 func (*UpdateResponse) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{4}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UpdateResponse) GetMessage() string {
@@ -406,7 +550,7 @@ type ChangePasswordRequest struct {
 
 func (x *ChangePasswordRequest) Reset() {
 	*x = ChangePasswordRequest{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[5]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -418,7 +562,7 @@ func (x *ChangePasswordRequest) String() string {
 func (*ChangePasswordRequest) ProtoMessage() {}
 
 func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[5]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -431,7 +575,7 @@ func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangePasswordRequest.ProtoReflect.Descriptor instead.
 func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{5}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ChangePasswordRequest) GetId() string {
@@ -465,7 +609,7 @@ type ChangePasswordResponse struct {
 
 func (x *ChangePasswordResponse) Reset() {
 	*x = ChangePasswordResponse{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[6]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -477,7 +621,7 @@ func (x *ChangePasswordResponse) String() string {
 func (*ChangePasswordResponse) ProtoMessage() {}
 
 func (x *ChangePasswordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[6]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -490,7 +634,7 @@ func (x *ChangePasswordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangePasswordResponse.ProtoReflect.Descriptor instead.
 func (*ChangePasswordResponse) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{6}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ChangePasswordResponse) GetMessage() string {
@@ -517,7 +661,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[7]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -529,7 +673,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[7]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -542,7 +686,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{7}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *LoginRequest) GetPassword() string {
@@ -569,7 +713,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[8]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -581,7 +725,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[8]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -594,7 +738,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{8}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *LoginResponse) GetMessage() string {
@@ -620,7 +764,7 @@ type DeleteRequest struct {
 
 func (x *DeleteRequest) Reset() {
 	*x = DeleteRequest{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[9]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -632,7 +776,7 @@ func (x *DeleteRequest) String() string {
 func (*DeleteRequest) ProtoMessage() {}
 
 func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[9]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -645,7 +789,7 @@ func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRequest.ProtoReflect.Descriptor instead.
 func (*DeleteRequest) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{9}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeleteRequest) GetId() string {
@@ -664,7 +808,7 @@ type DeleteResponse struct {
 
 func (x *DeleteResponse) Reset() {
 	*x = DeleteResponse{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[10]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -676,7 +820,7 @@ func (x *DeleteResponse) String() string {
 func (*DeleteResponse) ProtoMessage() {}
 
 func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[10]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -689,7 +833,7 @@ func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResponse.ProtoReflect.Descriptor instead.
 func (*DeleteResponse) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{10}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DeleteResponse) GetMessage() string {
@@ -708,7 +852,7 @@ type Users struct {
 
 func (x *Users) Reset() {
 	*x = Users{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[11]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -720,7 +864,7 @@ func (x *Users) String() string {
 func (*Users) ProtoMessage() {}
 
 func (x *Users) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[11]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -733,7 +877,7 @@ func (x *Users) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Users.ProtoReflect.Descriptor instead.
 func (*Users) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{11}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Users) GetData() []*User {
@@ -752,7 +896,7 @@ type ReadRequest struct {
 
 func (x *ReadRequest) Reset() {
 	*x = ReadRequest{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[12]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -764,7 +908,7 @@ func (x *ReadRequest) String() string {
 func (*ReadRequest) ProtoMessage() {}
 
 func (x *ReadRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[12]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -777,7 +921,7 @@ func (x *ReadRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReadRequest.ProtoReflect.Descriptor instead.
 func (*ReadRequest) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{12}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ReadRequest) GetRequest() *v1.Request {
@@ -796,7 +940,7 @@ type ReadResponse struct {
 
 func (x *ReadResponse) Reset() {
 	*x = ReadResponse{}
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[13]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -808,7 +952,7 @@ func (x *ReadResponse) String() string {
 func (*ReadResponse) ProtoMessage() {}
 
 func (x *ReadResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[13]
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -821,7 +965,7 @@ func (x *ReadResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReadResponse.ProtoReflect.Descriptor instead.
 func (*ReadResponse) Descriptor() ([]byte, []int) {
-	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{13}
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ReadResponse) GetResult() map[string]*Users {
@@ -835,7 +979,11 @@ var File_ose_micro_authora_user_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"$ose/micro/authora/user/v1/data.proto\x12\x19ose.micro.authora.user.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a ose/micro/common/v1/claims.proto\x1a!ose/micro/common/v1/request.proto\"\xdd\x03\n" +
+	"$ose/micro/authora/user/v1/data.proto\x12\x19ose.micro.authora.user.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a ose/micro/common/v1/claims.proto\x1a!ose/micro/common/v1/request.proto\"\xb5\x01\n" +
+	"\x06Status\x126\n" +
+	"\x05state\x18\x01 \x01(\x0e2 .ose.micro.authora.user.v1.StateR\x05state\x12<\n" +
+	"\bprevious\x18\x02 \x01(\x0e2 .ose.micro.authora.user.v1.StateR\bprevious\x125\n" +
+	"\boccur_on\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aoccurOn\"\x98\x04\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
 	"\vgiven_names\x18\x02 \x01(\tR\n" +
@@ -846,13 +994,14 @@ const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\bpassword\x18\x05 \x01(\tR\bpassword\x12I\n" +
 	"\bmetadata\x18\x06 \x03(\v2-.ose.micro.authora.user.v1.User.MetadataEntryR\bmetadata\x12\x18\n" +
 	"\aversion\x18\a \x01(\x05R\aversion\x129\n" +
+	"\x06status\x18\b \x01(\v2!.ose.micro.authora.user.v1.StatusR\x06status\x129\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
+	"updated_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
 	"\n" +
-	"deleted_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x1a;\n" +
+	"deleted_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xa8\x02\n" +
@@ -909,7 +1058,21 @@ const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\x06result\x18\x01 \x03(\v23.ose.micro.authora.user.v1.ReadResponse.ResultEntryR\x06result\x1a[\n" +
 	"\vResultEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .ose.micro.authora.user.v1.UsersR\x05value:\x028\x01B\x8b\x02\n" +
+	"\x05value\x18\x02 \x01(\v2 .ose.micro.authora.user.v1.UsersR\x05value:\x028\x01*\x81\x02\n" +
+	"\x05State\x12\x15\n" +
+	"\x11STATE_UNSPECIFIED\x10\x00\x12\x11\n" +
+	"\rSTATE_INVITED\x10\x01\x12\x1e\n" +
+	"\x1aSTATE_PENDING_VERIFICATION\x10\x02\x12\x12\n" +
+	"\x0eSTATE_INACTIVE\x10\x03\x12\x10\n" +
+	"\fSTATE_ACTIVE\x10\x04\x12\x11\n" +
+	"\rSTATE_DORMANT\x10\x05\x12\x13\n" +
+	"\x0fSTATE_SUSPENDED\x10\x06\x12\x10\n" +
+	"\fSTATE_LOCKED\x10\a\x12\x10\n" +
+	"\fSTATE_BANNED\x10\b\x12\x15\n" +
+	"\x11STATE_DEACTIVATED\x10\t\x12\x12\n" +
+	"\x0eSTATE_ARCHIVED\x10\n" +
+	"\x12\x11\n" +
+	"\rSTATE_DELETED\x10\vB\x8b\x02\n" +
 	"\x1dcom.ose.micro.authora.user.v1B\tDataProtoP\x01ZVgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userv1\xa2\x02\x04OMAU\xaa\x02\x19Ose.Micro.Authora.User.V1\xca\x02\x19Ose\\Micro\\Authora\\User\\V1\xe2\x02%Ose\\Micro\\Authora\\User\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::User::V1b\x06proto3"
 
 var (
@@ -924,50 +1087,57 @@ func file_ose_micro_authora_user_v1_data_proto_rawDescGZIP() []byte {
 	return file_ose_micro_authora_user_v1_data_proto_rawDescData
 }
 
-var file_ose_micro_authora_user_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_ose_micro_authora_user_v1_data_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_ose_micro_authora_user_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_ose_micro_authora_user_v1_data_proto_goTypes = []any{
-	(*User)(nil),                   // 0: ose.micro.authora.user.v1.User
-	(*CreateRequest)(nil),          // 1: ose.micro.authora.user.v1.CreateRequest
-	(*CreateResponse)(nil),         // 2: ose.micro.authora.user.v1.CreateResponse
-	(*UpdateRequest)(nil),          // 3: ose.micro.authora.user.v1.UpdateRequest
-	(*UpdateResponse)(nil),         // 4: ose.micro.authora.user.v1.UpdateResponse
-	(*ChangePasswordRequest)(nil),  // 5: ose.micro.authora.user.v1.ChangePasswordRequest
-	(*ChangePasswordResponse)(nil), // 6: ose.micro.authora.user.v1.ChangePasswordResponse
-	(*LoginRequest)(nil),           // 7: ose.micro.authora.user.v1.LoginRequest
-	(*LoginResponse)(nil),          // 8: ose.micro.authora.user.v1.LoginResponse
-	(*DeleteRequest)(nil),          // 9: ose.micro.authora.user.v1.DeleteRequest
-	(*DeleteResponse)(nil),         // 10: ose.micro.authora.user.v1.DeleteResponse
-	(*Users)(nil),                  // 11: ose.micro.authora.user.v1.Users
-	(*ReadRequest)(nil),            // 12: ose.micro.authora.user.v1.ReadRequest
-	(*ReadResponse)(nil),           // 13: ose.micro.authora.user.v1.ReadResponse
-	nil,                            // 14: ose.micro.authora.user.v1.User.MetadataEntry
-	nil,                            // 15: ose.micro.authora.user.v1.CreateRequest.MetadataEntry
-	nil,                            // 16: ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
-	nil,                            // 17: ose.micro.authora.user.v1.ReadResponse.ResultEntry
-	(*timestamppb.Timestamp)(nil),  // 18: google.protobuf.Timestamp
-	(*v1.Auth)(nil),                // 19: ose.micro.common.v1.Auth
-	(*v1.Request)(nil),             // 20: ose.micro.common.v1.Request
+	(State)(0),                     // 0: ose.micro.authora.user.v1.State
+	(*Status)(nil),                 // 1: ose.micro.authora.user.v1.Status
+	(*User)(nil),                   // 2: ose.micro.authora.user.v1.User
+	(*CreateRequest)(nil),          // 3: ose.micro.authora.user.v1.CreateRequest
+	(*CreateResponse)(nil),         // 4: ose.micro.authora.user.v1.CreateResponse
+	(*UpdateRequest)(nil),          // 5: ose.micro.authora.user.v1.UpdateRequest
+	(*UpdateResponse)(nil),         // 6: ose.micro.authora.user.v1.UpdateResponse
+	(*ChangePasswordRequest)(nil),  // 7: ose.micro.authora.user.v1.ChangePasswordRequest
+	(*ChangePasswordResponse)(nil), // 8: ose.micro.authora.user.v1.ChangePasswordResponse
+	(*LoginRequest)(nil),           // 9: ose.micro.authora.user.v1.LoginRequest
+	(*LoginResponse)(nil),          // 10: ose.micro.authora.user.v1.LoginResponse
+	(*DeleteRequest)(nil),          // 11: ose.micro.authora.user.v1.DeleteRequest
+	(*DeleteResponse)(nil),         // 12: ose.micro.authora.user.v1.DeleteResponse
+	(*Users)(nil),                  // 13: ose.micro.authora.user.v1.Users
+	(*ReadRequest)(nil),            // 14: ose.micro.authora.user.v1.ReadRequest
+	(*ReadResponse)(nil),           // 15: ose.micro.authora.user.v1.ReadResponse
+	nil,                            // 16: ose.micro.authora.user.v1.User.MetadataEntry
+	nil,                            // 17: ose.micro.authora.user.v1.CreateRequest.MetadataEntry
+	nil,                            // 18: ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
+	nil,                            // 19: ose.micro.authora.user.v1.ReadResponse.ResultEntry
+	(*timestamppb.Timestamp)(nil),  // 20: google.protobuf.Timestamp
+	(*v1.Auth)(nil),                // 21: ose.micro.common.v1.Auth
+	(*v1.Request)(nil),             // 22: ose.micro.common.v1.Request
 }
 var file_ose_micro_authora_user_v1_data_proto_depIdxs = []int32{
-	14, // 0: ose.micro.authora.user.v1.User.metadata:type_name -> ose.micro.authora.user.v1.User.MetadataEntry
-	18, // 1: ose.micro.authora.user.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	18, // 2: ose.micro.authora.user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
-	18, // 3: ose.micro.authora.user.v1.User.deleted_at:type_name -> google.protobuf.Timestamp
-	15, // 4: ose.micro.authora.user.v1.CreateRequest.metadata:type_name -> ose.micro.authora.user.v1.CreateRequest.MetadataEntry
-	0,  // 5: ose.micro.authora.user.v1.CreateResponse.record:type_name -> ose.micro.authora.user.v1.User
-	16, // 6: ose.micro.authora.user.v1.UpdateRequest.metadata:type_name -> ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
-	0,  // 7: ose.micro.authora.user.v1.UpdateResponse.record:type_name -> ose.micro.authora.user.v1.User
-	0,  // 8: ose.micro.authora.user.v1.ChangePasswordResponse.record:type_name -> ose.micro.authora.user.v1.User
-	19, // 9: ose.micro.authora.user.v1.LoginResponse.record:type_name -> ose.micro.common.v1.Auth
-	0,  // 10: ose.micro.authora.user.v1.Users.data:type_name -> ose.micro.authora.user.v1.User
-	20, // 11: ose.micro.authora.user.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
-	17, // 12: ose.micro.authora.user.v1.ReadResponse.result:type_name -> ose.micro.authora.user.v1.ReadResponse.ResultEntry
-	11, // 13: ose.micro.authora.user.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.user.v1.Users
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	0,  // 0: ose.micro.authora.user.v1.Status.state:type_name -> ose.micro.authora.user.v1.State
+	0,  // 1: ose.micro.authora.user.v1.Status.previous:type_name -> ose.micro.authora.user.v1.State
+	20, // 2: ose.micro.authora.user.v1.Status.occur_on:type_name -> google.protobuf.Timestamp
+	16, // 3: ose.micro.authora.user.v1.User.metadata:type_name -> ose.micro.authora.user.v1.User.MetadataEntry
+	1,  // 4: ose.micro.authora.user.v1.User.status:type_name -> ose.micro.authora.user.v1.Status
+	20, // 5: ose.micro.authora.user.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	20, // 6: ose.micro.authora.user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
+	20, // 7: ose.micro.authora.user.v1.User.deleted_at:type_name -> google.protobuf.Timestamp
+	17, // 8: ose.micro.authora.user.v1.CreateRequest.metadata:type_name -> ose.micro.authora.user.v1.CreateRequest.MetadataEntry
+	2,  // 9: ose.micro.authora.user.v1.CreateResponse.record:type_name -> ose.micro.authora.user.v1.User
+	18, // 10: ose.micro.authora.user.v1.UpdateRequest.metadata:type_name -> ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
+	2,  // 11: ose.micro.authora.user.v1.UpdateResponse.record:type_name -> ose.micro.authora.user.v1.User
+	2,  // 12: ose.micro.authora.user.v1.ChangePasswordResponse.record:type_name -> ose.micro.authora.user.v1.User
+	21, // 13: ose.micro.authora.user.v1.LoginResponse.record:type_name -> ose.micro.common.v1.Auth
+	2,  // 14: ose.micro.authora.user.v1.Users.data:type_name -> ose.micro.authora.user.v1.User
+	22, // 15: ose.micro.authora.user.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
+	19, // 16: ose.micro.authora.user.v1.ReadResponse.result:type_name -> ose.micro.authora.user.v1.ReadResponse.ResultEntry
+	13, // 17: ose.micro.authora.user.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.user.v1.Users
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_ose_micro_authora_user_v1_data_proto_init() }
@@ -980,13 +1150,14 @@ func file_ose_micro_authora_user_v1_data_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ose_micro_authora_user_v1_data_proto_rawDesc), len(file_ose_micro_authora_user_v1_data_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   18,
+			NumEnums:      1,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_ose_micro_authora_user_v1_data_proto_goTypes,
 		DependencyIndexes: file_ose_micro_authora_user_v1_data_proto_depIdxs,
+		EnumInfos:         file_ose_micro_authora_user_v1_data_proto_enumTypes,
 		MessageInfos:      file_ose_micro_authora_user_v1_data_proto_msgTypes,
 	}.Build()
 	File_ose_micro_authora_user_v1_data_proto = out.File

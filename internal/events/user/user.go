@@ -30,7 +30,7 @@ func (d defaultEvent) ChangeStatus(ctx context.Context, event user.DefaultEvent)
 
 	create, err := d.app.ChangeStatus(ctx, user.StatusCommand{
 		Id:    event.ID,
-		State: event.Status.State,
+		State: user.State(event.Status),
 	})
 	if err != nil {
 		span.RecordError(err)

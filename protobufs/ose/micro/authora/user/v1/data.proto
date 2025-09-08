@@ -8,6 +8,27 @@ import "ose/micro/common/v1/request.proto";
 
 option go_package = "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userpb";
 
+enum State {
+  STATE_UNSPECIFIED = 0;
+  STATE_INVITED = 1;
+  STATE_PENDING_VERIFICATION = 2;
+  STATE_INACTIVE = 3;
+  STATE_ACTIVE = 4;
+  STATE_DORMANT = 5;
+  STATE_SUSPENDED = 6;
+  STATE_LOCKED = 7;
+  STATE_BANNED = 8;
+  STATE_DEACTIVATED = 9;
+  STATE_ARCHIVED = 10;
+  STATE_DELETED = 11;
+}
+
+message Status {
+  State state = 1;
+  State previous = 2; // optional previous state
+  google.protobuf.Timestamp occur_on = 3;
+}
+
 message User {
   string id = 1;
   string given_names = 2;
@@ -16,9 +37,10 @@ message User {
   string password = 5;
   map<string, string> metadata = 6;
   int32 version = 7;
-  google.protobuf.Timestamp created_at = 8;
-  google.protobuf.Timestamp updated_at = 9;
-  google.protobuf.Timestamp deleted_at = 10;
+  Status status = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  google.protobuf.Timestamp deleted_at = 11;
 }
 
 message CreateRequest {

@@ -8,23 +8,33 @@ import (
 type State int32
 
 const (
-	StateInvited             State = iota // User invited, not yet registered
-	StatePendingVerification              // Registered but email/phone not confirmed
-	StateInactive                         // Exists but not enabled (admin or system hold)
-	StateActive                           // Fully verified and allowed to use the system
-	StateDormant                          // Inactive for a long period, auto-marked dormant
-	StateSuspended                        // Temporarily blocked by admin or system rule
-	StateLocked                           // Auto-locked (e.g. too many failed logins)
-	StateBanned                           // Permanently blocked for policy violation
-	StateDeactivated                      // User voluntarily deactivated account
-	StateArchived                         // Retained for records, no login allowed
-	StateDeleted                          // Permanently removed from system
+	StateUnspecified         State = iota
+	StateInvited                   // User invited, not yet registered
+	StatePendingVerification       // Registered but email/phone not confirmed
+	StateInactive                  // Exists but not enabled (admin or system hold)
+	StateActive                    // Fully verified and allowed to use the system
+	StateDormant                   // Inactive for a long period, auto-marked dormant
+	StateSuspended                 // Temporarily blocked by admin or system rule
+	StateLocked                    // Auto-locked (e.g. too many failed logins)
+	StateBanned                    // Permanently blocked for policy violation
+	StateDeactivated               // User voluntarily deactivated account
+	StateArchived                  // Retained for records, no login allowed
+	StateDeleted                   // Permanently removed from system
 )
 
 type Status struct {
 	State    State     `json:"state" bson:"state"`
 	Previous *State    `json:"previous" bson:"previous"`
 	OccurOn  time.Time `json:"occur_on" bson:"occur_on"`
+}
+
+var allowedTransitions = map[State][]State{
+	StateInvited:             {StatePendingVerification, StateDeleted},
+	StatePendingVerification: {StateActive, StateInactive, StateDeleted},
+	StateActive:              {StateSuspended, StateDormant, StateDeactivated, StateDeleted},
+	StateSuspended:           {StateActive, StateBanned, StateDeleted},
+	StateDormant:             {StateActive, StateDeleted},
+	StateDeactivated:         {StateActive, StateDeleted},
 }
 
 func (s *Status) IsActive() bool {
@@ -111,16 +121,58 @@ func Inactive() Status {
 	return NewStatus(StateInactive)
 }
 
-func (s *Status) ChangeState(state State) error {
-	if s.State == state {
-		return fmt.Errorf("status is already in State %v", state)
+func (s State) String() string {
+	switch s {
+	case StateInvited:
+		return "Invited"
+	case StatePendingVerification:
+		return "PendingVerification"
+	case StateInactive:
+		return "Inactive"
+	case StateActive:
+		return "Active"
+	case StateDormant:
+		return "Dormant"
+	case StateSuspended:
+		return "Suspended"
+	case StateLocked:
+		return "Locked"
+	case StateBanned:
+		return "Banned"
+	case StateDeactivated:
+		return "Deactivated"
+	case StateArchived:
+		return "Archived"
+	case StateDeleted:
+		return "Deleted"
+	default:
+		return "Unknown"
+	}
+}
+
+func (s *Status) ChangeState(next State) error {
+	if s.State == next {
+		return fmt.Errorf("status is already %v", next)
 	}
 
-	s.Previous = &state
-	s.State = state
+	allowed := false
+	for _, st := range allowedTransitions[s.State] {
+		if st == next {
+			allowed = true
+			break
+		}
+	}
+	if !allowed {
+		return fmt.Errorf("transition from %v to %v not allowed", s.State, next)
+	}
+
+	prev := s.State
+	s.Previous = &prev
+	s.State = next
+	s.OccurOn = time.Now()
 	return nil
 }
 
-func NewStatus(State State) Status {
-	return Status{State: State, Previous: nil, OccurOn: time.Now()}
+func NewStatus(state State) Status {
+	return Status{State: state, Previous: nil, OccurOn: time.Now()}
 }
