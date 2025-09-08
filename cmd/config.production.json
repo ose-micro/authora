@@ -14,8 +14,8 @@
   "nats": {
     "url": "nats://turntable.proxy.rlwy.net:58598",
     "name": "authora",
-    "user": "fundme",
-    "password": "mI7r9jQpLk3uXy6fHnWb2sEwRtAq8fGhJaL0yUzXk1E=",
+    "user": "nats",
+    "password": "m67r9jQpLk3uXy6fHnWb2sEwRtAq8fGhJaL0yUzXk5E",
     "timeout": "2s",
     "max_reconnect": -1
   },
