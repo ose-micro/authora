@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/ose-micro/authora/internal/business"
 	"github.com/ose-micro/authora/internal/business/assignment"
@@ -68,11 +69,24 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 			},
 		},
 	})
-
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		u.log.Error("failed to login record",
+		u.log.Error("validation process failed",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "login"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	if !record.Status().IsActive() {
+		msg := fmt.Sprintf("user is %s, user need to be activated", strings.ToLower(record.Status().State.String()))
+		err := ose_error.New(ose_error.ErrUnauthorized, msg)
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		u.log.Error("validation process failed",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "login"),
 			zap.Error(err),

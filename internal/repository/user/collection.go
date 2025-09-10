@@ -15,7 +15,7 @@ type User struct {
 	Password   string                 `bson:"password"`
 	Metadata   map[string]interface{} `bson:"metadata"`
 	Version    int32                  `bson:"version"`
-	Status     user.Status            `bson:"status"`
+	Status     *user.Status           `bson:"status"`
 	CreatedAt  time.Time              `bson:"created_at"`
 	UpdatedAt  time.Time              `bson:"updated_at"`
 	DeletedAt  *time.Time             `bson:"deleted_at"`
@@ -35,6 +35,6 @@ func newCollection(params user.Domain) User {
 		UpdatedAt:  params.UpdatedAt(),
 		DeletedAt:  params.DeletedAt(),
 		Events:     params.Events(),
-		Status:     params.Status,
+		Status:     params.Status(),
 	}
 }

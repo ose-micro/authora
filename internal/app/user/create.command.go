@@ -54,7 +54,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 		return nil, err
 	}
 
-	role, err := c.repo.Role.ReadOne(ctx, dto.Request{
+	extRole, err := c.repo.Role.ReadOne(ctx, dto.Request{
 		Queries: []dto.Query{
 			{
 				Name: "one",
@@ -138,7 +138,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 		return nil, err
 	}
 
-	err = c.publishEvent(*record.Public(), *role)
+	err = c.publishEvent(*record.Public(), *extRole)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -169,6 +169,7 @@ func (c createCommandHandler) publishEvent(payload user.Public, role role.Domain
 		Password:   payload.Password,
 		Role:       role.ID(),
 		Tenant:     role.Tenant(),
+		Status:     int32(user.StatePendingVerification),
 		Metadata:   payload.Metadata,
 		CreatedAt:  payload.CreatedAt,
 	})

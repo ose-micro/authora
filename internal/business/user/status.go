@@ -31,10 +31,11 @@ type Status struct {
 var allowedTransitions = map[State][]State{
 	StateInvited:             {StatePendingVerification, StateDeleted},
 	StatePendingVerification: {StateActive, StateInactive, StateDeleted},
-	StateActive:              {StateSuspended, StateDormant, StateDeactivated, StateDeleted},
-	StateSuspended:           {StateActive, StateBanned, StateDeleted},
-	StateDormant:             {StateActive, StateDeleted},
-	StateDeactivated:         {StateActive, StateDeleted},
+	StateActive:              {StateSuspended, StateDormant, StateArchived, StateDeactivated, StateDeleted},
+	StateSuspended:           {StateActive, StateBanned, StateActive, StateDeleted},
+	StateArchived:            {StateActive, StateDeleted},
+	StateDormant:             {StateActive, StateArchived, StateDeleted},
+	StateDeactivated:         {StateActive, StateArchived, StateDeleted},
 }
 
 func (s *Status) IsActive() bool {
@@ -81,43 +82,43 @@ func (s *Status) IsInactive() bool {
 	return s.State == StateInactive
 }
 
-func Active() Status {
+func Active() *Status {
 	return NewStatus(StateActive)
 }
 
-func Invited() Status {
+func Invited() *Status {
 	return NewStatus(StateInvited)
 }
 
-func Dormant() Status {
+func Dormant() *Status {
 	return NewStatus(StateDormant)
 }
 
-func Locked() Status {
+func Locked() *Status {
 	return NewStatus(StateLocked)
 }
 
-func Banned() Status {
+func Banned() *Status {
 	return NewStatus(StateBanned)
 }
 
-func Archived() Status {
+func Archived() *Status {
 	return NewStatus(StateArchived)
 }
 
-func Suspended() Status {
+func Suspended() *Status {
 	return NewStatus(StateSuspended)
 }
 
-func Deactivated() Status {
+func Deactivated() *Status {
 	return NewStatus(StateDeactivated)
 }
 
-func Deleted() Status {
+func Deleted() *Status {
 	return NewStatus(StateDeleted)
 }
 
-func Inactive() Status {
+func Inactive() *Status {
 	return NewStatus(StateInactive)
 }
 
@@ -173,6 +174,6 @@ func (s *Status) ChangeState(next State) error {
 	return nil
 }
 
-func NewStatus(state State) Status {
-	return Status{State: state, Previous: nil, OccurOn: time.Now()}
+func NewStatus(state State) *Status {
+	return &Status{State: state, Previous: nil, OccurOn: time.Now()}
 }

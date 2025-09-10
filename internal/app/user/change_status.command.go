@@ -78,7 +78,7 @@ func (c changeStatusCommandHandler) Handle(ctx context.Context, command user.Sta
 		return nil, err
 	}
 
-	if err := record.ChangeState(command.State); err != nil {
+	if err := record.Status().ChangeState(command.State); err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("failed to change state",

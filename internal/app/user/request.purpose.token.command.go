@@ -51,7 +51,7 @@ func (h requestPurposeTokenCommandHandler) Handle(ctx context.Context, command u
 		return nil, err
 	}
 
-	if _, err := h.repo.User.ReadOne(ctx, dto.Request{
+	record, err := h.repo.User.ReadOne(ctx, dto.Request{
 		Queries: []dto.Query{
 			{
 				Name: "one",
@@ -64,7 +64,21 @@ func (h requestPurposeTokenCommandHandler) Handle(ctx context.Context, command u
 				},
 			},
 		},
-	}); err != nil {
+	})
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("validation process failed",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "request_purpose_token"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	if !record.Status().IsActive() {
+		err = ose_error.New(ose_error.ErrUnauthorized, "user is not active")
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("validation process failed",
@@ -154,7 +168,6 @@ func (h requestPurposeTokenCommandHandler) prepareToken(ctx context.Context, id,
 	}
 
 	sub := fmt.Sprintf("%s:%s", id, purpose)
-	fmt.Println(tenants)
 	token, _, err := h.jwt.IssuePurposeToken(sub, tenants, nil)
 	if err != nil {
 		return nil, err

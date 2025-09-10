@@ -21,7 +21,7 @@ type Domain struct {
 	email      string
 	password   string
 	metadata   map[string]interface{}
-	Status
+	status     *Status
 }
 
 type Params struct {
@@ -31,7 +31,7 @@ type Params struct {
 	Email      string
 	Password   string
 	Metadata   map[string]interface{}
-	Status     Status
+	Status     *Status
 }
 
 type Public struct {
@@ -42,7 +42,7 @@ type Public struct {
 	Password   string                 `json:"password"`
 	Metadata   map[string]interface{} `json:"metadata"`
 	Version    int32                  `json:"version"`
-	Status     Status                 `json:"status"`
+	Status     *Status                `json:"status"`
 	CreatedAt  time.Time              `json:"created_at"`
 	UpdatedAt  time.Time              `json:"updated_at"`
 	DeletedAt  *time.Time             `json:"deleted_at"`
@@ -67,6 +67,10 @@ func (d *Domain) Name() string {
 
 func (d *Domain) Email() string {
 	return d.email
+}
+
+func (d *Domain) Status() *Status {
+	return d.status
 }
 
 func (d *Domain) Metadata() map[string]interface{} {
@@ -112,6 +116,7 @@ func (d *Domain) Public() *Public {
 		Email:      d.email,
 		Metadata:   d.metadata,
 		Password:   d.password,
+		Status:     d.status,
 		Version:    d.Version(),
 		CreatedAt:  d.CreatedAt(),
 		UpdatedAt:  d.UpdatedAt(),
@@ -137,5 +142,6 @@ func (p Public) Params() *Params {
 		Email:      p.Email,
 		Metadata:   p.Metadata,
 		Password:   p.Password,
+		Status:     p.Status,
 	}
 }
