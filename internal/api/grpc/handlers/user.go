@@ -215,6 +215,79 @@ func (h *UserHandler) ChangePassword(ctx context.Context, request *userv1.Change
 	}, nil
 }
 
+func (h *UserHandler) RequestAccessToken(ctx context.Context, request *userv1.RequestAccessTokenRequest) (*userv1.RequestAccessTokenResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.request_access_token.handler", trace.WithAttributes(
+		attribute.String("operation", "login"),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	payload := user.TokenCommand{
+		Token: request.Token,
+	}
+
+	res, err := h.app.RequestAccessToken(ctx, payload)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to request access token",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "request_access_token"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	h.log.Info("request access token process successfully",
+		zap.String("trace_id", traceId),
+		zap.String("operation", "update"),
+		zap.Any("dto", request),
+	)
+
+	return &userv1.RequestAccessTokenResponse{
+		Token: *res,
+	}, nil
+}
+
+func (h *UserHandler) RequestPurposeToken(ctx context.Context, request *userv1.RequestPurposeTokenRequest) (*userv1.RequestPurposeTokenResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.request_purpose_token.handler", trace.WithAttributes(
+		attribute.String("operation", "request_purpose_token"),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	payload := user.PurposeTokenCommand{
+		Purpose: request.Purpose,
+		Id:      request.Id,
+	}
+
+	res, err := h.app.RequestPurposeToken(ctx, payload)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to request_purpose_token user",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "request_purpose_token"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	h.log.Info("user update process successfully",
+		zap.String("trace_id", traceId),
+		zap.String("operation", "update"),
+		zap.Any("dto", request),
+	)
+
+	return &userv1.RequestPurposeTokenResponse{
+		Token: *res,
+	}, nil
+}
+
 func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (*userv1.LoginResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.login.handler", trace.WithAttributes(
 		attribute.String("operation", "login"),

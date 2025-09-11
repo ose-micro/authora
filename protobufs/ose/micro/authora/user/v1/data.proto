@@ -80,6 +80,23 @@ message ChangePasswordResponse {
   User record = 2;
 }
 
+message RequestPurposeTokenRequest {
+  string id = 1;
+  string purpose = 2;
+}
+
+message RequestPurposeTokenResponse {
+  string token = 1;
+}
+
+message RequestAccessTokenRequest {
+  string token = 1;
+}
+
+message RequestAccessTokenResponse {
+  string token = 1;
+}
+
 message LoginRequest {
   string password = 1;
   string email = 2;
