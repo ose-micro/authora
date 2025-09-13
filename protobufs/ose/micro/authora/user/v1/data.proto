@@ -126,3 +126,11 @@ message ReadRequest {
 message ReadResponse {
   map<string, Users> result = 1;
 }
+
+message ReadOneRequest {
+  ose.micro.common.v1.Request request = 1;
+}
+
+message ReadOneResponse {
+  User result = 1;
+}

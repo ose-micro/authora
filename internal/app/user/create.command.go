@@ -42,7 +42,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.New(ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -95,7 +95,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 			},
 		},
 	}); check != nil {
-		err := ose_error.New(ose_error.ErrAlreadyExists, "user already exists with this email")
+		err := ose_error.New(ose_error.ErrConflict, "user already exists with this email", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -114,7 +114,6 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 		Password:   command.Password,
 	})
 	if err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("failed to create user",
@@ -140,6 +139,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command user.CreateCom
 
 	err = c.publishEvent(*record.Public(), *extRole)
 	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("failed to publish event",
@@ -174,7 +174,7 @@ func (c createCommandHandler) publishEvent(payload user.Public, role role.Domain
 		CreatedAt:  payload.CreatedAt,
 	})
 	if err != nil {
-		return ose_error.New(ose_error.ErrInternal, err.Error())
+		return err
 	}
 
 	return nil

@@ -36,7 +36,7 @@ func (u updateCommandHandler) Handle(ctx context.Context, command role.UpdateCom
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("validation process failed",
@@ -95,7 +95,7 @@ func (u updateCommandHandler) Handle(ctx context.Context, command role.UpdateCom
 		},
 	}); check != nil {
 		if !check.Equals(*record) {
-			err := ose_error.New(ose_error.ErrInternal, "role already exist")
+			err := ose_error.New(ose_error.ErrConflict, "role already exist", traceId)
 			span.RecordError(err)
 			span.SetStatus(codes.Error, err.Error())
 			u.log.Error("failed to update record",

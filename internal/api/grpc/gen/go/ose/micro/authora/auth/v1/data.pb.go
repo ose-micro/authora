@@ -514,7 +514,7 @@ var File_ose_micro_authora_auth_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_auth_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"$ose/micro/authora/auth/v1/data.proto\x12\x19ose.micro.authora.auth.v1\x1a ose/micro/common/v1/common.proto\x1a ose/micro/common/v1/claims.proto\"R\n" +
+	"$ose/micro/authora/auth/v1/data.proto\x12\x19ose.micro.authora.auth.v1\x1a ose/micro/common/v1/claims.proto\"R\n" +
 	"\x0eHasRoleRequest\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x16\n" +
 	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x12\n" +

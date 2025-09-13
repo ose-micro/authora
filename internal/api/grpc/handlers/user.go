@@ -34,7 +34,7 @@ func (h *UserHandler) response(param user.Public) (*userv1.User, error) {
 	if param.Metadata != nil {
 		meta, err := common.ToStringMap(param.Metadata)
 		if err != nil {
-			return nil, ose_error.New(ose_error.ErrInternal, err.Error())
+			return nil, ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error())
 		}
 
 		metadata = meta
@@ -357,7 +357,7 @@ func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*u
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to read organizations",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "READ"),
+			zap.String("operation", "read"),
 			zap.Error(err),
 		)
 		return nil, err
@@ -386,6 +386,47 @@ func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*u
 
 			return data
 		}(),
+	}, nil
+}
+
+func (h *UserHandler) ReadOne(ctx context.Context, request *userv1.ReadOneRequest) (*userv1.ReadOneResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.read_one.handler", trace.WithAttributes(
+		attribute.String("operation", "read_one"),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	query, err := buildAppRequest(request.Request)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to case to dto",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	record, err := h.app.ReadOne(ctx, user.ReadQuery{
+		Request: *query,
+	})
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to read organizations",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	result, err := h.response(*record.Public())
+
+	return &userv1.ReadOneResponse{
+		Result: result,
 	}, nil
 }
 

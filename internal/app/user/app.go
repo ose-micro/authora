@@ -31,6 +31,30 @@ type app struct {
 	requestAccessToken  domain.CommandHandle[user.TokenCommand, *string]
 	changePassword      domain.CommandHandle[user.ChangePasswordCommand, *user.Domain]
 	read                domain.QueryHandle[user.ReadQuery, map[string]any]
+	readOne             domain.QueryHandle[user.ReadQuery, *user.Domain]
+}
+
+func (a app) ReadOne(ctx context.Context, command user.ReadQuery) (*user.Domain, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.read_one.query", trace.WithAttributes(
+		attribute.String("operation", "read_one"),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	record, err := a.readOne.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	return record, nil
 }
 
 func (a app) ChangeStatus(ctx context.Context, command user.StatusCommand) (bool, error) {
@@ -306,5 +330,6 @@ func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo r
 		requestAccessToken:  newRequestAccessTokenCommandHandler(log, tracer, jwt, repo),
 		changePassword:      newChangePasswordCommandHandler(bs, repo, log, tracer),
 		read:                newReadQueryHandler(repo.User, log, tracer),
+		readOne:             newReadOneQueryHandler(repo.User, log, tracer),
 	}
 }

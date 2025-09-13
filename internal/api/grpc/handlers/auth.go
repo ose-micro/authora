@@ -7,7 +7,7 @@ import (
 	authv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/auth/v1"
 	"github.com/ose-micro/authora/internal/app"
 	"github.com/ose-micro/authora/internal/business/user"
-	"github.com/ose-micro/common"
+	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	ose_error "github.com/ose-micro/error"
@@ -82,12 +82,12 @@ func (h *AuthHandler) HasPermission(ctx context.Context, request *authv1.HasPerm
 	payload := user.HasPermissionCommand{
 		Token:  request.Token,
 		Tenant: request.Tenant,
-		Permission: func() *common.Permission {
+		Permission: func() *claims.Permission {
 			if request.Permission == nil {
 				return nil
 			}
 
-			return &common.Permission{
+			return &claims.Permission{
 				Action:   request.Permission.Action,
 				Resource: request.Permission.Resource,
 			}

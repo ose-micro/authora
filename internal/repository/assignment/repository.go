@@ -10,6 +10,7 @@ import (
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	ose_error "github.com/ose-micro/error"
 	mongodb "github.com/ose-micro/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -54,12 +55,13 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*assignm
 
 	raw, ok := res["one"]
 	if !ok {
-		return nil, fmt.Errorf("failed to fetch assignment")
+		return nil, ose_error.New(ose_error.ErrNotFound, "assignment not found")
 	}
 
 	var records []assignment.Public
 
 	if err := common.JsonToAny(raw, &records); err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to read res",
@@ -71,7 +73,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*assignm
 	}
 
 	if len(records) == 0 {
-		return nil, fmt.Errorf("no record found for the assignment detail")
+		return nil, ose_error.New(ose_error.ErrNotFound, "assignment not found", traceId)
 	}
 
 	return r.toDomain(records[0]), nil
@@ -89,6 +91,7 @@ func (r *repository) Create(ctx context.Context, payload assignment.Domain) erro
 
 	record := newCollection(payload)
 	if _, err := r.collection.InsertOne(ctx, record); err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to create in mongo",
@@ -134,7 +137,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 			zap.Any("dto", request),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 	}
 
 	r.log.Info("Read process completed successfully",
@@ -145,6 +148,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 
 	records, err := mongodb.CastFacetedResult(res, typeHints)
 	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("Failed to cast faceted result",
@@ -162,7 +166,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 // Update implements assignment.Repository.
 func (r *repository) Update(ctx context.Context, payload assignment.Domain) error {
 	ctx, span := r.tracer.Start(ctx, "repository.read.assignment.update", trace.WithAttributes(
-		attribute.String("operation", "UPDATE"),
+		attribute.String("operation", "update"),
 		attribute.String("dto", fmt.Sprintf("%+v", payload.Public())),
 	))
 	defer span.End()
@@ -175,6 +179,7 @@ func (r *repository) Update(ctx context.Context, payload assignment.Domain) erro
 	if _, err := r.collection.UpdateOne(ctx, filter, bson.M{
 		"$set": collection,
 	}); err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 

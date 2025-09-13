@@ -39,7 +39,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -95,7 +95,6 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 			},
 		},
 	}); err != nil {
-		err = ose_error.New(ose_error.ErrUnauthorized, "process role not found")
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -126,7 +125,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 			},
 		},
 	}); check != nil {
-		err := ose_error.New(ose_error.ErrAlreadyExists, "assignment already exists for this user on this tenant")
+		err := ose_error.New(ose_error.ErrConflict, "assignment already exists for this user on this tenant", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -144,7 +143,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 		Role:   command.Role,
 	})
 	if err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
+		err = ose_error.New(ose_error.ErrBadRequest, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("failed to create assignment",

@@ -9,6 +9,7 @@ import (
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/common"
+	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -39,7 +40,7 @@ func (h requestAccessTokenCommandHandler) Handle(ctx context.Context, command us
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("validation process failed",
@@ -51,9 +52,9 @@ func (h requestAccessTokenCommandHandler) Handle(ctx context.Context, command us
 		return nil, err
 	}
 
-	claims, err := h.jwt.ParseClaims(command.Token)
+	parseClaims, err := h.jwt.ParseClaims(command.Token)
 	if err != nil {
-		err := ose_error.New(ose_error.ErrUnauthorized, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("validation process failed",
@@ -65,9 +66,9 @@ func (h requestAccessTokenCommandHandler) Handle(ctx context.Context, command us
 		return nil, err
 	}
 
-	token, err := h.prepareToken(ctx, claims.Sub)
+	token, err := h.prepareToken(ctx, parseClaims.Sub)
 	if err != nil {
-		err := ose_error.New(ose_error.ErrUnauthorized, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("validation process failed",
@@ -150,9 +151,9 @@ func (h requestAccessTokenCommandHandler) prepareToken(ctx context.Context, id s
 	return &token, nil
 }
 
-func (h requestAccessTokenCommandHandler) preparePermission(ctx context.Context, one role.Domain) ([]common.Permission, error) {
+func (h requestAccessTokenCommandHandler) preparePermission(ctx context.Context, one role.Domain) ([]claims.Permission, error) {
 
-	list := make([]common.Permission, 0)
+	list := make([]claims.Permission, 0)
 
 	for _, id := range one.Permissions() {
 		permission, err := h.repo.Permission.ReadOne(ctx, dto.Request{
@@ -173,7 +174,7 @@ func (h requestAccessTokenCommandHandler) preparePermission(ctx context.Context,
 			return nil, err
 		}
 
-		list = append(list, common.Permission{
+		list = append(list, claims.Permission{
 			Resource: permission.Resource(),
 			Action:   permission.Action(),
 		})

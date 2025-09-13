@@ -8,7 +8,7 @@ import (
 	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
 	commonv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
 	"github.com/ose-micro/authora/internal/business/user"
-	"github.com/ose-micro/common"
+	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
 	ose_jwt "github.com/ose-micro/jwt"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -168,11 +168,11 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 	}, nil
 }
 
-func buildPermissions(list []*commonv1.Permission) []common.Permission {
-	var permissions []common.Permission
+func buildPermissions(list []*commonv1.Permission) []claims.Permission {
+	var permissions []claims.Permission
 
 	for _, p := range list {
-		permissions = append(permissions, common.Permission{
+		permissions = append(permissions, claims.Permission{
 			Resource: p.Resource,
 			Action:   p.Action,
 		})
@@ -181,7 +181,7 @@ func buildPermissions(list []*commonv1.Permission) []common.Permission {
 	return permissions
 }
 
-func buildPermissionsProto(list []common.Permission) []*commonv1.Permission {
+func buildPermissionsProto(list []claims.Permission) []*commonv1.Permission {
 	var permissions []*commonv1.Permission
 
 	for _, p := range list {

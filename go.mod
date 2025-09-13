@@ -3,14 +3,14 @@ module github.com/ose-micro/authora
 go 1.25.0
 
 require (
-	github.com/ose-micro/common v0.0.3
+	github.com/ose-micro/common v0.1.0
 	github.com/ose-micro/core v0.3.8
 	github.com/ose-micro/cqrs v0.3.3
-	github.com/ose-micro/error v0.0.0-20250827220005-c4271c27c5aa
+	github.com/ose-micro/error v0.0.1
 	github.com/ose-micro/grpc v0.1.1
-	github.com/ose-micro/jwt v0.0.1
+	github.com/ose-micro/jwt v0.0.3
 	github.com/ose-micro/mongo v0.2.1
-	github.com/ose-micro/nats v0.0.2
+	github.com/ose-micro/nats v0.0.3
 	github.com/ose-micro/rid v0.0.6
 	go.mongodb.org/mongo-driver v1.17.4
 	go.opentelemetry.io/otel v1.38.0
@@ -18,7 +18,7 @@ require (
 	go.uber.org/fx v1.24.0
 	go.uber.org/zap v1.27.0
 	google.golang.org/grpc v1.75.0
-	google.golang.org/protobuf v1.36.8
+	google.golang.org/protobuf v1.36.9
 )
 
 require (

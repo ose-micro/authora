@@ -10,6 +10,7 @@ import (
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	ose_error "github.com/ose-micro/error"
 	mongodb "github.com/ose-micro/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -54,7 +55,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*user.Do
 
 	raw, ok := res["one"]
 	if !ok {
-		return nil, fmt.Errorf("failed to fetch user")
+		return nil, ose_error.New(ose_error.ErrNotFound, "user not found", traceId)
 	}
 
 	var records []user.Public
@@ -67,11 +68,11 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*user.Do
 			zap.String("operation", "read_one"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
 	}
 
 	if len(records) == 0 {
-		return nil, fmt.Errorf("no record found for the user detail")
+		return nil, ose_error.New(ose_error.ErrNotFound, "user not found", traceId)
 	}
 
 	return r.toDomain(records[0]), nil
@@ -96,7 +97,7 @@ func (r *repository) Create(ctx context.Context, payload user.Domain) error {
 			zap.String("operation", "create"),
 			zap.Error(err),
 		)
-		return err
+		return ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
 	}
 
 	r.log.Info("create process complete successfully",
@@ -110,7 +111,7 @@ func (r *repository) Create(ctx context.Context, payload user.Domain) error {
 // Read implements user.Repository.
 func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]any, error) {
 	ctx, span := r.tracer.Start(ctx, "read.repository.user.read", trace.WithAttributes(
-		attribute.String("operation", "READ"),
+		attribute.String("operation", "read"),
 		attribute.String("dto", fmt.Sprintf("%+v", request)),
 	))
 	defer span.End()
@@ -134,7 +135,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 			zap.Any("dto", request),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 	}
 
 	r.log.Info("Read process completed successfully",
@@ -153,7 +154,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 			zap.Any("dto", request),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 	}
 
 	return records, nil
@@ -183,7 +184,7 @@ func (r *repository) Update(ctx context.Context, payload user.Domain) error {
 			zap.String("trace_id", traceID),
 			zap.Error(err),
 		)
-		return err
+		return ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 	}
 
 	r.log.Info("update process complete successfully",

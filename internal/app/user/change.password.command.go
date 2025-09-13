@@ -36,7 +36,7 @@ func (u changePasswordCommandHandler) Handle(ctx context.Context, command user.C
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("validation process failed",
@@ -76,7 +76,7 @@ func (u changePasswordCommandHandler) Handle(ctx context.Context, command user.C
 	}
 
 	if !record.Status().IsActive() {
-		err := ose_error.New(ose_error.ErrUnauthorized, "user is not active")
+		err := ose_error.New(ose_error.ErrUnauthorized, "user is not active", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("failed to change_password record",

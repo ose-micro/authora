@@ -101,8 +101,8 @@ func (State) EnumDescriptor() ([]byte, []int) {
 
 type Status struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         State                  `protobuf:"varint,1,opt,name=state,proto3,enum=ose.micro.authora.user.v1.State" json:"state,omitempty"`
-	Previous      State                  `protobuf:"varint,2,opt,name=previous,proto3,enum=ose.micro.authora.user.v1.State" json:"previous,omitempty"` // optional previous state
+	State         State                  `protobuf:"varint,1,opt,name=state,proto3,enum=ose.micro.authora.user.v1.Status" json:"state,omitempty"`
+	Previous      State                  `protobuf:"varint,2,opt,name=previous,proto3,enum=ose.micro.authora.user.v1.Status" json:"previous,omitempty"` // optional previous state
 	OccurOn       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=occur_on,json=occurOn,proto3" json:"occur_on,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1159,6 +1159,94 @@ func (x *ReadResponse) GetResult() map[string]*Users {
 	return nil
 }
 
+type ReadOneRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Request       *v1.Request            `protobuf:"bytes,1,opt,name=request,proto3" json:"request,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReadOneRequest) Reset() {
+	*x = ReadOneRequest{}
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReadOneRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReadOneRequest) ProtoMessage() {}
+
+func (x *ReadOneRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReadOneRequest.ProtoReflect.Descriptor instead.
+func (*ReadOneRequest) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *ReadOneRequest) GetRequest() *v1.Request {
+	if x != nil {
+		return x.Request
+	}
+	return nil
+}
+
+type ReadOneResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Result        *User                  `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReadOneResponse) Reset() {
+	*x = ReadOneResponse{}
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReadOneResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReadOneResponse) ProtoMessage() {}
+
+func (x *ReadOneResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_user_v1_data_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReadOneResponse.ProtoReflect.Descriptor instead.
+func (*ReadOneResponse) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_user_v1_data_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *ReadOneResponse) GetResult() *User {
+	if x != nil {
+		return x.Result
+	}
+	return nil
+}
+
 var File_ose_micro_authora_user_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
@@ -1251,7 +1339,11 @@ const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\x06result\x18\x01 \x03(\v23.ose.micro.authora.user.v1.ReadResponse.ResultEntryR\x06result\x1a[\n" +
 	"\vResultEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .ose.micro.authora.user.v1.UsersR\x05value:\x028\x01*\x81\x02\n" +
+	"\x05value\x18\x02 \x01(\v2 .ose.micro.authora.user.v1.UsersR\x05value:\x028\x01\"H\n" +
+	"\x0eReadOneRequest\x126\n" +
+	"\arequest\x18\x01 \x01(\v2\x1c.ose.micro.common.v1.RequestR\arequest\"J\n" +
+	"\x0fReadOneResponse\x127\n" +
+	"\x06result\x18\x01 \x01(\v2\x1f.ose.micro.authora.user.v1.UserR\x06result*\x81\x02\n" +
 	"\x05State\x12\x15\n" +
 	"\x11STATE_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rSTATE_INVITED\x10\x01\x12\x1e\n" +
@@ -1281,9 +1373,9 @@ func file_ose_micro_authora_user_v1_data_proto_rawDescGZIP() []byte {
 }
 
 var file_ose_micro_authora_user_v1_data_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_ose_micro_authora_user_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_ose_micro_authora_user_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_ose_micro_authora_user_v1_data_proto_goTypes = []any{
-	(State)(0),                          // 0: ose.micro.authora.user.v1.State
+	(State)(0),                          // 0: ose.micro.authora.user.v1.Status
 	(*Status)(nil),                      // 1: ose.micro.authora.user.v1.Status
 	(*User)(nil),                        // 2: ose.micro.authora.user.v1.User
 	(*CreateRequest)(nil),               // 3: ose.micro.authora.user.v1.CreateRequest
@@ -1303,38 +1395,42 @@ var file_ose_micro_authora_user_v1_data_proto_goTypes = []any{
 	(*Users)(nil),                       // 17: ose.micro.authora.user.v1.Users
 	(*ReadRequest)(nil),                 // 18: ose.micro.authora.user.v1.ReadRequest
 	(*ReadResponse)(nil),                // 19: ose.micro.authora.user.v1.ReadResponse
-	nil,                                 // 20: ose.micro.authora.user.v1.User.MetadataEntry
-	nil,                                 // 21: ose.micro.authora.user.v1.CreateRequest.MetadataEntry
-	nil,                                 // 22: ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
-	nil,                                 // 23: ose.micro.authora.user.v1.ReadResponse.ResultEntry
-	(*timestamppb.Timestamp)(nil),       // 24: google.protobuf.Timestamp
-	(*v1.Auth)(nil),                     // 25: ose.micro.common.v1.Auth
-	(*v1.Request)(nil),                  // 26: ose.micro.common.v1.Request
+	(*ReadOneRequest)(nil),              // 20: ose.micro.authora.user.v1.ReadOneRequest
+	(*ReadOneResponse)(nil),             // 21: ose.micro.authora.user.v1.ReadOneResponse
+	nil,                                 // 22: ose.micro.authora.user.v1.User.MetadataEntry
+	nil,                                 // 23: ose.micro.authora.user.v1.CreateRequest.MetadataEntry
+	nil,                                 // 24: ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
+	nil,                                 // 25: ose.micro.authora.user.v1.ReadResponse.ResultEntry
+	(*timestamppb.Timestamp)(nil),       // 26: google.protobuf.Timestamp
+	(*v1.Auth)(nil),                     // 27: ose.micro.common.v1.Auth
+	(*v1.Request)(nil),                  // 28: ose.micro.common.v1.Request
 }
 var file_ose_micro_authora_user_v1_data_proto_depIdxs = []int32{
-	0,  // 0: ose.micro.authora.user.v1.Status.state:type_name -> ose.micro.authora.user.v1.State
-	0,  // 1: ose.micro.authora.user.v1.Status.previous:type_name -> ose.micro.authora.user.v1.State
-	24, // 2: ose.micro.authora.user.v1.Status.occur_on:type_name -> google.protobuf.Timestamp
-	20, // 3: ose.micro.authora.user.v1.User.metadata:type_name -> ose.micro.authora.user.v1.User.MetadataEntry
+	0,  // 0: ose.micro.authora.user.v1.Status.state:type_name -> ose.micro.authora.user.v1.Status
+	0,  // 1: ose.micro.authora.user.v1.Status.previous:type_name -> ose.micro.authora.user.v1.Status
+	26, // 2: ose.micro.authora.user.v1.Status.occur_on:type_name -> google.protobuf.Timestamp
+	22, // 3: ose.micro.authora.user.v1.User.metadata:type_name -> ose.micro.authora.user.v1.User.MetadataEntry
 	1,  // 4: ose.micro.authora.user.v1.User.status:type_name -> ose.micro.authora.user.v1.Status
-	24, // 5: ose.micro.authora.user.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	24, // 6: ose.micro.authora.user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
-	24, // 7: ose.micro.authora.user.v1.User.deleted_at:type_name -> google.protobuf.Timestamp
-	21, // 8: ose.micro.authora.user.v1.CreateRequest.metadata:type_name -> ose.micro.authora.user.v1.CreateRequest.MetadataEntry
+	26, // 5: ose.micro.authora.user.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	26, // 6: ose.micro.authora.user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
+	26, // 7: ose.micro.authora.user.v1.User.deleted_at:type_name -> google.protobuf.Timestamp
+	23, // 8: ose.micro.authora.user.v1.CreateRequest.metadata:type_name -> ose.micro.authora.user.v1.CreateRequest.MetadataEntry
 	2,  // 9: ose.micro.authora.user.v1.CreateResponse.record:type_name -> ose.micro.authora.user.v1.User
-	22, // 10: ose.micro.authora.user.v1.UpdateRequest.metadata:type_name -> ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
+	24, // 10: ose.micro.authora.user.v1.UpdateRequest.metadata:type_name -> ose.micro.authora.user.v1.UpdateRequest.MetadataEntry
 	2,  // 11: ose.micro.authora.user.v1.UpdateResponse.record:type_name -> ose.micro.authora.user.v1.User
 	2,  // 12: ose.micro.authora.user.v1.ChangePasswordResponse.record:type_name -> ose.micro.authora.user.v1.User
-	25, // 13: ose.micro.authora.user.v1.LoginResponse.record:type_name -> ose.micro.common.v1.Auth
+	27, // 13: ose.micro.authora.user.v1.LoginResponse.record:type_name -> ose.micro.common.v1.Auth
 	2,  // 14: ose.micro.authora.user.v1.Users.data:type_name -> ose.micro.authora.user.v1.User
-	26, // 15: ose.micro.authora.user.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
-	23, // 16: ose.micro.authora.user.v1.ReadResponse.result:type_name -> ose.micro.authora.user.v1.ReadResponse.ResultEntry
-	17, // 17: ose.micro.authora.user.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.user.v1.Users
-	18, // [18:18] is the sub-list for method output_type
-	18, // [18:18] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	28, // 15: ose.micro.authora.user.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
+	25, // 16: ose.micro.authora.user.v1.ReadResponse.result:type_name -> ose.micro.authora.user.v1.ReadResponse.ResultEntry
+	28, // 17: ose.micro.authora.user.v1.ReadOneRequest.request:type_name -> ose.micro.common.v1.Request
+	2,  // 18: ose.micro.authora.user.v1.ReadOneResponse.result:type_name -> ose.micro.authora.user.v1.User
+	17, // 19: ose.micro.authora.user.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.user.v1.Users
+	20, // [20:20] is the sub-list for method output_type
+	20, // [20:20] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_ose_micro_authora_user_v1_data_proto_init() }
@@ -1348,7 +1444,7 @@ func file_ose_micro_authora_user_v1_data_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ose_micro_authora_user_v1_data_proto_rawDesc), len(file_ose_micro_authora_user_v1_data_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   23,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

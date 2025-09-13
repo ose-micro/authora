@@ -39,7 +39,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -70,7 +70,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 			},
 		},
 	}); check != nil {
-		err := ose_error.New(ose_error.ErrAlreadyExists, "role already exists")
+		err := ose_error.New(ose_error.ErrConflict, "role already exists", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -122,7 +122,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 				},
 			},
 		}); err != nil {
-			err := ose_error.New(ose_error.ErrInvalidInput, fmt.Sprintf("permission id: %s not exist", permission))
+			err := ose_error.New(ose_error.ErrConflict, fmt.Sprintf("permission id: %s not exist", permission), traceId)
 			span.RecordError(err)
 			span.SetStatus(codes.Error, err.Error())
 			c.log.Error("failed to check if permission exists",
@@ -141,7 +141,6 @@ func (c createCommandHandler) Handle(ctx context.Context, command role.CreateCom
 		Permissions: command.Permissions,
 	})
 	if err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("failed to create role",

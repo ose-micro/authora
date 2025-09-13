@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/ose-micro/core/dto"
+	ose_error "github.com/ose-micro/error"
 )
 
 type Repo interface {
-	Create(ctx context.Context, payload Domain) error
-	Read(ctx context.Context, request dto.Request) (map[string]any, error)
-	ReadOne(ctx context.Context, request dto.Request) (*Domain, error)
-	Update(ctx context.Context, payload Domain) error
-	Delete(ctx context.Context, payload Domain) error
+	Create(ctx context.Context, payload Domain) *ose_error.Error
+	Read(ctx context.Context, request dto.Request) (map[string]any, *ose_error.Error)
+	ReadOne(ctx context.Context, request dto.Request) (*Domain, *ose_error.Error)
+	Update(ctx context.Context, payload Domain) *ose_error.Error
+	Delete(ctx context.Context, payload Domain) *ose_error.Error
 }

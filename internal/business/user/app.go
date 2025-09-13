@@ -19,4 +19,5 @@ type App interface {
 	RequestPurposeToken(ctx context.Context, command PurposeTokenCommand) (*string, error)
 	RequestAccessToken(ctx context.Context, command TokenCommand) (*string, error)
 	Read(ctx context.Context, command ReadQuery) (map[string]any, error)
+	ReadOne(ctx context.Context, command ReadQuery) (*Domain, error)
 }

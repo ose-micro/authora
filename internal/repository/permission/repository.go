@@ -27,12 +27,12 @@ type repository struct {
 	bs         business.Domain
 }
 
-func (r *repository) Delete(ctx context.Context, payload permission.Domain) error {
+func (r *repository) Delete(ctx context.Context, payload permission.Domain) *ose_error.Error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*permission.Domain, error) {
+func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*permission.Domain, *ose_error.Error) {
 	ctx, span := r.tracer.Start(ctx, "read.repository.permission.read_one", trace.WithAttributes(
 		attribute.String("operation", "read_one"),
 		attribute.String("dto", fmt.Sprintf("%v", request))),
@@ -43,7 +43,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*permiss
 
 	res, err := r.Read(ctx, request)
 	if err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
+		err = ose_error.New(ose_error.ErrInternalServerError, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to read res",
@@ -56,7 +56,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*permiss
 
 	raw, ok := res["one"]
 	if !ok {
-		err = ose_error.New(ose_error.ErrNotFound, "read one not found")
+		err = ose_error.New(ose_error.ErrNotFound, "permission not found", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("read one not found",
@@ -70,7 +70,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*permiss
 	var records []permission.Public
 
 	if err := common.JsonToAny(raw, &records); err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
+		err := ose_error.New(ose_error.ErrInternalServerError, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to read res",
@@ -78,11 +78,12 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*permiss
 			zap.String("operation", "read_one"),
 			zap.Error(err),
 		)
+
 		return nil, err
 	}
 
 	if len(records) == 0 {
-		err = ose_error.New(ose_error.ErrNotFound, "read one not found")
+		err = ose_error.New(ose_error.ErrNotFound, "permission not found", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("read one not found",
@@ -97,7 +98,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*permiss
 }
 
 // Create implements permission.Repository.
-func (r *repository) Create(ctx context.Context, payload permission.Domain) error {
+func (r *repository) Create(ctx context.Context, payload permission.Domain) *ose_error.Error {
 	ctx, span := r.tracer.Start(ctx, "read.repository.permission.create", trace.WithAttributes(
 		attribute.String("operation", "create"),
 		attribute.String("dto", fmt.Sprintf("%v", payload.Public())),
@@ -108,7 +109,7 @@ func (r *repository) Create(ctx context.Context, payload permission.Domain) erro
 
 	record := newCollection(payload)
 	if _, err := r.collection.InsertOne(ctx, record); err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("failed to create in mongo",
@@ -128,7 +129,7 @@ func (r *repository) Create(ctx context.Context, payload permission.Domain) erro
 }
 
 // Read implements permission.Repository.
-func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]any, error) {
+func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]any, *ose_error.Error) {
 	ctx, span := r.tracer.Start(ctx, "read.repository.permission.read", trace.WithAttributes(
 		attribute.String("operation", "read"),
 		attribute.String("dto", fmt.Sprintf("%+v", request)),
@@ -145,7 +146,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 
 	res, err := mongodb.RunFaceted(ctx, r.collection, request)
 	if err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
@@ -166,7 +167,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 
 	records, err := mongodb.CastFacetedResult(res, typeHints)
 	if err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("Failed to cast faceted result",
@@ -182,7 +183,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 }
 
 // Update implements permission.Repository.
-func (r *repository) Update(ctx context.Context, payload permission.Domain) error {
+func (r *repository) Update(ctx context.Context, payload permission.Domain) *ose_error.Error {
 	ctx, span := r.tracer.Start(ctx, "repository.read.permission.update", trace.WithAttributes(
 		attribute.String("operation", "update"),
 		attribute.String("dto", fmt.Sprintf("%+v", payload.Public())),
@@ -197,7 +198,7 @@ func (r *repository) Update(ctx context.Context, payload permission.Domain) erro
 	if _, err := r.collection.UpdateOne(ctx, filter, bson.M{
 		"$set": collection,
 	}); err != nil {
-		err = ose_error.New(ose_error.ErrInternal, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceID)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 

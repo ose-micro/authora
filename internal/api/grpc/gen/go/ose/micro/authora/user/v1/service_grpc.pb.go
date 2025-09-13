@@ -23,7 +23,7 @@ const (
 	UserService_Update_FullMethodName              = "/ose.micro.authora.user.v1.UserService/Update"
 	UserService_ChangePassword_FullMethodName      = "/ose.micro.authora.user.v1.UserService/ChangePassword"
 	UserService_Read_FullMethodName                = "/ose.micro.authora.user.v1.UserService/Read"
-	UserService_RequestAccessToken_FullMethodName  = "/ose.micro.authora.user.v1.UserService/RequestAccessToken"
+	UserService_ReadOne_FullMethodName             = "/ose.micro.authora.user.v1.UserService/ReadOne"
 	UserService_RequestPurposeToken_FullMethodName = "/ose.micro.authora.user.v1.UserService/RequestPurposeToken"
 	UserService_Login_FullMethodName               = "/ose.micro.authora.user.v1.UserService/Login"
 )
@@ -36,7 +36,7 @@ type UserServiceClient interface {
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (*ReadResponse, error)
-	RequestAccessToken(ctx context.Context, in *RequestAccessTokenRequest, opts ...grpc.CallOption) (*RequestAccessTokenResponse, error)
+	ReadOne(ctx context.Context, in *ReadOneRequest, opts ...grpc.CallOption) (*ReadOneResponse, error)
 	RequestPurposeToken(ctx context.Context, in *RequestPurposeTokenRequest, opts ...grpc.CallOption) (*RequestPurposeTokenResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 }
@@ -89,10 +89,10 @@ func (c *userServiceClient) Read(ctx context.Context, in *ReadRequest, opts ...g
 	return out, nil
 }
 
-func (c *userServiceClient) RequestAccessToken(ctx context.Context, in *RequestAccessTokenRequest, opts ...grpc.CallOption) (*RequestAccessTokenResponse, error) {
+func (c *userServiceClient) ReadOne(ctx context.Context, in *ReadOneRequest, opts ...grpc.CallOption) (*ReadOneResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RequestAccessTokenResponse)
-	err := c.cc.Invoke(ctx, UserService_RequestAccessToken_FullMethodName, in, out, cOpts...)
+	out := new(ReadOneResponse)
+	err := c.cc.Invoke(ctx, UserService_ReadOne_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ type UserServiceServer interface {
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	Read(context.Context, *ReadRequest) (*ReadResponse, error)
-	RequestAccessToken(context.Context, *RequestAccessTokenRequest) (*RequestAccessTokenResponse, error)
+	ReadOne(context.Context, *ReadOneRequest) (*ReadOneResponse, error)
 	RequestPurposeToken(context.Context, *RequestPurposeTokenRequest) (*RequestPurposeTokenResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -152,8 +152,8 @@ func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePas
 func (UnimplementedUserServiceServer) Read(context.Context, *ReadRequest) (*ReadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
 }
-func (UnimplementedUserServiceServer) RequestAccessToken(context.Context, *RequestAccessTokenRequest) (*RequestAccessTokenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestAccessToken not implemented")
+func (UnimplementedUserServiceServer) ReadOne(context.Context, *ReadOneRequest) (*ReadOneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadOne not implemented")
 }
 func (UnimplementedUserServiceServer) RequestPurposeToken(context.Context, *RequestPurposeTokenRequest) (*RequestPurposeTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestPurposeToken not implemented")
@@ -254,20 +254,20 @@ func _UserService_Read_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_RequestAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RequestAccessTokenRequest)
+func _UserService_ReadOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadOneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).RequestAccessToken(ctx, in)
+		return srv.(UserServiceServer).ReadOne(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_RequestAccessToken_FullMethodName,
+		FullMethod: UserService_ReadOne_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).RequestAccessToken(ctx, req.(*RequestAccessTokenRequest))
+		return srv.(UserServiceServer).ReadOne(ctx, req.(*ReadOneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -332,8 +332,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_Read_Handler,
 		},
 		{
-			MethodName: "RequestAccessToken",
-			Handler:    _UserService_RequestAccessToken_Handler,
+			MethodName: "ReadOne",
+			Handler:    _UserService_ReadOne_Handler,
 		},
 		{
 			MethodName: "RequestPurposeToken",

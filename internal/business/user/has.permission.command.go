@@ -4,14 +4,14 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/ose-micro/common"
+	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/domain"
 )
 
 type HasPermissionCommand struct {
 	Token      string
 	Tenant     string
-	Permission *common.Permission
+	Permission *claims.Permission
 }
 
 func (c HasPermissionCommand) CommandName() string {

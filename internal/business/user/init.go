@@ -16,7 +16,7 @@ func (i initializer) New(param Params) (*Domain, error) {
 	aggregate := domain.NewAggregate(*id)
 	password, err := utils.HashPassword(param.Password)
 	if err != nil {
-		return nil, ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		return nil, ose_error.New(ose_error.ErrBadRequest, err.Error())
 	}
 
 	return &Domain{

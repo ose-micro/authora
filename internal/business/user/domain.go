@@ -101,7 +101,7 @@ func (d *Domain) ChangePassword(password string, oldPassword string) error {
 
 	hash, err := utils.HashPassword(password)
 	if err != nil {
-		return ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		return ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error())
 	}
 
 	d.password = hash

@@ -33,7 +33,7 @@ func (u parseClaimCommandHandler) Handle(ctx context.Context, command user.Token
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("validation process failed",
@@ -47,7 +47,7 @@ func (u parseClaimCommandHandler) Handle(ctx context.Context, command user.Token
 
 	claims, err := u.jwt.ParseClaims(command.Token)
 	if err != nil {
-		err := ose_error.New(ose_error.ErrUnauthorized, err.Error())
+		err := ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("validation process failed",

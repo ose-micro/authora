@@ -24,13 +24,13 @@ var File_ose_micro_authora_user_v1_service_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_user_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"'ose/micro/authora/user/v1/service.proto\x12\x19ose.micro.authora.user.v1\x1a$ose/micro/authora/user/v1/data.proto2\x82\x06\n" +
+	"'ose/micro/authora/user/v1/service.proto\x12\x19ose.micro.authora.user.v1\x1a$ose/micro/authora/user/v1/data.proto2\xe0\x05\n" +
 	"\vUserService\x12]\n" +
 	"\x06Create\x12(.ose.micro.authora.user.v1.CreateRequest\x1a).ose.micro.authora.user.v1.CreateResponse\x12]\n" +
 	"\x06Update\x12(.ose.micro.authora.user.v1.UpdateRequest\x1a).ose.micro.authora.user.v1.UpdateResponse\x12u\n" +
 	"\x0eChangePassword\x120.ose.micro.authora.user.v1.ChangePasswordRequest\x1a1.ose.micro.authora.user.v1.ChangePasswordResponse\x12W\n" +
-	"\x04Read\x12&.ose.micro.authora.user.v1.ReadRequest\x1a'.ose.micro.authora.user.v1.ReadResponse\x12\x81\x01\n" +
-	"\x12RequestAccessToken\x124.ose.micro.authora.user.v1.RequestAccessTokenRequest\x1a5.ose.micro.authora.user.v1.RequestAccessTokenResponse\x12\x84\x01\n" +
+	"\x04Read\x12&.ose.micro.authora.user.v1.ReadRequest\x1a'.ose.micro.authora.user.v1.ReadResponse\x12`\n" +
+	"\aReadOne\x12).ose.micro.authora.user.v1.ReadOneRequest\x1a*.ose.micro.authora.user.v1.ReadOneResponse\x12\x84\x01\n" +
 	"\x13RequestPurposeToken\x125.ose.micro.authora.user.v1.RequestPurposeTokenRequest\x1a6.ose.micro.authora.user.v1.RequestPurposeTokenResponse\x12Z\n" +
 	"\x05Login\x12'.ose.micro.authora.user.v1.LoginRequest\x1a(.ose.micro.authora.user.v1.LoginResponseB\x8e\x02\n" +
 	"\x1dcom.ose.micro.authora.user.v1B\fServiceProtoP\x01ZVgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userv1\xa2\x02\x04OMAU\xaa\x02\x19Ose.Micro.Authora.User.V1\xca\x02\x19Ose\\Micro\\Authora\\User\\V1\xe2\x02%Ose\\Micro\\Authora\\User\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::User::V1b\x06proto3"
@@ -40,14 +40,14 @@ var file_ose_micro_authora_user_v1_service_proto_goTypes = []any{
 	(*UpdateRequest)(nil),               // 1: ose.micro.authora.user.v1.UpdateRequest
 	(*ChangePasswordRequest)(nil),       // 2: ose.micro.authora.user.v1.ChangePasswordRequest
 	(*ReadRequest)(nil),                 // 3: ose.micro.authora.user.v1.ReadRequest
-	(*RequestAccessTokenRequest)(nil),   // 4: ose.micro.authora.user.v1.RequestAccessTokenRequest
+	(*ReadOneRequest)(nil),              // 4: ose.micro.authora.user.v1.ReadOneRequest
 	(*RequestPurposeTokenRequest)(nil),  // 5: ose.micro.authora.user.v1.RequestPurposeTokenRequest
 	(*LoginRequest)(nil),                // 6: ose.micro.authora.user.v1.LoginRequest
 	(*CreateResponse)(nil),              // 7: ose.micro.authora.user.v1.CreateResponse
 	(*UpdateResponse)(nil),              // 8: ose.micro.authora.user.v1.UpdateResponse
 	(*ChangePasswordResponse)(nil),      // 9: ose.micro.authora.user.v1.ChangePasswordResponse
 	(*ReadResponse)(nil),                // 10: ose.micro.authora.user.v1.ReadResponse
-	(*RequestAccessTokenResponse)(nil),  // 11: ose.micro.authora.user.v1.RequestAccessTokenResponse
+	(*ReadOneResponse)(nil),             // 11: ose.micro.authora.user.v1.ReadOneResponse
 	(*RequestPurposeTokenResponse)(nil), // 12: ose.micro.authora.user.v1.RequestPurposeTokenResponse
 	(*LoginResponse)(nil),               // 13: ose.micro.authora.user.v1.LoginResponse
 }
@@ -56,14 +56,14 @@ var file_ose_micro_authora_user_v1_service_proto_depIdxs = []int32{
 	1,  // 1: ose.micro.authora.user.v1.UserService.Update:input_type -> ose.micro.authora.user.v1.UpdateRequest
 	2,  // 2: ose.micro.authora.user.v1.UserService.ChangePassword:input_type -> ose.micro.authora.user.v1.ChangePasswordRequest
 	3,  // 3: ose.micro.authora.user.v1.UserService.Read:input_type -> ose.micro.authora.user.v1.ReadRequest
-	4,  // 4: ose.micro.authora.user.v1.UserService.RequestAccessToken:input_type -> ose.micro.authora.user.v1.RequestAccessTokenRequest
+	4,  // 4: ose.micro.authora.user.v1.UserService.ReadOne:input_type -> ose.micro.authora.user.v1.ReadOneRequest
 	5,  // 5: ose.micro.authora.user.v1.UserService.RequestPurposeToken:input_type -> ose.micro.authora.user.v1.RequestPurposeTokenRequest
 	6,  // 6: ose.micro.authora.user.v1.UserService.Login:input_type -> ose.micro.authora.user.v1.LoginRequest
 	7,  // 7: ose.micro.authora.user.v1.UserService.Create:output_type -> ose.micro.authora.user.v1.CreateResponse
 	8,  // 8: ose.micro.authora.user.v1.UserService.Update:output_type -> ose.micro.authora.user.v1.UpdateResponse
 	9,  // 9: ose.micro.authora.user.v1.UserService.ChangePassword:output_type -> ose.micro.authora.user.v1.ChangePasswordResponse
 	10, // 10: ose.micro.authora.user.v1.UserService.Read:output_type -> ose.micro.authora.user.v1.ReadResponse
-	11, // 11: ose.micro.authora.user.v1.UserService.RequestAccessToken:output_type -> ose.micro.authora.user.v1.RequestAccessTokenResponse
+	11, // 11: ose.micro.authora.user.v1.UserService.ReadOne:output_type -> ose.micro.authora.user.v1.ReadOneResponse
 	12, // 12: ose.micro.authora.user.v1.UserService.RequestPurposeToken:output_type -> ose.micro.authora.user.v1.RequestPurposeTokenResponse
 	13, // 13: ose.micro.authora.user.v1.UserService.Login:output_type -> ose.micro.authora.user.v1.LoginResponse
 	7,  // [7:14] is the sub-list for method output_type

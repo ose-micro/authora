@@ -11,6 +11,7 @@ import (
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/repository"
 	"github.com/ose-micro/common"
+	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -43,7 +44,7 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrInvalidInput, err.Error())
+		err := ose_error.New(ose_error.ErrBadRequest, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("validation process failed",
@@ -203,9 +204,8 @@ func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domai
 	}, nil
 }
 
-func (u loginCommandHandler) preparePermission(ctx context.Context, one role.Domain) ([]common.Permission, error) {
-
-	list := make([]common.Permission, 0)
+func (u loginCommandHandler) preparePermission(ctx context.Context, one role.Domain) ([]claims.Permission, error) {
+	list := make([]claims.Permission, 0)
 
 	for _, id := range one.Permissions() {
 		permission, err := u.repo.Permission.ReadOne(ctx, dto.Request{
@@ -226,7 +226,7 @@ func (u loginCommandHandler) preparePermission(ctx context.Context, one role.Dom
 			return nil, err
 		}
 
-		list = append(list, common.Permission{
+		list = append(list, claims.Permission{
 			Resource: permission.Resource(),
 			Action:   permission.Action(),
 		})
