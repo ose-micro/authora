@@ -25,6 +25,7 @@ type Public struct {
 	Id        string                 `json:"_id"`
 	Name      string                 `json:"name"`
 	Metadata  map[string]interface{} `json:"metadata"`
+	Count     int32                  `json:"count"`
 	Version   int32                  `json:"version"`
 	CreatedAt time.Time              `json:"created_at"`
 	UpdatedAt time.Time              `json:"updated_at"`

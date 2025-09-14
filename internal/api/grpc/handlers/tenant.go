@@ -9,6 +9,7 @@ import (
 	"github.com/ose-micro/authora/internal/business/tenant"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	ose_error "github.com/ose-micro/error"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -30,6 +31,7 @@ func (h *TenantHandler) response(param tenant.Public) *tenantv1.Tenant {
 		Id:        param.Id,
 		Name:      param.Name,
 		Version:   param.Version,
+		Count:     param.Count,
 		CreatedAt: timestamppb.New(param.CreatedAt),
 		UpdatedAt: timestamppb.New(param.UpdatedAt),
 		DeletedAt: buildDeletedAt(param.DeletedAt),
@@ -68,7 +70,7 @@ func (h *TenantHandler) Create(ctx context.Context, request *tenantv1.CreateRequ
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("tenant create process successfully",
@@ -105,7 +107,7 @@ func (h *TenantHandler) Update(ctx context.Context, request *tenantv1.UpdateRequ
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("tenant update process successfully",
@@ -129,14 +131,15 @@ func (h *TenantHandler) Read(ctx context.Context, request *tenantv1.ReadRequest)
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	query, err := buildAppRequest(request.Request)
 	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "READ"),
+			zap.String("operation", "read"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	records, err := h.app.Read(ctx, tenant.ReadQuery{
@@ -150,28 +153,26 @@ func (h *TenantHandler) Read(ctx context.Context, request *tenantv1.ReadRequest)
 			zap.String("operation", "READ"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
+	}
+
+	result := map[string]*tenantv1.Tenants{}
+
+	for k, v := range records {
+		switch x := v.(type) {
+		case []tenant.Public:
+			list := make([]*tenantv1.Tenant, 0)
+			for _, v := range x {
+				list = append(list, h.response(v))
+			}
+			result[k] = &tenantv1.Tenants{
+				Data: list,
+			}
+		}
 	}
 
 	return &tenantv1.ReadResponse{
-		Result: func() map[string]*tenantv1.Tenants {
-			data := map[string]*tenantv1.Tenants{}
-
-			for k, v := range records {
-				switch x := v.(type) {
-				case []tenant.Public:
-					list := make([]*tenantv1.Tenant, 0)
-					for _, v := range x {
-						list = append(list, h.response(v))
-					}
-					data[k] = &tenantv1.Tenants{
-						Data: list,
-					}
-				}
-			}
-
-			return data
-		}(),
+		Result: result,
 	}, nil
 }
 

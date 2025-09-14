@@ -11,6 +11,7 @@ import (
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"github.com/ose-micro/cqrs"
+	ose_error "github.com/ose-micro/error"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -37,6 +38,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command permission.Cre
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	// validate command dto
 	if err := command.Validate(); err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -67,7 +69,10 @@ func (c createCommandHandler) Handle(ctx context.Context, command permission.Cre
 			},
 		},
 	}); check != nil {
-		err := fmt.Errorf("permission with resource: %s and action: %s already exists", command.Resource, command.Action)
+		err := ose_error.New(ose_error.ErrConflict,
+			fmt.Sprintf("permission with resource: %s and action: %s already exists", command.Resource, command.Action),
+			traceId,
+		)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
@@ -96,6 +101,14 @@ func (c createCommandHandler) Handle(ctx context.Context, command permission.Cre
 	}
 
 	if err := c.repo.Permission.Create(ctx, *record); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		c.log.Error(err.Error(),
+			zap.String("trace_id", traceId),
+			zap.String("operation", CreateOperation),
+			zap.Error(err),
+		)
+
 		return nil, err
 	}
 

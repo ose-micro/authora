@@ -101,8 +101,8 @@ func (State) EnumDescriptor() ([]byte, []int) {
 
 type Status struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	State         State                  `protobuf:"varint,1,opt,name=state,proto3,enum=ose.micro.authora.user.v1.Status" json:"state,omitempty"`
-	Previous      State                  `protobuf:"varint,2,opt,name=previous,proto3,enum=ose.micro.authora.user.v1.Status" json:"previous,omitempty"` // optional previous state
+	State         State                  `protobuf:"varint,1,opt,name=state,proto3,enum=ose.micro.authora.user.v1.State" json:"state,omitempty"`
+	Previous      State                  `protobuf:"varint,2,opt,name=previous,proto3,enum=ose.micro.authora.user.v1.State" json:"previous,omitempty"` // optional previous state
 	OccurOn       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=occur_on,json=occurOn,proto3" json:"occur_on,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -168,10 +168,11 @@ type User struct {
 	Password      string                 `protobuf:"bytes,5,opt,name=password,proto3" json:"password,omitempty"`
 	Metadata      map[string]string      `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	Version       int32                  `protobuf:"varint,7,opt,name=version,proto3" json:"version,omitempty"`
-	Status        *Status                `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	Count         int32                  `protobuf:"varint,8,opt,name=count,proto3" json:"count,omitempty"`
+	Status        *Status                `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -251,6 +252,13 @@ func (x *User) GetMetadata() map[string]string {
 func (x *User) GetVersion() int32 {
 	if x != nil {
 		return x.Version
+	}
+	return 0
+}
+
+func (x *User) GetCount() int32 {
+	if x != nil {
+		return x.Count
 	}
 	return 0
 }
@@ -1255,7 +1263,7 @@ const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\x06Status\x126\n" +
 	"\x05state\x18\x01 \x01(\x0e2 .ose.micro.authora.user.v1.StateR\x05state\x12<\n" +
 	"\bprevious\x18\x02 \x01(\x0e2 .ose.micro.authora.user.v1.StateR\bprevious\x125\n" +
-	"\boccur_on\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aoccurOn\"\x98\x04\n" +
+	"\boccur_on\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aoccurOn\"\xae\x04\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
 	"\vgiven_names\x18\x02 \x01(\tR\n" +
@@ -1265,15 +1273,16 @@ const file_ose_micro_authora_user_v1_data_proto_rawDesc = "" +
 	"\x05email\x18\x04 \x01(\tR\x05email\x12\x1a\n" +
 	"\bpassword\x18\x05 \x01(\tR\bpassword\x12I\n" +
 	"\bmetadata\x18\x06 \x03(\v2-.ose.micro.authora.user.v1.User.MetadataEntryR\bmetadata\x12\x18\n" +
-	"\aversion\x18\a \x01(\x05R\aversion\x129\n" +
-	"\x06status\x18\b \x01(\v2!.ose.micro.authora.user.v1.StatusR\x06status\x129\n" +
+	"\aversion\x18\a \x01(\x05R\aversion\x12\x14\n" +
+	"\x05count\x18\b \x01(\x05R\x05count\x129\n" +
+	"\x06status\x18\t \x01(\v2!.ose.micro.authora.user.v1.StatusR\x06status\x129\n" +
 	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
 	"\n" +
-	"deleted_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x1a;\n" +
+	"deleted_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xa8\x02\n" +
@@ -1375,7 +1384,7 @@ func file_ose_micro_authora_user_v1_data_proto_rawDescGZIP() []byte {
 var file_ose_micro_authora_user_v1_data_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_ose_micro_authora_user_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_ose_micro_authora_user_v1_data_proto_goTypes = []any{
-	(State)(0),                          // 0: ose.micro.authora.user.v1.Status
+	(State)(0),                          // 0: ose.micro.authora.user.v1.State
 	(*Status)(nil),                      // 1: ose.micro.authora.user.v1.Status
 	(*User)(nil),                        // 2: ose.micro.authora.user.v1.User
 	(*CreateRequest)(nil),               // 3: ose.micro.authora.user.v1.CreateRequest
@@ -1406,8 +1415,8 @@ var file_ose_micro_authora_user_v1_data_proto_goTypes = []any{
 	(*v1.Request)(nil),                  // 28: ose.micro.common.v1.Request
 }
 var file_ose_micro_authora_user_v1_data_proto_depIdxs = []int32{
-	0,  // 0: ose.micro.authora.user.v1.Status.state:type_name -> ose.micro.authora.user.v1.Status
-	0,  // 1: ose.micro.authora.user.v1.Status.previous:type_name -> ose.micro.authora.user.v1.Status
+	0,  // 0: ose.micro.authora.user.v1.Status.state:type_name -> ose.micro.authora.user.v1.State
+	0,  // 1: ose.micro.authora.user.v1.Status.previous:type_name -> ose.micro.authora.user.v1.State
 	26, // 2: ose.micro.authora.user.v1.Status.occur_on:type_name -> google.protobuf.Timestamp
 	22, // 3: ose.micro.authora.user.v1.User.metadata:type_name -> ose.micro.authora.user.v1.User.MetadataEntry
 	1,  // 4: ose.micro.authora.user.v1.User.status:type_name -> ose.micro.authora.user.v1.Status

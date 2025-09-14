@@ -28,10 +28,11 @@ type Tenant struct {
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Metadata      map[string]string      `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Version       int32                  `protobuf:"varint,4,opt,name=version,proto3" json:"version,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	Count         int32                  `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
+	Version       int32                  `protobuf:"varint,5,opt,name=version,proto3" json:"version,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -85,6 +86,13 @@ func (x *Tenant) GetMetadata() map[string]string {
 		return x.Metadata
 	}
 	return nil
+}
+
+func (x *Tenant) GetCount() int32 {
+	if x != nil {
+		return x.Count
+	}
+	return 0
 }
 
 func (x *Tenant) GetVersion() int32 {
@@ -555,18 +563,19 @@ var File_ose_micro_authora_tenant_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_tenant_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"&ose/micro/authora/tenant/v1/data.proto\x12\x1bose.micro.authora.tenant.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!ose/micro/common/v1/request.proto\"\x83\x03\n" +
+	"&ose/micro/authora/tenant/v1/data.proto\x12\x1bose.micro.authora.tenant.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!ose/micro/common/v1/request.proto\"\x99\x03\n" +
 	"\x06Tenant\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12M\n" +
-	"\bmetadata\x18\x03 \x03(\v21.ose.micro.authora.tenant.v1.Tenant.MetadataEntryR\bmetadata\x12\x18\n" +
-	"\aversion\x18\x04 \x01(\x05R\aversion\x129\n" +
+	"\bmetadata\x18\x03 \x03(\v21.ose.micro.authora.tenant.v1.Tenant.MetadataEntryR\bmetadata\x12\x14\n" +
+	"\x05count\x18\x04 \x01(\x05R\x05count\x12\x18\n" +
+	"\aversion\x18\x05 \x01(\x05R\aversion\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
 	"\n" +
-	"deleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x1a;\n" +
+	"deleted_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb6\x01\n" +

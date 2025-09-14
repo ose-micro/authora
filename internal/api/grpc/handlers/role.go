@@ -9,6 +9,7 @@ import (
 	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	ose_error "github.com/ose-micro/error"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -32,6 +33,7 @@ func (h *RoleHandler) response(param role.Public) *rolev1.Role {
 		Tenant:      param.Tenant,
 		Permissions: param.Permissions,
 		Version:     param.Version,
+		Count:       param.Count,
 		CreatedAt:   timestamppb.New(param.CreatedAt),
 		UpdatedAt:   timestamppb.New(param.UpdatedAt),
 		DeletedAt:   buildDeletedAt(param.DeletedAt),
@@ -63,7 +65,7 @@ func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest)
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("role create process successfully",
@@ -103,7 +105,7 @@ func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest)
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("role update process successfully",
@@ -127,6 +129,7 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	query, err := buildAppRequest(request.Request)
 	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
@@ -134,7 +137,7 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 			zap.String("operation", "read"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	records, err := h.app.Read(ctx, role.ReadQuery{
@@ -148,28 +151,26 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 			zap.String("operation", "READ"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
+	}
+
+	result := map[string]*rolev1.Tenants{}
+
+	for k, v := range records {
+		switch x := v.(type) {
+		case []role.Public:
+			list := make([]*rolev1.Role, 0)
+			for _, v := range x {
+				list = append(list, h.response(v))
+			}
+			result[k] = &rolev1.Tenants{
+				Data: list,
+			}
+		}
 	}
 
 	return &rolev1.ReadResponse{
-		Result: func() map[string]*rolev1.Tenants {
-			data := map[string]*rolev1.Tenants{}
-
-			for k, v := range records {
-				switch x := v.(type) {
-				case []role.Public:
-					list := make([]*rolev1.Role, 0)
-					for _, v := range x {
-						list = append(list, h.response(v))
-					}
-					data[k] = &rolev1.Tenants{
-						Data: list,
-					}
-				}
-			}
-
-			return data
-		}(),
+		Result: result,
 	}, nil
 }
 

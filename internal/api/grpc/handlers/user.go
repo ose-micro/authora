@@ -48,6 +48,7 @@ func (h *UserHandler) response(param user.Public) (*userv1.User, error) {
 		Password:   param.Password,
 		Metadata:   metadata,
 		Version:    param.Version,
+		Count:      param.Count,
 		Status:     buildUserStatus(*param.Status),
 		CreatedAt:  timestamppb.New(param.CreatedAt),
 		UpdatedAt:  timestamppb.New(param.UpdatedAt),
@@ -274,7 +275,7 @@ func (h *UserHandler) RequestPurposeToken(ctx context.Context, request *userv1.R
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("user update process successfully",
@@ -311,7 +312,7 @@ func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("user update process successfully",
@@ -360,32 +361,29 @@ func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*u
 			zap.String("operation", "read"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
+	}
+
+	result := map[string]*userv1.Users{}
+	for k, v := range records {
+		switch x := v.(type) {
+		case []user.Public:
+			list := make([]*userv1.User, 0)
+			for _, v := range x {
+				result, err := h.response(v)
+				if err != nil {
+
+				}
+				list = append(list, result)
+			}
+			result[k] = &userv1.Users{
+				Data: list,
+			}
+		}
 	}
 
 	return &userv1.ReadResponse{
-		Result: func() map[string]*userv1.Users {
-			data := map[string]*userv1.Users{}
-
-			for k, v := range records {
-				switch x := v.(type) {
-				case []user.Public:
-					list := make([]*userv1.User, 0)
-					for _, v := range x {
-						result, err := h.response(v)
-						if err != nil {
-
-						}
-						list = append(list, result)
-					}
-					data[k] = &userv1.Users{
-						Data: list,
-					}
-				}
-			}
-
-			return data
-		}(),
+		Result: result,
 	}, nil
 }
 
@@ -399,6 +397,7 @@ func (h *UserHandler) ReadOne(ctx context.Context, request *userv1.ReadOneReques
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	query, err := buildAppRequest(request.Request)
 	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
@@ -406,7 +405,7 @@ func (h *UserHandler) ReadOne(ctx context.Context, request *userv1.ReadOneReques
 			zap.String("operation", "read_one"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	record, err := h.app.ReadOne(ctx, user.ReadQuery{
@@ -420,7 +419,7 @@ func (h *UserHandler) ReadOne(ctx context.Context, request *userv1.ReadOneReques
 			zap.String("operation", "read_one"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	result, err := h.response(*record.Public())

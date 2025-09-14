@@ -9,6 +9,7 @@ import (
 	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	ose_error "github.com/ose-micro/error"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -32,6 +33,7 @@ func (h *AssignmentHandler) response(param assignment.Public) *assignmentv1.Assi
 		User:      param.User,
 		Role:      param.Role,
 		Version:   param.Version,
+		Count:     param.Count,
 		CreatedAt: timestamppb.New(param.CreatedAt),
 		UpdatedAt: timestamppb.New(param.UpdatedAt),
 		DeletedAt: buildDeletedAt(param.DeletedAt),
@@ -62,7 +64,7 @@ func (h *AssignmentHandler) Create(ctx context.Context, request *assignmentv1.Cr
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("assignment create process successfully",
@@ -99,7 +101,7 @@ func (h *AssignmentHandler) Update(ctx context.Context, request *assignmentv1.Up
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("assignment update process successfully",
@@ -123,6 +125,7 @@ func (h *AssignmentHandler) Read(ctx context.Context, request *assignmentv1.Read
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	query, err := buildAppRequest(request.Request)
 	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
@@ -130,7 +133,7 @@ func (h *AssignmentHandler) Read(ctx context.Context, request *assignmentv1.Read
 			zap.String("operation", "read"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	records, err := h.app.Read(ctx, assignment.ReadQuery{
@@ -144,28 +147,26 @@ func (h *AssignmentHandler) Read(ctx context.Context, request *assignmentv1.Read
 			zap.String("operation", "READ"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
+	}
+
+	result := map[string]*assignmentv1.Assignments{}
+
+	for k, v := range records {
+		switch x := v.(type) {
+		case []assignment.Public:
+			list := make([]*assignmentv1.Assignment, 0)
+			for _, v := range x {
+				list = append(list, h.response(v))
+			}
+			result[k] = &assignmentv1.Assignments{
+				Data: list,
+			}
+		}
 	}
 
 	return &assignmentv1.ReadResponse{
-		Result: func() map[string]*assignmentv1.Assignments {
-			data := map[string]*assignmentv1.Assignments{}
-
-			for k, v := range records {
-				switch x := v.(type) {
-				case []assignment.Public:
-					list := make([]*assignmentv1.Assignment, 0)
-					for _, v := range x {
-						list = append(list, h.response(v))
-					}
-					data[k] = &assignmentv1.Assignments{
-						Data: list,
-					}
-				}
-			}
-
-			return data
-		}(),
+		Result: result,
 	}, nil
 }
 

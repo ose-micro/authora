@@ -37,10 +37,11 @@ message User {
   string password = 5;
   map<string, string> metadata = 6;
   int32 version = 7;
-  Status status = 8;
-  google.protobuf.Timestamp created_at = 9;
-  google.protobuf.Timestamp updated_at = 10;
-  google.protobuf.Timestamp deleted_at = 11;
+  int32 count = 8;
+  Status status = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+  google.protobuf.Timestamp deleted_at = 12;
 }
 
 message CreateRequest {

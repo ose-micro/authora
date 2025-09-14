@@ -10,6 +10,7 @@ import (
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
+	ose_error "github.com/ose-micro/error"
 	ose_jwt "github.com/ose-micro/jwt"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -168,19 +169,6 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 	}, nil
 }
 
-func buildPermissions(list []*commonv1.Permission) []claims.Permission {
-	var permissions []claims.Permission
-
-	for _, p := range list {
-		permissions = append(permissions, claims.Permission{
-			Resource: p.Resource,
-			Action:   p.Action,
-		})
-	}
-
-	return permissions
-}
-
 func buildPermissionsProto(list []claims.Permission) []*commonv1.Permission {
 	var permissions []*commonv1.Permission
 
@@ -247,6 +235,17 @@ func buildUserStatus(status user.Status) *userv1.Status {
 func buildDeletedAt(deletedAt *time.Time) *timestamppb.Timestamp {
 	if deletedAt != nil {
 		return timestamppb.New(*deletedAt)
+	}
+
+	return nil
+}
+
+func parseError(err error) error {
+	oseErr := ose_error.CastToError(err)
+
+	err = ose_error.ToGRPCError(oseErr)
+	if err != nil {
+		return err
 	}
 
 	return nil

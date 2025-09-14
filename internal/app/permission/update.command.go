@@ -11,6 +11,7 @@ import (
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
 	"github.com/ose-micro/cqrs"
+	ose_error "github.com/ose-micro/error"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -35,6 +36,7 @@ func (u updateCommandHandler) Handle(ctx context.Context, command permission.Upd
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	// validate command dto
 	if err := command.Validate(); err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("validation process failed",

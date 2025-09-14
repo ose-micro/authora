@@ -24,6 +24,7 @@ type Public struct {
 	Resource  string         `json:"resource"`
 	Action    string         `json:"action"`
 	Version   int32          `json:"version"`
+	Count     int32          `json:"count"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt *time.Time     `json:"deleted_at"`

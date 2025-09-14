@@ -11,10 +11,11 @@ message Tenant {
   string id = 1;
   string name = 2;
   map<string, string> metadata = 3;
-  int32 version = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
-  google.protobuf.Timestamp deleted_at = 7;
+  int32 count = 4;
+  int32 version = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp deleted_at = 8;
 }
 
 message CreateRequest {

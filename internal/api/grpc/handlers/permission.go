@@ -9,6 +9,7 @@ import (
 	"github.com/ose-micro/authora/internal/business/permission"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	ose_error "github.com/ose-micro/error"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -31,6 +32,7 @@ func (h *PermissionHandler) response(param permission.Public) *permissionv1.Perm
 		Resource:  param.Resource,
 		Action:    param.Action,
 		Version:   param.Version,
+		Count:     param.Count,
 		CreatedAt: timestamppb.New(param.CreatedAt),
 		UpdatedAt: timestamppb.New(param.UpdatedAt),
 		DeletedAt: buildDeletedAt(param.DeletedAt),
@@ -60,7 +62,7 @@ func (h *PermissionHandler) Create(ctx context.Context, request *permissionv1.Cr
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("permission create process successfully",
@@ -98,7 +100,7 @@ func (h *PermissionHandler) Update(ctx context.Context, request *permissionv1.Up
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	h.log.Info("permission update process successfully",
@@ -122,6 +124,7 @@ func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.Read
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	query, err := buildAppRequest(request.Request)
 	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
@@ -129,7 +132,7 @@ func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.Read
 			zap.String("operation", "READ"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	records, err := h.app.Read(ctx, permission.ReadQuery{
@@ -143,28 +146,26 @@ func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.Read
 			zap.String("operation", "READ"),
 			zap.Error(err),
 		)
-		return nil, err
+		return nil, parseError(err)
+	}
+
+	result := map[string]*permissionv1.Permissions{}
+
+	for k, v := range records {
+		switch x := v.(type) {
+		case []permission.Public:
+			list := make([]*permissionv1.Permission, 0)
+			for _, v := range x {
+				list = append(list, h.response(v))
+			}
+			result[k] = &permissionv1.Permissions{
+				Data: list,
+			}
+		}
 	}
 
 	return &permissionv1.ReadResponse{
-		Result: func() map[string]*permissionv1.Permissions {
-			data := map[string]*permissionv1.Permissions{}
-
-			for k, v := range records {
-				switch x := v.(type) {
-				case []permission.Public:
-					list := make([]*permissionv1.Permission, 0)
-					for _, v := range x {
-						list = append(list, h.response(v))
-					}
-					data[k] = &permissionv1.Permissions{
-						Data: list,
-					}
-				}
-			}
-
-			return data
-		}(),
+		Result: result,
 	}, nil
 }
 

@@ -50,7 +50,7 @@ func (h *AuthHandler) HasRole(ctx context.Context, request *authv1.HasRoleReques
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	if !result {
@@ -63,7 +63,7 @@ func (h *AuthHandler) HasRole(ctx context.Context, request *authv1.HasRoleReques
 			zap.Error(err),
 		)
 
-		return nil, err
+		return nil, parseError(err)
 	}
 
 	return &authv1.HasRoleResponse{

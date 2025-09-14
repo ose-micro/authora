@@ -31,9 +31,10 @@ type Role struct {
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Permissions   []string               `protobuf:"bytes,5,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	Version       int32                  `protobuf:"varint,6,opt,name=version,proto3" json:"version,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	Count         int32                  `protobuf:"varint,7,opt,name=count,proto3" json:"count,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -106,6 +107,13 @@ func (x *Role) GetPermissions() []string {
 func (x *Role) GetVersion() int32 {
 	if x != nil {
 		return x.Version
+	}
+	return 0
+}
+
+func (x *Role) GetCount() int32 {
+	if x != nil {
+		return x.Count
 	}
 	return 0
 }
@@ -603,20 +611,22 @@ var File_ose_micro_authora_role_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_role_v1_data_proto_rawDesc = "" +
 	"\n" +
-	"$ose/micro/authora/role/v1/data.proto\x12\x19ose.micro.authora.role.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!ose/micro/common/v1/request.proto\"\xd1\x02\n" +
+	"$ose/micro/authora/role/v1/data.proto\x12\x19ose.micro.authora.role.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!ose/micro/common/v1/request.proto\"\xe7\x02\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
 	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12 \n" +
 	"\vpermissions\x18\x05 \x03(\tR\vpermissions\x12\x18\n" +
-	"\aversion\x18\x06 \x01(\x05R\aversion\x129\n" +
+	"\aversion\x18\x06 \x01(\x05R\aversion\x12\x14\n" +
+	"\x05count\x18\a \x01(\x05R\x05count\x129\n" +
 	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
 	"\n" +
-	"deleted_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"\x7f\n" +
+	"deleted_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"\x7f\n" +
 	"\rCreateRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
 	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12 \n" +

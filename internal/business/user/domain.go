@@ -42,6 +42,7 @@ type Public struct {
 	Password   string                 `json:"password"`
 	Metadata   map[string]interface{} `json:"metadata"`
 	Version    int32                  `json:"version"`
+	Count      int32                  `json:"count"`
 	Status     *Status                `json:"status"`
 	CreatedAt  time.Time              `json:"created_at"`
 	UpdatedAt  time.Time              `json:"updated_at"`
