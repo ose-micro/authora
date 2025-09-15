@@ -115,7 +115,7 @@ func (h *PermissionHandler) Update(ctx context.Context, request *permissionv1.Up
 }
 
 func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.ReadRequest) (*permissionv1.ReadResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.permission.read.handler", trace.WithAttributes(
+	ctx, span := h.tracer.Start(ctx, "api.grpc.permission.repository.handler", trace.WithAttributes(
 		attribute.String("operation", "READ"),
 		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
@@ -141,7 +141,7 @@ func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.Read
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to read organizations",
+		h.log.Error("failed to repository organizations",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "READ"),
 			zap.Error(err),

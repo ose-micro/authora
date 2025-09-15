@@ -18,9 +18,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const ChangeStatusOperation = "change_status"
-
-type changeStatusCommandHandler struct {
+type resetPasswordCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
 	tracer tracing.Tracer
@@ -28,30 +26,29 @@ type changeStatusCommandHandler struct {
 }
 
 // Handle implements cqrs.CommandHandle.
-func (c changeStatusCommandHandler) Handle(ctx context.Context, command user.StatusCommand) (*bool, error) {
-	ctx, span := c.tracer.Start(ctx, "app.user.create.command.handler", trace.WithAttributes(
-		attribute.String("operation", ChangeStatusOperation),
+func (u resetPasswordCommandHandler) Handle(ctx context.Context, command user.ResetPasswordCommand) (*user.Domain, error) {
+	ctx, span := u.tracer.Start(ctx, "app.user.change_password.command.handler", trace.WithAttributes(
+		attribute.String("operation", "change_password"),
 		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-
 	// validate command dto
 	if err := command.Validate(); err != nil {
-		err := ose_error.New(ose_error.ErrBadRequest, err.Error(), traceId)
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		c.log.Error("validation process failed",
+		u.log.Error("validation process failed",
 			zap.String("trace_id", traceId),
-			zap.String("operation", ChangeStatusOperation),
+			zap.String("operation", "change_password"),
 			zap.Error(err),
 		)
 
 		return nil, err
 	}
 
-	record, err := c.repo.User.ReadOne(ctx, dto.Request{
+	record, err := u.repo.User.ReadOne(ctx, dto.Request{
 		Queries: []dto.Query{
 			{
 				Name: "one",
@@ -69,54 +66,66 @@ func (c changeStatusCommandHandler) Handle(ctx context.Context, command user.Sta
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		c.log.Error("user role not found",
+		u.log.Error("failed to change_password record",
 			zap.String("trace_id", traceId),
-			zap.String("operation", ChangeStatusOperation),
+			zap.String("operation", "change_password"),
 			zap.Error(err),
 		)
 
 		return nil, err
 	}
 
-	if err := record.Status().ChangeState(command.State); err != nil {
+	if !record.Status().IsActive() {
+		err := ose_error.New(ose_error.ErrUnauthorized, "user is not active", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		c.log.Error("failed to change state",
+		u.log.Error("failed to change_password record",
 			zap.String("trace_id", traceId),
-			zap.String("operation", ChangeStatusOperation),
+			zap.String("operation", "change_password"),
 			zap.Error(err),
 		)
 
 		return nil, err
 	}
-	record.Touch()
 
-	if err := c.repo.User.Update(ctx, *record); err != nil {
+	if err := record.ResetPassword(command.NewPassword); err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		c.log.Error("failed to create user",
+		u.log.Error("failed to change_password record",
 			zap.String("trace_id", traceId),
-			zap.String("operation", ChangeStatusOperation),
+			zap.String("operation", "change_password"),
 			zap.Error(err),
 		)
 
 		return nil, err
 	}
 
-	c.log.Info("change status process complete successfully",
+	// save user to write store
+	err = u.repo.User.Update(ctx, *record)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		u.log.Error("failed to change_password record",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "change_password"),
+			zap.Error(err),
+		)
+
+		return nil, err
+	}
+
+	u.log.Info("change_password process complete successfully",
 		zap.String("trace_id", traceId),
-		zap.String("operation", ChangeStatusOperation),
+		zap.String("operation", "change_password"),
 		zap.Any("dto", command),
 	)
 
-	result := true
-
-	return &result, nil
+	return record, nil
 }
 
-func newChangeStausCommandHandler(bs business.Domain, repo repository.Repository, log logger.Logger,
-	tracer tracing.Tracer) cqrs.CommandHandle[user.StatusCommand, *bool] {
-	return &changeStatusCommandHandler{
+func newResetPasswordCommandHandler(bs business.Domain, repo repository.Repository,
+	log logger.Logger, tracer tracing.Tracer) cqrs.CommandHandle[user.ResetPasswordCommand, *user.Domain] {
+	return &resetPasswordCommandHandler{
 		repo:   repo,
 		log:    log,
 		tracer: tracer,

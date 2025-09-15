@@ -28,6 +28,7 @@ message ParseClaimResponse {
 message RequestPurposeTokenRequest {
   string id = 1;
   string purpose = 2;
+  bool safe = 3;
 }
 
 message RequestPurposeTokenResponse {

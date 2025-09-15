@@ -35,7 +35,7 @@ func (r *readOneQueryHandler) Handle(ctx context.Context, query user.ReadQuery) 
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read users",
+		r.log.Error("failed to repository users",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "read_one"),
 			zap.Error(err),
@@ -44,7 +44,7 @@ func (r *readOneQueryHandler) Handle(ctx context.Context, query user.ReadQuery) 
 		return nil, err
 	}
 
-	r.log.Info("read process complete successfully",
+	r.log.Info("repository process complete successfully",
 		zap.String("trace_id", traceId),
 		zap.String("operation", "read_one"),
 		zap.Any("dto", fmt.Sprintf("%v", query)),

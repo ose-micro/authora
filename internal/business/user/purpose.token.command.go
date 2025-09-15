@@ -10,6 +10,7 @@ import (
 type PurposeTokenCommand struct {
 	Id      string
 	Purpose string
+	Safe    bool
 }
 
 func (c PurposeTokenCommand) CommandName() string {

@@ -30,8 +30,32 @@ type app struct {
 	requestPurposeToken domain.CommandHandle[user.PurposeTokenCommand, *string]
 	requestAccessToken  domain.CommandHandle[user.TokenCommand, *string]
 	changePassword      domain.CommandHandle[user.ChangePasswordCommand, *user.Domain]
+	resetPassword       domain.CommandHandle[user.ResetPasswordCommand, *user.Domain]
 	read                domain.QueryHandle[user.ReadQuery, map[string]any]
 	readOne             domain.QueryHandle[user.ReadQuery, *user.Domain]
+}
+
+func (a app) ResetPassword(ctx context.Context, command user.ResetPasswordCommand) (*user.Domain, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.reset_password.query", trace.WithAttributes(
+		attribute.String("operation", "reset_password"),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	record, err := a.resetPassword.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "reset_password"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	return record, nil
 }
 
 func (a app) ReadOne(ctx context.Context, command user.ReadQuery) (*user.Domain, error) {
@@ -241,8 +265,8 @@ func (a app) ChangePassword(ctx context.Context, command user.ChangePasswordComm
 }
 
 func (a app) Read(ctx context.Context, command user.ReadQuery) (map[string]any, error) {
-	ctx, span := a.tracer.Start(ctx, "app.user.read.command", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := a.tracer.Start(ctx, "app.user.repository.command", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
@@ -254,7 +278,7 @@ func (a app) Read(ctx context.Context, command user.ReadQuery) (map[string]any, 
 		span.SetStatus(codes.Error, err.Error())
 		a.log.Error("failed to process command",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 		return nil, err
@@ -331,5 +355,6 @@ func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo r
 		changePassword:      newChangePasswordCommandHandler(bs, repo, log, tracer),
 		read:                newReadQueryHandler(repo.User, log, tracer),
 		readOne:             newReadOneQueryHandler(repo.User, log, tracer),
+		resetPassword:       newResetPasswordCommandHandler(bs, repo, log, tracer),
 	}
 }

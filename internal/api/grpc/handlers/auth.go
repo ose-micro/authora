@@ -136,6 +136,7 @@ func (h *AuthHandler) RequestPurposeToken(ctx context.Context, request *authv1.R
 	payload := user.PurposeTokenCommand{
 		Id:      request.Id,
 		Purpose: request.Purpose,
+		Safe:    request.Safe,
 	}
 
 	token, err := h.app.RequestPurposeToken(ctx, payload)

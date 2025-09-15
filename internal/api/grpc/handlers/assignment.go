@@ -116,8 +116,8 @@ func (h *AssignmentHandler) Update(ctx context.Context, request *assignmentv1.Up
 }
 
 func (h *AssignmentHandler) Read(ctx context.Context, request *assignmentv1.ReadRequest) (*assignmentv1.ReadResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.assignment.read.handler", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := h.tracer.Start(ctx, "api.grpc.assignment.repository.handler", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
@@ -130,7 +130,7 @@ func (h *AssignmentHandler) Read(ctx context.Context, request *assignmentv1.Read
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 		return nil, parseError(err)
@@ -142,7 +142,7 @@ func (h *AssignmentHandler) Read(ctx context.Context, request *assignmentv1.Read
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to read organizations",
+		h.log.Error("failed to repository organizations",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "READ"),
 			zap.Error(err),

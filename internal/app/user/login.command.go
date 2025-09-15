@@ -191,11 +191,13 @@ func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domai
 		}
 	}
 
-	accessToken, _, err := u.jwt.IssueAccessToken(command.ID(), tenants, nil)
+	sub := fmt.Sprintf("%s:access", command.ID())
+	accessToken, _, err := u.jwt.IssueAccessToken(sub, tenants, nil)
 	if err != nil {
 		return nil, err
 	}
 
+	sub = fmt.Sprintf("%s:refresh", command.ID())
 	refreshToken, _, err := u.jwt.IssueRefreshToken(command.ID(), tenants, nil)
 
 	return &user.Auth{

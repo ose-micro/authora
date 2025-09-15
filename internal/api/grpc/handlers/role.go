@@ -120,8 +120,8 @@ func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest)
 }
 
 func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*rolev1.ReadResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.role.read.handler", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := h.tracer.Start(ctx, "api.grpc.role.repository.handler", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
@@ -134,7 +134,7 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 		return nil, parseError(err)
@@ -146,7 +146,7 @@ func (h *RoleHandler) Read(ctx context.Context, request *rolev1.ReadRequest) (*r
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to read organizations",
+		h.log.Error("failed to repository organizations",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "READ"),
 			zap.Error(err),

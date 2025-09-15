@@ -33,7 +33,7 @@ func (r *repository) Delete(ctx context.Context, payload role.Domain) error {
 }
 
 func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Domain, error) {
-	ctx, span := r.tracer.Start(ctx, "read.repository.role.read_one", trace.WithAttributes(
+	ctx, span := r.tracer.Start(ctx, "repository.infrastructure.role.read_one", trace.WithAttributes(
 		attribute.String("operation", "read_one"),
 		attribute.String("dto", fmt.Sprintf("%v", request))),
 	)
@@ -46,7 +46,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 		err := ose_error.New(ose_error.ErrInternalServerError, err.Error())
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read res",
+		r.log.Error("failed to repository res",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "read_one"),
 			zap.Error(err),
@@ -59,7 +59,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 		err := ose_error.New(ose_error.ErrUnprocessableEntity, "role not found", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read res",
+		r.log.Error("failed to repository res",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "read_one"),
 			zap.Error(err),
@@ -74,7 +74,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read res",
+		r.log.Error("failed to repository res",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "read_one"),
 			zap.Error(err),
@@ -86,7 +86,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 		err := ose_error.New(ose_error.ErrInternalServerError, "role not found", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read res", zap.String("trace_id", traceId), zap.String("operation", "read_one"), zap.Error(err))
+		r.log.Error("failed to repository res", zap.String("trace_id", traceId), zap.String("operation", "read_one"), zap.Error(err))
 		return nil, err
 	}
 
@@ -95,7 +95,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*role.Do
 
 // Create implements role.Repository.
 func (r *repository) Create(ctx context.Context, payload role.Domain) error {
-	ctx, span := r.tracer.Start(ctx, "read.repository.role.create", trace.WithAttributes(
+	ctx, span := r.tracer.Start(ctx, "repository.infrastructure.role.create", trace.WithAttributes(
 		attribute.String("operation", "create"),
 		attribute.String("dto", fmt.Sprintf("%v", payload.Public())),
 	))
@@ -126,8 +126,8 @@ func (r *repository) Create(ctx context.Context, payload role.Domain) error {
 
 // Read implements role.Repository.
 func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]any, error) {
-	ctx, span := r.tracer.Start(ctx, "read.repository.role.read", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := r.tracer.Start(ctx, "repository.infrastructure.role.repository", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%+v", request)),
 	))
 	defer span.End()
@@ -147,7 +147,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 		span.SetStatus(codes.Error, err.Error())
 
 		r.log.Error("Failed to fetch role by request",
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.String("trace_id", traceID),
 			zap.Any("dto", request),
 			zap.Error(err),
@@ -156,7 +156,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 	}
 
 	r.log.Info("Read process completed successfully",
-		zap.String("operation", "read"),
+		zap.String("operation", "repository"),
 		zap.String("trace_id", traceID),
 		zap.Any("dto", request),
 	)
@@ -167,7 +167,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("Failed to cast faceted result",
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.String("trace_id", traceID),
 			zap.Any("dto", request),
 			zap.Error(err),
@@ -180,7 +180,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 
 // Update implements role.Repository.
 func (r *repository) Update(ctx context.Context, payload role.Domain) error {
-	ctx, span := r.tracer.Start(ctx, "repository.read.role.update", trace.WithAttributes(
+	ctx, span := r.tracer.Start(ctx, "infrastructure.repository.role.update", trace.WithAttributes(
 		attribute.String("operation", "update"),
 		attribute.String("dto", fmt.Sprintf("%+v", payload.Public())),
 	))

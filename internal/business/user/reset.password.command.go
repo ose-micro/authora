@@ -7,27 +7,22 @@ import (
 	"github.com/ose-micro/cqrs"
 )
 
-type ChangePasswordCommand struct {
+type ResetPasswordCommand struct {
 	Id          string
 	NewPassword string
-	OldPassword string
 }
 
-func (c ChangePasswordCommand) CommandName() string {
-	return "user.create.command"
+func (c ResetPasswordCommand) CommandName() string {
+	return "user.reset_password.command"
 }
 
-func (c ChangePasswordCommand) Validate() error {
+func (c ResetPasswordCommand) Validate() error {
 	fields := make([]string, 0)
 
 	if c.NewPassword == "" {
 		fields = append(fields, "new password is required")
 	} else if len(c.NewPassword) < 8 {
 		fields = append(fields, "password must be at least 8 characters")
-	}
-
-	if c.OldPassword == "" {
-		fields = append(fields, "old password is required")
 	}
 
 	if c.Id == "" {
@@ -42,4 +37,4 @@ func (c ChangePasswordCommand) Validate() error {
 	return nil
 }
 
-var _ cqrs.Command = ChangePasswordCommand{}
+var _ cqrs.Command = ResetPasswordCommand{}

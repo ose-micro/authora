@@ -10,6 +10,7 @@ service UserService {
   rpc Create(ose.micro.authora.user.v1.CreateRequest) returns (ose.micro.authora.user.v1.CreateResponse);
   rpc Update(ose.micro.authora.user.v1.UpdateRequest) returns (ose.micro.authora.user.v1.UpdateResponse);
   rpc ChangePassword(ose.micro.authora.user.v1.ChangePasswordRequest) returns (ose.micro.authora.user.v1.ChangePasswordResponse);
+  rpc ResetPassword(ose.micro.authora.user.v1.ResetPasswordRequest) returns (ose.micro.authora.user.v1.ResetPasswordResponse);
   rpc Read(ose.micro.authora.user.v1.ReadRequest) returns (ose.micro.authora.user.v1.ReadResponse);
   rpc ReadOne(ose.micro.authora.user.v1.ReadOneRequest) returns (ose.micro.authora.user.v1.ReadOneResponse);
   rpc RequestPurposeToken(ose.micro.authora.user.v1.RequestPurposeTokenRequest) returns (ose.micro.authora.user.v1.RequestPurposeTokenResponse);

@@ -19,9 +19,6 @@
     "timeout": "2s",
     "max_reconnect": -1
   },
-  "grpc": {
-    "port": 20244
-  },
   "jwt": {
     "prefix": "FMC",
     "secret": "mI7r9jQpLk3uXy6fHnWb2sEwRtAq8fGhJaL0yUzXk1E=",
@@ -29,6 +26,9 @@
     "access_ttl": "15m",
     "refresh_ttl": "168h",
     "purpose_ttl": "30m"
+  },
+  "grpc": {
+    "port": 20245
   },
   "mongo": {
     "host": "localhost",

@@ -64,7 +64,7 @@ systems.
 ## 📦 Installation
 
 ```bash
-# Clone the repo
+# Clone the repository
 git clone https://github.com/ose-micro/authora.git
 cd authora
 

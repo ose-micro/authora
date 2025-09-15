@@ -11,7 +11,7 @@ type ReadQuery struct {
 
 // QueryName implements cqrs.Query.
 func (c ReadQuery) QueryName() string {
-	return "permission.read.query"
+	return "permission.repository.query"
 }
 
 var _ domain.Query = ReadQuery{}

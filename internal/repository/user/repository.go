@@ -33,7 +33,7 @@ func (r *repository) Delete(ctx context.Context, payload user.Domain) error {
 }
 
 func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*user.Domain, error) {
-	ctx, span := r.tracer.Start(ctx, "read.repository.user.read_one", trace.WithAttributes(
+	ctx, span := r.tracer.Start(ctx, "repository.infrastructure.user.read_one", trace.WithAttributes(
 		attribute.String("operation", "read_one"),
 		attribute.String("dto", fmt.Sprintf("%v", request))),
 	)
@@ -45,7 +45,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*user.Do
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read res",
+		r.log.Error("failed to repository res",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "read_one"),
 			zap.Error(err),
@@ -63,7 +63,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*user.Do
 	if err := common.JsonToAny(raw, &records); err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read res",
+		r.log.Error("failed to repository res",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "read_one"),
 			zap.Error(err),
@@ -80,7 +80,7 @@ func (r *repository) ReadOne(ctx context.Context, request dto.Request) (*user.Do
 
 // Create implements user.Repository.
 func (r *repository) Create(ctx context.Context, payload user.Domain) error {
-	ctx, span := r.tracer.Start(ctx, "read.repository.user.create", trace.WithAttributes(
+	ctx, span := r.tracer.Start(ctx, "repository.infrastructure.user.create", trace.WithAttributes(
 		attribute.String("operation", "create"),
 		attribute.String("dto", fmt.Sprintf("%v", payload.Public())),
 	))
@@ -110,8 +110,8 @@ func (r *repository) Create(ctx context.Context, payload user.Domain) error {
 
 // Read implements user.Repository.
 func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]any, error) {
-	ctx, span := r.tracer.Start(ctx, "read.repository.user.read", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := r.tracer.Start(ctx, "repository.infrastructure.user.repository", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%+v", request)),
 	))
 	defer span.End()
@@ -130,7 +130,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 		span.SetStatus(codes.Error, err.Error())
 
 		r.log.Error("Failed to fetch user by request",
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.String("trace_id", traceID),
 			zap.Any("dto", request),
 			zap.Error(err),
@@ -139,7 +139,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 	}
 
 	r.log.Info("Read process completed successfully",
-		zap.String("operation", "read"),
+		zap.String("operation", "repository"),
 		zap.String("trace_id", traceID),
 		zap.Any("dto", request),
 	)
@@ -149,7 +149,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		r.log.Error("Failed to cast faceted result",
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.String("trace_id", traceID),
 			zap.Any("dto", request),
 			zap.Error(err),
@@ -162,7 +162,7 @@ func (r *repository) Read(ctx context.Context, request dto.Request) (map[string]
 
 // Update implements user.Repository.
 func (r *repository) Update(ctx context.Context, payload user.Domain) error {
-	ctx, span := r.tracer.Start(ctx, "repository.read.user.update", trace.WithAttributes(
+	ctx, span := r.tracer.Start(ctx, "infrastructure.repository.user.update", trace.WithAttributes(
 		attribute.String("operation", "update"),
 		attribute.String("dto", fmt.Sprintf("%+v", payload.Public())),
 	))

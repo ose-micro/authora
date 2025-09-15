@@ -109,6 +109,16 @@ func (d *Domain) ChangePassword(password string, oldPassword string) error {
 	return nil
 }
 
+func (d *Domain) ResetPassword(password string) error {
+	hash, err := utils.HashPassword(password)
+	if err != nil {
+		return ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error())
+	}
+
+	d.password = hash
+	return nil
+}
+
 func (d *Domain) Public() *Public {
 	return &Public{
 		Id:         d.ID(),

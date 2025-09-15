@@ -187,7 +187,7 @@ func (h *UserHandler) ChangePassword(ctx context.Context, request *userv1.Change
 	payload := user.ChangePasswordCommand{
 		Id:          request.Id,
 		OldPassword: request.OldPassword,
-		Password:    request.Password,
+		NewPassword: request.Password,
 	}
 
 	record, err := h.app.ChangePassword(ctx, payload)
@@ -216,62 +216,26 @@ func (h *UserHandler) ChangePassword(ctx context.Context, request *userv1.Change
 	}, nil
 }
 
-func (h *UserHandler) RequestAccessToken(ctx context.Context, request *userv1.RequestAccessTokenRequest) (*userv1.RequestAccessTokenResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.user.request_access_token.handler", trace.WithAttributes(
-		attribute.String("operation", "login"),
+func (h *UserHandler) ResetPassword(ctx context.Context, request *userv1.ResetPasswordRequest) (*userv1.ResetPasswordResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.reset_password.handler", trace.WithAttributes(
+		attribute.String("operation", "reset_password"),
 		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	payload := user.TokenCommand{
-		Token: request.Token,
+	payload := user.ResetPasswordCommand{
+		Id:          request.Id,
+		NewPassword: request.Password,
 	}
 
-	res, err := h.app.RequestAccessToken(ctx, payload)
+	res, err := h.app.ResetPassword(ctx, payload)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to request access token",
+		h.log.Error("failed to reset_password user",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "request_access_token"),
-			zap.Error(err),
-		)
-
-		return nil, err
-	}
-
-	h.log.Info("request access token process successfully",
-		zap.String("trace_id", traceId),
-		zap.String("operation", "update"),
-		zap.Any("dto", request),
-	)
-
-	return &userv1.RequestAccessTokenResponse{
-		Token: *res,
-	}, nil
-}
-
-func (h *UserHandler) RequestPurposeToken(ctx context.Context, request *userv1.RequestPurposeTokenRequest) (*userv1.RequestPurposeTokenResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.user.request_purpose_token.handler", trace.WithAttributes(
-		attribute.String("operation", "request_purpose_token"),
-		attribute.String("dto", fmt.Sprintf("%v", request)),
-	))
-	defer span.End()
-
-	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
-	payload := user.PurposeTokenCommand{
-		Purpose: request.Purpose,
-		Id:      request.Id,
-	}
-
-	res, err := h.app.RequestPurposeToken(ctx, payload)
-	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to request_purpose_token user",
-			zap.String("trace_id", traceId),
-			zap.String("operation", "request_purpose_token"),
+			zap.String("operation", "reset_password"),
 			zap.Error(err),
 		)
 
@@ -284,8 +248,22 @@ func (h *UserHandler) RequestPurposeToken(ctx context.Context, request *userv1.R
 		zap.Any("dto", request),
 	)
 
-	return &userv1.RequestPurposeTokenResponse{
-		Token: *res,
+	record, err := h.response(*res.Public())
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to reset_password user",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "reset_password"),
+			zap.Error(err),
+		)
+
+		return nil, parseError(err)
+	}
+
+	return &userv1.ResetPasswordResponse{
+		Message: "reset password successfully",
+		Record:  record,
 	}, nil
 }
 
@@ -331,8 +309,8 @@ func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (
 }
 
 func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*userv1.ReadResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.user.read.handler", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.repository.handler", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
@@ -344,7 +322,7 @@ func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*u
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 		return nil, err
@@ -356,9 +334,9 @@ func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*u
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to read organizations",
+		h.log.Error("failed to repository organizations",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 		return nil, parseError(err)
@@ -414,7 +392,7 @@ func (h *UserHandler) ReadOne(ctx context.Context, request *userv1.ReadOneReques
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to read organizations",
+		h.log.Error("failed to repository organizations",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "read_one"),
 			zap.Error(err),

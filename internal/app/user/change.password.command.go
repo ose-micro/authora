@@ -88,7 +88,7 @@ func (u changePasswordCommandHandler) Handle(ctx context.Context, command user.C
 		return nil, err
 	}
 
-	if err := record.ChangePassword(command.Password, command.OldPassword); err != nil {
+	if err := record.ChangePassword(command.NewPassword, command.OldPassword); err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		u.log.Error("failed to change_password record",

@@ -226,6 +226,7 @@ type RequestPurposeTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Purpose       string                 `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
+	Safe          bool                   `protobuf:"varint,3,opt,name=safe,proto3" json:"safe,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -272,6 +273,13 @@ func (x *RequestPurposeTokenRequest) GetPurpose() string {
 		return x.Purpose
 	}
 	return ""
+}
+
+func (x *RequestPurposeTokenRequest) GetSafe() bool {
+	if x != nil {
+		return x.Safe
+	}
+	return false
 }
 
 type RequestPurposeTokenResponse struct {
@@ -525,10 +533,11 @@ const file_ose_micro_authora_auth_v1_data_proto_rawDesc = "" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"a\n" +
 	"\x12ParseClaimResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x121\n" +
-	"\x05claim\x18\x02 \x01(\v2\x1b.ose.micro.common.v1.ClaimsR\x05claim\"F\n" +
+	"\x05claim\x18\x02 \x01(\v2\x1b.ose.micro.common.v1.ClaimsR\x05claim\"Z\n" +
 	"\x1aRequestPurposeTokenRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\apurpose\x18\x02 \x01(\tR\apurpose\"3\n" +
+	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x12\n" +
+	"\x04safe\x18\x03 \x01(\bR\x04safe\"3\n" +
 	"\x1bRequestPurposeTokenResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"5\n" +
 	"\x19RequestAccessTokenRequest\x12\x18\n" +

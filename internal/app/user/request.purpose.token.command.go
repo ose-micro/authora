@@ -78,17 +78,19 @@ func (h requestPurposeTokenCommandHandler) Handle(ctx context.Context, command u
 		return nil, err
 	}
 
-	if !record.Status().IsActive() {
-		err = ose_error.New(ose_error.ErrUnauthorized, "user is not active")
-		span.RecordError(err)
-		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("validation process failed",
-			zap.String("trace_id", traceId),
-			zap.String("operation", "request_purpose_token"),
-			zap.Error(err),
-		)
+	if !command.Safe {
+		if !record.Status().IsActive() {
+			err = ose_error.New(ose_error.ErrUnauthorized, "user is not active")
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+			h.log.Error("validation process failed",
+				zap.String("trace_id", traceId),
+				zap.String("operation", "request_purpose_token"),
+				zap.Error(err),
+			)
 
-		return nil, err
+			return nil, err
+		}
 	}
 
 	token, err := h.prepareToken(ctx, command.Id, command.Purpose)

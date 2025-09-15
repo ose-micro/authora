@@ -25,8 +25,8 @@ type app struct {
 }
 
 func (a app) Read(ctx context.Context, command role.ReadQuery) (map[string]any, error) {
-	ctx, span := a.tracer.Start(ctx, "app.role.read.command", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := a.tracer.Start(ctx, "app.role.repository.command", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
@@ -38,7 +38,7 @@ func (a app) Read(ctx context.Context, command role.ReadQuery) (map[string]any, 
 		span.SetStatus(codes.Error, err.Error())
 		a.log.Error("failed to process command",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 		return nil, err

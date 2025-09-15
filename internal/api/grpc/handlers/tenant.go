@@ -122,7 +122,7 @@ func (h *TenantHandler) Update(ctx context.Context, request *tenantv1.UpdateRequ
 }
 
 func (h *TenantHandler) Read(ctx context.Context, request *tenantv1.ReadRequest) (*tenantv1.ReadResponse, error) {
-	ctx, span := h.tracer.Start(ctx, "api.grpc.tenant.read.handler", trace.WithAttributes(
+	ctx, span := h.tracer.Start(ctx, "api.grpc.tenant.repository.handler", trace.WithAttributes(
 		attribute.String("operation", "READ"),
 		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
@@ -136,7 +136,7 @@ func (h *TenantHandler) Read(ctx context.Context, request *tenantv1.ReadRequest)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 		return nil, parseError(err)
@@ -148,7 +148,7 @@ func (h *TenantHandler) Read(ctx context.Context, request *tenantv1.ReadRequest)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		h.log.Error("failed to read organizations",
+		h.log.Error("failed to repository organizations",
 			zap.String("trace_id", traceId),
 			zap.String("operation", "READ"),
 			zap.Error(err),

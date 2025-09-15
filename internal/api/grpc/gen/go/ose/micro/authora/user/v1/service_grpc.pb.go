@@ -22,6 +22,7 @@ const (
 	UserService_Create_FullMethodName              = "/ose.micro.authora.user.v1.UserService/Create"
 	UserService_Update_FullMethodName              = "/ose.micro.authora.user.v1.UserService/Update"
 	UserService_ChangePassword_FullMethodName      = "/ose.micro.authora.user.v1.UserService/ChangePassword"
+	UserService_ResetPassword_FullMethodName       = "/ose.micro.authora.user.v1.UserService/ResetPassword"
 	UserService_Read_FullMethodName                = "/ose.micro.authora.user.v1.UserService/Read"
 	UserService_ReadOne_FullMethodName             = "/ose.micro.authora.user.v1.UserService/ReadOne"
 	UserService_RequestPurposeToken_FullMethodName = "/ose.micro.authora.user.v1.UserService/RequestPurposeToken"
@@ -35,6 +36,7 @@ type UserServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
+	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 	Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (*ReadResponse, error)
 	ReadOne(ctx context.Context, in *ReadOneRequest, opts ...grpc.CallOption) (*ReadOneResponse, error)
 	RequestPurposeToken(ctx context.Context, in *RequestPurposeTokenRequest, opts ...grpc.CallOption) (*RequestPurposeTokenResponse, error)
@@ -73,6 +75,16 @@ func (c *userServiceClient) ChangePassword(ctx context.Context, in *ChangePasswo
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ChangePasswordResponse)
 	err := c.cc.Invoke(ctx, UserService_ChangePassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResetPasswordResponse)
+	err := c.cc.Invoke(ctx, UserService_ResetPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -126,6 +138,7 @@ type UserServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	Read(context.Context, *ReadRequest) (*ReadResponse, error)
 	ReadOne(context.Context, *ReadOneRequest) (*ReadOneResponse, error)
 	RequestPurposeToken(context.Context, *RequestPurposeTokenRequest) (*RequestPurposeTokenResponse, error)
@@ -148,6 +161,9 @@ func (UnimplementedUserServiceServer) Update(context.Context, *UpdateRequest) (*
 }
 func (UnimplementedUserServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
+}
+func (UnimplementedUserServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
 func (UnimplementedUserServiceServer) Read(context.Context, *ReadRequest) (*ReadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
@@ -232,6 +248,24 @@ func _UserService_ChangePassword_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ResetPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ResetPassword(ctx, req.(*ResetPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -326,6 +360,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChangePassword",
 			Handler:    _UserService_ChangePassword_Handler,
+		},
+		{
+			MethodName: "ResetPassword",
+			Handler:    _UserService_ResetPassword_Handler,
 		},
 		{
 			MethodName: "Read",

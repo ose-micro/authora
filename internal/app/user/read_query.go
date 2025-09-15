@@ -22,8 +22,8 @@ type readQueryHandler struct {
 
 // Handle implements cqrs.QueryHandle.
 func (r *readQueryHandler) Handle(ctx context.Context, query user.ReadQuery) (map[string]any, error) {
-	ctx, span := r.tracer.Start(ctx, "app.user.read.query.handler", trace.WithAttributes(
-		attribute.String("operation", "read"),
+	ctx, span := r.tracer.Start(ctx, "app.user.repository.query.handler", trace.WithAttributes(
+		attribute.String("operation", "repository"),
 		attribute.String("dto", fmt.Sprintf("%v", query)),
 	))
 	defer span.End()
@@ -35,18 +35,18 @@ func (r *readQueryHandler) Handle(ctx context.Context, query user.ReadQuery) (ma
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
-		r.log.Error("failed to read users",
+		r.log.Error("failed to repository users",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "read"),
+			zap.String("operation", "repository"),
 			zap.Error(err),
 		)
 
 		return nil, err
 	}
 
-	r.log.Info("read process complete successfully",
+	r.log.Info("repository process complete successfully",
 		zap.String("trace_id", traceId),
-		zap.String("operation", "read"),
+		zap.String("operation", "repository"),
 		zap.Any("dto", fmt.Sprintf("%v", query)),
 	)
 	return records, nil
