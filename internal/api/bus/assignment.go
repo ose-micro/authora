@@ -2,8 +2,11 @@ package bus
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
+	"github.com/ose-micro/authora/internal/app"
+	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/events"
 	"github.com/ose-micro/core/logger"
@@ -15,8 +18,8 @@ import (
 	"go.uber.org/zap"
 )
 
-func newAssignmentConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
-	return bus.Subscribe(user.CreatedEvent, "assignment", func(ctx context.Context, data any) error {
+func newAssignmentConsumer(bus bus.Bus, app app.Apps, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
+	_ = bus.Subscribe(user.CreatedEvent, "assignment_created", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.assignment.created.handler", trace.WithAttributes(
 			attribute.String("operation", "created"),
 			attribute.String("dto", fmt.Sprintf("%v", data)),
@@ -45,4 +48,61 @@ func newAssignmentConsumer(bus bus.Bus, event events.Events, tracer tracing.Trac
 
 		return nil
 	})
+
+	_ = bus.Subscribe(assignment.OnboardEvent, "assignment_onboard", func(ctx context.Context, data any) error {
+		ctx, span := tracer.Start(ctx, "event.assignment.onboard.handler", trace.WithAttributes(
+			attribute.String("operation", "onboard"),
+			attribute.String("dto", fmt.Sprintf("%v", data)),
+		))
+		defer span.End()
+
+		traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+
+		msg, err := toAssignmentEvent(data)
+		if err != nil {
+			return err
+		}
+		_, err = app.Assignment.Create(ctx, assignment.CreateCommand{
+			User:   msg.User,
+			Tenant: msg.Tenant,
+			Role:   msg.Role,
+		})
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+			log.Error("failed to broadcast event",
+				zap.Any("msg", msg),
+				zap.String("trace_id", traceId),
+				zap.String("operation", "onboard"),
+				zap.Error(err),
+			)
+
+			return err
+		}
+
+		return nil
+	})
+
+	return nil
+}
+
+func toAssignmentEvent(data interface{}) (assignment.DefaultEvent, error) {
+	mapData, ok := data.(map[string]interface{})
+	if !ok {
+		return assignment.DefaultEvent{}, fmt.Errorf("invalid message format")
+	}
+
+	// Marshal it to JSON
+	raw, err := json.Marshal(mapData)
+	if err != nil {
+		return assignment.DefaultEvent{}, fmt.Errorf("failed to marshal map: %w", err)
+	}
+
+	var event assignment.DefaultEvent
+
+	if err := json.Unmarshal(raw, &event); err != nil {
+		return event, fmt.Errorf("failed to unmarshal into DefaultEvent: %w", err)
+	}
+
+	return event, nil
 }

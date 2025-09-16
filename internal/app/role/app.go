@@ -17,16 +17,40 @@ import (
 )
 
 type app struct {
-	tracer tracing.Tracer
-	log    logger.Logger
-	create domain.CommandHandle[role.CreateCommand, *role.Domain]
-	update domain.CommandHandle[role.UpdateCommand, *role.Domain]
-	read   domain.QueryHandle[role.ReadQuery, map[string]any]
+	tracer  tracing.Tracer
+	log     logger.Logger
+	create  domain.CommandHandle[role.CreateCommand, *role.Domain]
+	update  domain.CommandHandle[role.UpdateCommand, *role.Domain]
+	read    domain.QueryHandle[role.ReadQuery, map[string]any]
+	readOne domain.QueryHandle[role.ReadQuery, *role.Domain]
+}
+
+func (a app) ReadOne(ctx context.Context, command role.ReadQuery) (*role.Domain, error) {
+	ctx, span := a.tracer.Start(ctx, "app.role.read_one.query", trace.WithAttributes(
+		attribute.String("operation", "read_one"),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	res, err := a.readOne.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	return res, nil
 }
 
 func (a app) Read(ctx context.Context, command role.ReadQuery) (map[string]any, error) {
-	ctx, span := a.tracer.Start(ctx, "app.role.repository.command", trace.WithAttributes(
-		attribute.String("operation", "repository"),
+	ctx, span := a.tracer.Start(ctx, "app.role.read.query", trace.WithAttributes(
+		attribute.String("operation", "read"),
 		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
@@ -38,7 +62,7 @@ func (a app) Read(ctx context.Context, command role.ReadQuery) (map[string]any, 
 		span.SetStatus(codes.Error, err.Error())
 		a.log.Error("failed to process command",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "repository"),
+			zap.String("operation", "read"),
 			zap.Error(err),
 		)
 		return nil, err
@@ -100,10 +124,11 @@ func (a app) Delete(ctx context.Context, params role.UpdateCommand) (*role.Domai
 
 func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) role.App {
 	return &app{
-		tracer: tracer,
-		log:    log,
-		create: newCreateCommandHandler(bs, repo, log, tracer),
-		update: newUpdateCommandHandler(bs, repo, log, tracer),
-		read:   newReadQueryHandler(repo.Role, log, tracer),
+		tracer:  tracer,
+		log:     log,
+		create:  newCreateCommandHandler(bs, repo, log, tracer),
+		update:  newUpdateCommandHandler(bs, repo, log, tracer),
+		read:    newReadQueryHandler(repo.Role, log, tracer),
+		readOne: newReadOneQueryHandler(repo.Role, log, tracer),
 	}
 }

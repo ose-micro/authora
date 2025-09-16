@@ -10,9 +10,9 @@ import (
 	"github.com/ose-micro/rid"
 )
 
-const CreatedEvent string = "events.authora.user_created"
-const OnboardedEvent string = "events.authora.user_onboard"
-const ChangeStateEvent string = "events.authora.user_change_state"
+const CreatedEvent string = "events.user_created"
+const OnboardedEvent string = "events.user_onboard"
+const ChangeStateEvent string = "events.user_change_state"
 
 type Domain struct {
 	*domain.Aggregate

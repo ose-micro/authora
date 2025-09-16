@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/ose-micro/authora/internal/app"
+	"github.com/ose-micro/authora/internal/business/assignment"
+	"github.com/ose-micro/authora/internal/business/tenant"
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/events"
 	"github.com/ose-micro/core/domain"
@@ -14,11 +17,17 @@ import (
 	"go.uber.org/zap"
 )
 
-func InvokeConsumers(lc fx.Lifecycle, event *events.Events, bus domain.Bus, trancer tracing.Tracer, log logger.Logger) error {
+func InvokeConsumers(lc fx.Lifecycle, app app.Apps, event *events.Events, bus domain.Bus, trancer tracing.Tracer, log logger.Logger) error {
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
 			go func() {
-				eventList := []string{user.OnboardedEvent, user.CreatedEvent, "events.tenant_onboard", user.ChangeStateEvent}
+				eventList := []string{
+					user.OnboardedEvent,
+					user.CreatedEvent,
+					tenant.OnboardedEvent,
+					user.ChangeStateEvent,
+					assignment.OnboardEvent,
+				}
 				err := bus.EnsureStream("EVENT", eventList...)
 				if err != nil {
 					log.Fatal("nats stream failed", zap.Error(err))
@@ -31,7 +40,7 @@ func InvokeConsumers(lc fx.Lifecycle, event *events.Events, bus domain.Bus, tran
 
 				newUserConsumer(bus, *event, trancer, log)
 
-				err = newAssignmentConsumer(bus, *event, trancer, log)
+				err = newAssignmentConsumer(bus, app, *event, trancer, log)
 				if err != nil {
 					log.Fatal("assignment consumer failed", zap.Error(err))
 				}

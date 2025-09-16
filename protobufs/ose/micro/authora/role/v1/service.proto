@@ -10,4 +10,5 @@ service RoleService {
   rpc Create(ose.micro.authora.role.v1.CreateRequest) returns (ose.micro.authora.role.v1.CreateResponse);
   rpc Update(ose.micro.authora.role.v1.UpdateRequest) returns (ose.micro.authora.role.v1.UpdateResponse);
   rpc Read(ose.micro.authora.role.v1.ReadRequest) returns (ose.micro.authora.role.v1.ReadResponse);
+  rpc ReadOne(ose.micro.authora.role.v1.ReadOneRequest) returns (ose.micro.authora.role.v1.ReadOneResponse);
 }

@@ -18,8 +18,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const CreateOperation = "create"
-
 type createCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
@@ -30,7 +28,7 @@ type createCommandHandler struct {
 // Handle implements cqrs.CommandHandle.
 func (c createCommandHandler) Handle(ctx context.Context, command assignment.CreateCommand) (*assignment.Domain, error) {
 	ctx, span := c.tracer.Start(ctx, "app.assignment.create.command.handler", trace.WithAttributes(
-		attribute.String("operation", CreateOperation),
+		attribute.String("operation", "create"),
 		attribute.String("dto", fmt.Sprintf("%v", command)),
 	))
 	defer span.End()
@@ -44,7 +42,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
 			zap.String("trace_id", traceId),
-			zap.String("operation", CreateOperation),
+			zap.String("operation", "create"),
 			zap.Error(err),
 		)
 
@@ -69,14 +67,14 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
 			zap.String("trace_id", traceId),
-			zap.String("operation", CreateOperation),
+			zap.String("operation", "create"),
 			zap.Error(err),
 		)
 
 		return nil, err
 	}
 
-	if _, err := c.repo.Role.ReadOne(ctx, dto.Request{
+	_, err := c.repo.Role.ReadOne(ctx, dto.Request{
 		Queries: []dto.Query{
 			{
 				Name: "one",
@@ -86,20 +84,16 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 						Op:    dto.OpEq,
 						Value: command.Role,
 					},
-					{
-						Field: "tenant",
-						Op:    dto.OpEq,
-						Value: command.Tenant,
-					},
 				},
 			},
 		},
-	}); err != nil {
+	})
+	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
 			zap.String("trace_id", traceId),
-			zap.String("operation", CreateOperation),
+			zap.String("operation", "create"),
 			zap.Error(err),
 		)
 
@@ -130,7 +124,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("validation process failed",
 			zap.String("trace_id", traceId),
-			zap.String("operation", CreateOperation),
+			zap.String("operation", "create"),
 			zap.Error(err),
 		)
 
@@ -148,7 +142,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("failed to create assignment",
 			zap.String("trace_id", traceId),
-			zap.String("operation", CreateOperation),
+			zap.String("operation", "create"),
 			zap.Error(err),
 		)
 
@@ -160,7 +154,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 		span.SetStatus(codes.Error, err.Error())
 		c.log.Error("failed to create assignment",
 			zap.String("trace_id", traceId),
-			zap.String("operation", CreateOperation),
+			zap.String("operation", "create"),
 			zap.Error(err),
 		)
 
@@ -169,7 +163,7 @@ func (c createCommandHandler) Handle(ctx context.Context, command assignment.Cre
 
 	c.log.Info("create process complete successfully",
 		zap.String("trace_id", traceId),
-		zap.String("operation", CreateOperation),
+		zap.String("operation", "create"),
 		zap.Any("dto", command),
 	)
 

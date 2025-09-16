@@ -64,3 +64,11 @@ message ReadRequest {
 message ReadResponse {
   map<string, Tenants> result = 1;
 }
+
+message ReadOneRequest {
+  ose.micro.common.v1.Request request = 1;
+}
+
+message ReadOneResponse {
+  Role result = 1;
+}

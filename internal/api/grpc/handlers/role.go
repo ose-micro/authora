@@ -79,6 +79,54 @@ func (h *RoleHandler) Create(ctx context.Context, request *rolev1.CreateRequest)
 	}, nil
 }
 
+func (h *RoleHandler) ReadOne(ctx context.Context, request *rolev1.ReadOneRequest) (*rolev1.ReadOneResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.role.read_one.handler", trace.WithAttributes(
+		attribute.String("operation", "read_one"),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+
+	query, err := buildAppRequest(request.Request)
+	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to case to dto",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, parseError(err)
+	}
+
+	record, err := h.app.ReadOne(ctx, role.ReadQuery{
+		Request: *query,
+	})
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to read role",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+
+		return nil, parseError(err)
+	}
+
+	h.log.Info("fetch role successfully",
+		zap.String("trace_id", traceId),
+		zap.String("operation", "read_one"),
+		zap.Any("dto", request),
+	)
+
+	return &rolev1.ReadOneResponse{
+		Result: h.response(*record.Public()),
+	}, nil
+}
+
 func (h *RoleHandler) Update(ctx context.Context, request *rolev1.UpdateRequest) (*rolev1.UpdateResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.role.update.handler", trace.WithAttributes(
 		attribute.String("operation", "update"),

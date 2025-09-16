@@ -17,7 +17,7 @@ import (
 )
 
 func newTenantConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
-	return bus.Subscribe(tenant.OnboardedEvent, "tenant", func(ctx context.Context, data any) error {
+	return bus.Subscribe(tenant.OnboardedEvent, "tenant_onboard", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "bus.tenant.onboard.handler", trace.WithAttributes(
 			attribute.String("operation", "onboard"),
 			attribute.String("dto", fmt.Sprintf("%v", data)),
@@ -30,6 +30,7 @@ func newTenantConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, 
 		if err != nil {
 			return err
 		}
+
 		_, err = event.Tenant.OnBoard(ctx, msg)
 		if err != nil {
 			span.RecordError(err)

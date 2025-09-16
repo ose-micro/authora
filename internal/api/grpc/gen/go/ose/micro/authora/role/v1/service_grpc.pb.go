@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RoleService_Create_FullMethodName = "/ose.micro.authora.role.v1.RoleService/Create"
-	RoleService_Update_FullMethodName = "/ose.micro.authora.role.v1.RoleService/Update"
-	RoleService_Read_FullMethodName   = "/ose.micro.authora.role.v1.RoleService/Read"
+	RoleService_Create_FullMethodName  = "/ose.micro.authora.role.v1.RoleService/Create"
+	RoleService_Update_FullMethodName  = "/ose.micro.authora.role.v1.RoleService/Update"
+	RoleService_Read_FullMethodName    = "/ose.micro.authora.role.v1.RoleService/Read"
+	RoleService_ReadOne_FullMethodName = "/ose.micro.authora.role.v1.RoleService/ReadOne"
 )
 
 // RoleServiceClient is the client API for RoleService service.
@@ -31,6 +32,7 @@ type RoleServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (*ReadResponse, error)
+	ReadOne(ctx context.Context, in *ReadOneRequest, opts ...grpc.CallOption) (*ReadOneResponse, error)
 }
 
 type roleServiceClient struct {
@@ -71,6 +73,16 @@ func (c *roleServiceClient) Read(ctx context.Context, in *ReadRequest, opts ...g
 	return out, nil
 }
 
+func (c *roleServiceClient) ReadOne(ctx context.Context, in *ReadOneRequest, opts ...grpc.CallOption) (*ReadOneResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadOneResponse)
+	err := c.cc.Invoke(ctx, RoleService_ReadOne_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RoleServiceServer is the server API for RoleService service.
 // All implementations must embed UnimplementedRoleServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type RoleServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	Read(context.Context, *ReadRequest) (*ReadResponse, error)
+	ReadOne(context.Context, *ReadOneRequest) (*ReadOneResponse, error)
 	mustEmbedUnimplementedRoleServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedRoleServiceServer) Update(context.Context, *UpdateRequest) (*
 }
 func (UnimplementedRoleServiceServer) Read(context.Context, *ReadRequest) (*ReadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
+}
+func (UnimplementedRoleServiceServer) ReadOne(context.Context, *ReadOneRequest) (*ReadOneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadOne not implemented")
 }
 func (UnimplementedRoleServiceServer) mustEmbedUnimplementedRoleServiceServer() {}
 func (UnimplementedRoleServiceServer) testEmbeddedByValue()                     {}
@@ -172,6 +188,24 @@ func _RoleService_Read_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RoleService_ReadOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadOneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).ReadOne(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_ReadOne_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).ReadOne(ctx, req.(*ReadOneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RoleService_ServiceDesc is the grpc.ServiceDesc for RoleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Read",
 			Handler:    _RoleService_Read_Handler,
+		},
+		{
+			MethodName: "ReadOne",
+			Handler:    _RoleService_ReadOne_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

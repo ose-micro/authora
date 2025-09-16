@@ -24,30 +24,35 @@ var File_ose_micro_authora_role_v1_service_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_role_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"'ose/micro/authora/role/v1/service.proto\x12\x19ose.micro.authora.role.v1\x1a$ose/micro/authora/role/v1/data.proto2\xa4\x02\n" +
+	"'ose/micro/authora/role/v1/service.proto\x12\x19ose.micro.authora.role.v1\x1a$ose/micro/authora/role/v1/data.proto2\x86\x03\n" +
 	"\vRoleService\x12]\n" +
 	"\x06Create\x12(.ose.micro.authora.role.v1.CreateRequest\x1a).ose.micro.authora.role.v1.CreateResponse\x12]\n" +
 	"\x06Update\x12(.ose.micro.authora.role.v1.UpdateRequest\x1a).ose.micro.authora.role.v1.UpdateResponse\x12W\n" +
-	"\x04Read\x12&.ose.micro.authora.role.v1.ReadRequest\x1a'.ose.micro.authora.role.v1.ReadResponseB\x8e\x02\n" +
+	"\x04Read\x12&.ose.micro.authora.role.v1.ReadRequest\x1a'.ose.micro.authora.role.v1.ReadResponse\x12`\n" +
+	"\aReadOne\x12).ose.micro.authora.role.v1.ReadOneRequest\x1a*.ose.micro.authora.role.v1.ReadOneResponseB\x8e\x02\n" +
 	"\x1dcom.ose.micro.authora.role.v1B\fServiceProtoP\x01ZVgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/role/v1;rolev1\xa2\x02\x04OMAR\xaa\x02\x19Ose.Micro.Authora.Role.V1\xca\x02\x19Ose\\Micro\\Authora\\Role\\V1\xe2\x02%Ose\\Micro\\Authora\\Role\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::Role::V1b\x06proto3"
 
 var file_ose_micro_authora_role_v1_service_proto_goTypes = []any{
-	(*CreateRequest)(nil),  // 0: ose.micro.authora.role.v1.CreateRequest
-	(*UpdateRequest)(nil),  // 1: ose.micro.authora.role.v1.UpdateRequest
-	(*ReadRequest)(nil),    // 2: ose.micro.authora.role.v1.ReadRequest
-	(*CreateResponse)(nil), // 3: ose.micro.authora.role.v1.CreateResponse
-	(*UpdateResponse)(nil), // 4: ose.micro.authora.role.v1.UpdateResponse
-	(*ReadResponse)(nil),   // 5: ose.micro.authora.role.v1.ReadResponse
+	(*CreateRequest)(nil),   // 0: ose.micro.authora.role.v1.CreateRequest
+	(*UpdateRequest)(nil),   // 1: ose.micro.authora.role.v1.UpdateRequest
+	(*ReadRequest)(nil),     // 2: ose.micro.authora.role.v1.ReadRequest
+	(*ReadOneRequest)(nil),  // 3: ose.micro.authora.role.v1.ReadOneRequest
+	(*CreateResponse)(nil),  // 4: ose.micro.authora.role.v1.CreateResponse
+	(*UpdateResponse)(nil),  // 5: ose.micro.authora.role.v1.UpdateResponse
+	(*ReadResponse)(nil),    // 6: ose.micro.authora.role.v1.ReadResponse
+	(*ReadOneResponse)(nil), // 7: ose.micro.authora.role.v1.ReadOneResponse
 }
 var file_ose_micro_authora_role_v1_service_proto_depIdxs = []int32{
 	0, // 0: ose.micro.authora.role.v1.RoleService.Create:input_type -> ose.micro.authora.role.v1.CreateRequest
 	1, // 1: ose.micro.authora.role.v1.RoleService.Update:input_type -> ose.micro.authora.role.v1.UpdateRequest
 	2, // 2: ose.micro.authora.role.v1.RoleService.Read:input_type -> ose.micro.authora.role.v1.ReadRequest
-	3, // 3: ose.micro.authora.role.v1.RoleService.Create:output_type -> ose.micro.authora.role.v1.CreateResponse
-	4, // 4: ose.micro.authora.role.v1.RoleService.Update:output_type -> ose.micro.authora.role.v1.UpdateResponse
-	5, // 5: ose.micro.authora.role.v1.RoleService.Read:output_type -> ose.micro.authora.role.v1.ReadResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	3, // 3: ose.micro.authora.role.v1.RoleService.ReadOne:input_type -> ose.micro.authora.role.v1.ReadOneRequest
+	4, // 4: ose.micro.authora.role.v1.RoleService.Create:output_type -> ose.micro.authora.role.v1.CreateResponse
+	5, // 5: ose.micro.authora.role.v1.RoleService.Update:output_type -> ose.micro.authora.role.v1.UpdateResponse
+	6, // 6: ose.micro.authora.role.v1.RoleService.Read:output_type -> ose.micro.authora.role.v1.ReadResponse
+	7, // 7: ose.micro.authora.role.v1.RoleService.ReadOne:output_type -> ose.micro.authora.role.v1.ReadOneResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
