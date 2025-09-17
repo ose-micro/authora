@@ -32,6 +32,7 @@ func (h *RoleHandler) response(param role.Public) *rolev1.Role {
 		Name:        param.Name,
 		Tenant:      param.Tenant,
 		Permissions: param.Permissions,
+		Description: param.Description,
 		Version:     param.Version,
 		Count:       param.Count,
 		CreatedAt:   timestamppb.New(param.CreatedAt),

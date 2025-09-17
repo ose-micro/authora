@@ -18,6 +18,7 @@ func (i initializer) New(param Params) (*Domain, error) {
 		name:        param.Name,
 		tenant:      param.Tenant,
 		permissions: param.Permissions,
+		description: param.Description,
 	}, nil
 }
 
@@ -36,6 +37,7 @@ func (i initializer) Existing(param Params) (*Domain, error) {
 		name:        param.Name,
 		tenant:      param.Tenant,
 		permissions: param.Permissions,
+		description: param.Description,
 	}, nil
 }
 

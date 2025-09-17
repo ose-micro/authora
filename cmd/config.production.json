@@ -12,7 +12,7 @@
     }
   },
   "nats": {
-    "url": "nats://turntable.proxy.rlwy.net:58598",
+    "url": "nats://nats-server.railway.internal:4222",
     "name": "authora",
     "user": "nats",
     "password": "m67r9jQpLk3uXy6fHnWb2sEwRtAq8fGhJaL0yUzXk5E",
