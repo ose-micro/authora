@@ -18,6 +18,23 @@ import (
 	"go.uber.org/fx"
 )
 
+func main() {
+	ose.New(
+		fx.Provide(
+			loadConfig,
+			mongodb.New,
+			nats.New,
+			repository.Inject,
+			business.Inject,
+			app.Inject,
+			ose_jwt.NewManager,
+			events.NewEvents,
+		),
+		fx.Invoke(bus.InvokeConsumers),
+		fx.Invoke(grpc.RunGRPCServer),
+	).Run()
+}
+
 func loadConfig() (config.Service, logger.Config, tracing.Config, timestamp.Config,
 	mongodb.Config, nats.Config, grpc.Config, ose_jwt.Config, error) {
 
@@ -40,21 +57,4 @@ func loadConfig() (config.Service, logger.Config, tracing.Config, timestamp.Conf
 
 	return conf.Core.Service, conf.Core.Service.Logger, conf.Core.Service.Tracer,
 		conf.Core.Service.Timestamp, mongoConfig, natsConf, grpcConfig, jwtConfig, nil
-}
-
-func main() {
-	ose.New(
-		fx.Provide(
-			loadConfig,
-			mongodb.New,
-			nats.New,
-			repository.Inject,
-			business.Inject,
-			app.Inject,
-			ose_jwt.NewManager,
-			events.NewEvents,
-		),
-		fx.Invoke(bus.InvokeConsumers),
-		fx.Invoke(grpc.RunGRPCServer),
-	).Run()
 }

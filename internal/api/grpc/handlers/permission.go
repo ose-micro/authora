@@ -116,7 +116,7 @@ func (h *PermissionHandler) Update(ctx context.Context, request *permissionv1.Up
 
 func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.ReadRequest) (*permissionv1.ReadResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.permission.repository.handler", trace.WithAttributes(
-		attribute.String("operation", "READ"),
+		attribute.String("operation", "read"),
 		attribute.String("dto", fmt.Sprintf("%v", request)),
 	))
 	defer span.End()
@@ -129,7 +129,7 @@ func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.Read
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to case to dto",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "READ"),
+			zap.String("operation", "read"),
 			zap.Error(err),
 		)
 		return nil, parseError(err)
@@ -143,7 +143,7 @@ func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.Read
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("failed to repository organizations",
 			zap.String("trace_id", traceId),
-			zap.String("operation", "READ"),
+			zap.String("operation", "read"),
 			zap.Error(err),
 		)
 		return nil, parseError(err)
@@ -165,6 +165,48 @@ func (h *PermissionHandler) Read(ctx context.Context, request *permissionv1.Read
 	}
 
 	return &permissionv1.ReadResponse{
+		Result: result,
+	}, nil
+}
+
+func (h *PermissionHandler) ReadOne(ctx context.Context, request *permissionv1.ReadOneRequest) (*permissionv1.ReadOneResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.permission.read_one.handler", trace.WithAttributes(
+		attribute.String("operation", "read_one"),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	query, err := buildAppRequest(request.Request)
+	if err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrBadRequest, err.Error(), traceId)
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to case to dto",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, parseError(err)
+	}
+
+	record, err := h.app.ReadOne(ctx, permission.ReadQuery{
+		Request: *query,
+	})
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to read permission",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, parseError(err)
+	}
+
+	result := h.response(*record.Public())
+
+	return &permissionv1.ReadOneResponse{
 		Result: result,
 	}, nil
 }

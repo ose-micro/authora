@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PermissionService_Create_FullMethodName = "/ose.micro.authora.permission.v1.PermissionService/Create"
-	PermissionService_Update_FullMethodName = "/ose.micro.authora.permission.v1.PermissionService/Update"
-	PermissionService_Read_FullMethodName   = "/ose.micro.authora.permission.v1.PermissionService/Read"
+	PermissionService_Create_FullMethodName  = "/ose.micro.authora.permission.v1.PermissionService/Create"
+	PermissionService_Update_FullMethodName  = "/ose.micro.authora.permission.v1.PermissionService/Update"
+	PermissionService_Read_FullMethodName    = "/ose.micro.authora.permission.v1.PermissionService/Read"
+	PermissionService_ReadOne_FullMethodName = "/ose.micro.authora.permission.v1.PermissionService/ReadOne"
 )
 
 // PermissionServiceClient is the client API for PermissionService service.
@@ -31,6 +32,7 @@ type PermissionServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	Read(ctx context.Context, in *ReadRequest, opts ...grpc.CallOption) (*ReadResponse, error)
+	ReadOne(ctx context.Context, in *ReadOneRequest, opts ...grpc.CallOption) (*ReadOneResponse, error)
 }
 
 type permissionServiceClient struct {
@@ -71,6 +73,16 @@ func (c *permissionServiceClient) Read(ctx context.Context, in *ReadRequest, opt
 	return out, nil
 }
 
+func (c *permissionServiceClient) ReadOne(ctx context.Context, in *ReadOneRequest, opts ...grpc.CallOption) (*ReadOneResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadOneResponse)
+	err := c.cc.Invoke(ctx, PermissionService_ReadOne_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PermissionServiceServer is the server API for PermissionService service.
 // All implementations must embed UnimplementedPermissionServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type PermissionServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	Read(context.Context, *ReadRequest) (*ReadResponse, error)
+	ReadOne(context.Context, *ReadOneRequest) (*ReadOneResponse, error)
 	mustEmbedUnimplementedPermissionServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedPermissionServiceServer) Update(context.Context, *UpdateReque
 }
 func (UnimplementedPermissionServiceServer) Read(context.Context, *ReadRequest) (*ReadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
+}
+func (UnimplementedPermissionServiceServer) ReadOne(context.Context, *ReadOneRequest) (*ReadOneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadOne not implemented")
 }
 func (UnimplementedPermissionServiceServer) mustEmbedUnimplementedPermissionServiceServer() {}
 func (UnimplementedPermissionServiceServer) testEmbeddedByValue()                           {}
@@ -172,6 +188,24 @@ func _PermissionService_Read_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PermissionService_ReadOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadOneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).ReadOne(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_ReadOne_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).ReadOne(ctx, req.(*ReadOneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PermissionService_ServiceDesc is the grpc.ServiceDesc for PermissionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Read",
 			Handler:    _PermissionService_Read_Handler,
+		},
+		{
+			MethodName: "ReadOne",
+			Handler:    _PermissionService_ReadOne_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

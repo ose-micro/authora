@@ -9,4 +9,5 @@ type App interface {
 	Update(ctx context.Context, command UpdateCommand) (*Domain, error)
 	Delete(ctx context.Context, command UpdateCommand) (*Domain, error)
 	Read(ctx context.Context, command ReadQuery) (map[string]any, error)
+	ReadOne(ctx context.Context, command ReadQuery) (*Domain, error)
 }

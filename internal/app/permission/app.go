@@ -17,11 +17,35 @@ import (
 )
 
 type app struct {
-	tracer tracing.Tracer
-	log    logger.Logger
-	create domain.CommandHandle[permission.CreateCommand, *permission.Domain]
-	update domain.CommandHandle[permission.UpdateCommand, *permission.Domain]
-	read   domain.QueryHandle[permission.ReadQuery, map[string]any]
+	tracer  tracing.Tracer
+	log     logger.Logger
+	create  domain.CommandHandle[permission.CreateCommand, *permission.Domain]
+	update  domain.CommandHandle[permission.UpdateCommand, *permission.Domain]
+	read    domain.QueryHandle[permission.ReadQuery, map[string]any]
+	readOne domain.QueryHandle[permission.ReadQuery, *permission.Domain]
+}
+
+func (a app) ReadOne(ctx context.Context, command permission.ReadQuery) (*permission.Domain, error) {
+	ctx, span := a.tracer.Start(ctx, "app.permission.read_one.command", trace.WithAttributes(
+		attribute.String("operation", "read_one"),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	res, err := a.readOne.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "read_one"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	return res, nil
 }
 
 func (a app) Read(ctx context.Context, command permission.ReadQuery) (map[string]any, error) {
@@ -100,10 +124,11 @@ func (a app) Delete(ctx context.Context, params permission.UpdateCommand) (*perm
 
 func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository) permission.App {
 	return &app{
-		tracer: tracer,
-		log:    log,
-		create: newCreateCommandHandler(bs, repo, log, tracer),
-		update: newUpdateCommandHandler(bs, repo, log, tracer),
-		read:   newReadQueryHandler(repo.Permission, log, tracer),
+		tracer:  tracer,
+		log:     log,
+		create:  newCreateCommandHandler(bs, repo, log, tracer),
+		update:  newUpdateCommandHandler(bs, repo, log, tracer),
+		read:    newReadQueryHandler(repo.Permission, log, tracer),
+		readOne: newReadOneQueryHandler(repo.Permission, log, tracer),
 	}
 }

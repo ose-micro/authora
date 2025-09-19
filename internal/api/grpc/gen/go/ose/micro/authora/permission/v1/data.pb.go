@@ -559,6 +559,94 @@ func (x *ReadResponse) GetResult() map[string]*Permissions {
 	return nil
 }
 
+type ReadOneRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Request       *v1.Request            `protobuf:"bytes,1,opt,name=request,proto3" json:"request,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReadOneRequest) Reset() {
+	*x = ReadOneRequest{}
+	mi := &file_ose_micro_authora_permission_v1_data_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReadOneRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReadOneRequest) ProtoMessage() {}
+
+func (x *ReadOneRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_permission_v1_data_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReadOneRequest.ProtoReflect.Descriptor instead.
+func (*ReadOneRequest) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_permission_v1_data_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ReadOneRequest) GetRequest() *v1.Request {
+	if x != nil {
+		return x.Request
+	}
+	return nil
+}
+
+type ReadOneResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Result        *Permission            `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReadOneResponse) Reset() {
+	*x = ReadOneResponse{}
+	mi := &file_ose_micro_authora_permission_v1_data_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReadOneResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReadOneResponse) ProtoMessage() {}
+
+func (x *ReadOneResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_authora_permission_v1_data_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReadOneResponse.ProtoReflect.Descriptor instead.
+func (*ReadOneResponse) Descriptor() ([]byte, []int) {
+	return file_ose_micro_authora_permission_v1_data_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ReadOneResponse) GetResult() *Permission {
+	if x != nil {
+		return x.Result
+	}
+	return nil
+}
+
 var File_ose_micro_authora_permission_v1_data_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_permission_v1_data_proto_rawDesc = "" +
@@ -602,7 +690,11 @@ const file_ose_micro_authora_permission_v1_data_proto_rawDesc = "" +
 	"\x06result\x18\x01 \x03(\v29.ose.micro.authora.permission.v1.ReadResponse.ResultEntryR\x06result\x1ag\n" +
 	"\vResultEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12B\n" +
-	"\x05value\x18\x02 \x01(\v2,.ose.micro.authora.permission.v1.PermissionsR\x05value:\x028\x01B\xb5\x02\n" +
+	"\x05value\x18\x02 \x01(\v2,.ose.micro.authora.permission.v1.PermissionsR\x05value:\x028\x01\"H\n" +
+	"\x0eReadOneRequest\x126\n" +
+	"\arequest\x18\x01 \x01(\v2\x1c.ose.micro.common.v1.RequestR\arequest\"V\n" +
+	"\x0fReadOneResponse\x12C\n" +
+	"\x06result\x18\x01 \x01(\v2+.ose.micro.authora.permission.v1.PermissionR\x06resultB\xb5\x02\n" +
 	"#com.ose.micro.authora.permission.v1B\tDataProtoP\x01Zbgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/permission/v1;permissionv1\xa2\x02\x04OMAP\xaa\x02\x1fOse.Micro.Authora.Permission.V1\xca\x02\x1fOse\\Micro\\Authora\\Permission\\V1\xe2\x02+Ose\\Micro\\Authora\\Permission\\V1\\GPBMetadata\xea\x02#Ose::Micro::Authora::Permission::V1b\x06proto3"
 
 var (
@@ -617,7 +709,7 @@ func file_ose_micro_authora_permission_v1_data_proto_rawDescGZIP() []byte {
 	return file_ose_micro_authora_permission_v1_data_proto_rawDescData
 }
 
-var file_ose_micro_authora_permission_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_ose_micro_authora_permission_v1_data_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_ose_micro_authora_permission_v1_data_proto_goTypes = []any{
 	(*Permission)(nil),            // 0: ose.micro.authora.permission.v1.Permission
 	(*CreateRequest)(nil),         // 1: ose.micro.authora.permission.v1.CreateRequest
@@ -629,25 +721,29 @@ var file_ose_micro_authora_permission_v1_data_proto_goTypes = []any{
 	(*Permissions)(nil),           // 7: ose.micro.authora.permission.v1.Permissions
 	(*ReadRequest)(nil),           // 8: ose.micro.authora.permission.v1.ReadRequest
 	(*ReadResponse)(nil),          // 9: ose.micro.authora.permission.v1.ReadResponse
-	nil,                           // 10: ose.micro.authora.permission.v1.ReadResponse.ResultEntry
-	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
-	(*v1.Request)(nil),            // 12: ose.micro.common.v1.Request
+	(*ReadOneRequest)(nil),        // 10: ose.micro.authora.permission.v1.ReadOneRequest
+	(*ReadOneResponse)(nil),       // 11: ose.micro.authora.permission.v1.ReadOneResponse
+	nil,                           // 12: ose.micro.authora.permission.v1.ReadResponse.ResultEntry
+	(*timestamppb.Timestamp)(nil), // 13: google.protobuf.Timestamp
+	(*v1.Request)(nil),            // 14: ose.micro.common.v1.Request
 }
 var file_ose_micro_authora_permission_v1_data_proto_depIdxs = []int32{
-	11, // 0: ose.micro.authora.permission.v1.Permission.created_at:type_name -> google.protobuf.Timestamp
-	11, // 1: ose.micro.authora.permission.v1.Permission.updated_at:type_name -> google.protobuf.Timestamp
-	11, // 2: ose.micro.authora.permission.v1.Permission.deleted_at:type_name -> google.protobuf.Timestamp
+	13, // 0: ose.micro.authora.permission.v1.Permission.created_at:type_name -> google.protobuf.Timestamp
+	13, // 1: ose.micro.authora.permission.v1.Permission.updated_at:type_name -> google.protobuf.Timestamp
+	13, // 2: ose.micro.authora.permission.v1.Permission.deleted_at:type_name -> google.protobuf.Timestamp
 	0,  // 3: ose.micro.authora.permission.v1.CreateResponse.record:type_name -> ose.micro.authora.permission.v1.Permission
 	0,  // 4: ose.micro.authora.permission.v1.UpdateResponse.record:type_name -> ose.micro.authora.permission.v1.Permission
 	0,  // 5: ose.micro.authora.permission.v1.Permissions.data:type_name -> ose.micro.authora.permission.v1.Permission
-	12, // 6: ose.micro.authora.permission.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
-	10, // 7: ose.micro.authora.permission.v1.ReadResponse.result:type_name -> ose.micro.authora.permission.v1.ReadResponse.ResultEntry
-	7,  // 8: ose.micro.authora.permission.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.permission.v1.Permissions
-	9,  // [9:9] is the sub-list for method output_type
-	9,  // [9:9] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	14, // 6: ose.micro.authora.permission.v1.ReadRequest.request:type_name -> ose.micro.common.v1.Request
+	12, // 7: ose.micro.authora.permission.v1.ReadResponse.result:type_name -> ose.micro.authora.permission.v1.ReadResponse.ResultEntry
+	14, // 8: ose.micro.authora.permission.v1.ReadOneRequest.request:type_name -> ose.micro.common.v1.Request
+	0,  // 9: ose.micro.authora.permission.v1.ReadOneResponse.result:type_name -> ose.micro.authora.permission.v1.Permission
+	7,  // 10: ose.micro.authora.permission.v1.ReadResponse.ResultEntry.value:type_name -> ose.micro.authora.permission.v1.Permissions
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_ose_micro_authora_permission_v1_data_proto_init() }
@@ -661,7 +757,7 @@ func file_ose_micro_authora_permission_v1_data_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ose_micro_authora_permission_v1_data_proto_rawDesc), len(file_ose_micro_authora_permission_v1_data_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

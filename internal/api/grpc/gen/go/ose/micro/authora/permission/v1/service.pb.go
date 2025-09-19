@@ -24,30 +24,35 @@ var File_ose_micro_authora_permission_v1_service_proto protoreflect.FileDescript
 
 const file_ose_micro_authora_permission_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"-ose/micro/authora/permission/v1/service.proto\x12\x1fose.micro.authora.permission.v1\x1a*ose/micro/authora/permission/v1/data.proto2\xce\x02\n" +
+	"-ose/micro/authora/permission/v1/service.proto\x12\x1fose.micro.authora.permission.v1\x1a*ose/micro/authora/permission/v1/data.proto2\xbc\x03\n" +
 	"\x11PermissionService\x12i\n" +
 	"\x06Create\x12..ose.micro.authora.permission.v1.CreateRequest\x1a/.ose.micro.authora.permission.v1.CreateResponse\x12i\n" +
 	"\x06Update\x12..ose.micro.authora.permission.v1.UpdateRequest\x1a/.ose.micro.authora.permission.v1.UpdateResponse\x12c\n" +
-	"\x04Read\x12,.ose.micro.authora.permission.v1.ReadRequest\x1a-.ose.micro.authora.permission.v1.ReadResponseB\xb8\x02\n" +
+	"\x04Read\x12,.ose.micro.authora.permission.v1.ReadRequest\x1a-.ose.micro.authora.permission.v1.ReadResponse\x12l\n" +
+	"\aReadOne\x12/.ose.micro.authora.permission.v1.ReadOneRequest\x1a0.ose.micro.authora.permission.v1.ReadOneResponseB\xb8\x02\n" +
 	"#com.ose.micro.authora.permission.v1B\fServiceProtoP\x01Zbgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/permission/v1;permissionv1\xa2\x02\x04OMAP\xaa\x02\x1fOse.Micro.Authora.Permission.V1\xca\x02\x1fOse\\Micro\\Authora\\Permission\\V1\xe2\x02+Ose\\Micro\\Authora\\Permission\\V1\\GPBMetadata\xea\x02#Ose::Micro::Authora::Permission::V1b\x06proto3"
 
 var file_ose_micro_authora_permission_v1_service_proto_goTypes = []any{
-	(*CreateRequest)(nil),  // 0: ose.micro.authora.permission.v1.CreateRequest
-	(*UpdateRequest)(nil),  // 1: ose.micro.authora.permission.v1.UpdateRequest
-	(*ReadRequest)(nil),    // 2: ose.micro.authora.permission.v1.ReadRequest
-	(*CreateResponse)(nil), // 3: ose.micro.authora.permission.v1.CreateResponse
-	(*UpdateResponse)(nil), // 4: ose.micro.authora.permission.v1.UpdateResponse
-	(*ReadResponse)(nil),   // 5: ose.micro.authora.permission.v1.ReadResponse
+	(*CreateRequest)(nil),   // 0: ose.micro.authora.permission.v1.CreateRequest
+	(*UpdateRequest)(nil),   // 1: ose.micro.authora.permission.v1.UpdateRequest
+	(*ReadRequest)(nil),     // 2: ose.micro.authora.permission.v1.ReadRequest
+	(*ReadOneRequest)(nil),  // 3: ose.micro.authora.permission.v1.ReadOneRequest
+	(*CreateResponse)(nil),  // 4: ose.micro.authora.permission.v1.CreateResponse
+	(*UpdateResponse)(nil),  // 5: ose.micro.authora.permission.v1.UpdateResponse
+	(*ReadResponse)(nil),    // 6: ose.micro.authora.permission.v1.ReadResponse
+	(*ReadOneResponse)(nil), // 7: ose.micro.authora.permission.v1.ReadOneResponse
 }
 var file_ose_micro_authora_permission_v1_service_proto_depIdxs = []int32{
 	0, // 0: ose.micro.authora.permission.v1.PermissionService.Create:input_type -> ose.micro.authora.permission.v1.CreateRequest
 	1, // 1: ose.micro.authora.permission.v1.PermissionService.Update:input_type -> ose.micro.authora.permission.v1.UpdateRequest
 	2, // 2: ose.micro.authora.permission.v1.PermissionService.Read:input_type -> ose.micro.authora.permission.v1.ReadRequest
-	3, // 3: ose.micro.authora.permission.v1.PermissionService.Create:output_type -> ose.micro.authora.permission.v1.CreateResponse
-	4, // 4: ose.micro.authora.permission.v1.PermissionService.Update:output_type -> ose.micro.authora.permission.v1.UpdateResponse
-	5, // 5: ose.micro.authora.permission.v1.PermissionService.Read:output_type -> ose.micro.authora.permission.v1.ReadResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	3, // 3: ose.micro.authora.permission.v1.PermissionService.ReadOne:input_type -> ose.micro.authora.permission.v1.ReadOneRequest
+	4, // 4: ose.micro.authora.permission.v1.PermissionService.Create:output_type -> ose.micro.authora.permission.v1.CreateResponse
+	5, // 5: ose.micro.authora.permission.v1.PermissionService.Update:output_type -> ose.micro.authora.permission.v1.UpdateResponse
+	6, // 6: ose.micro.authora.permission.v1.PermissionService.Read:output_type -> ose.micro.authora.permission.v1.ReadResponse
+	7, // 7: ose.micro.authora.permission.v1.PermissionService.ReadOne:output_type -> ose.micro.authora.permission.v1.ReadOneResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

@@ -10,4 +10,5 @@ service PermissionService {
   rpc Create(ose.micro.authora.permission.v1.CreateRequest) returns (ose.micro.authora.permission.v1.CreateResponse);
   rpc Update(ose.micro.authora.permission.v1.UpdateRequest) returns (ose.micro.authora.permission.v1.UpdateResponse);
   rpc Read(ose.micro.authora.permission.v1.ReadRequest) returns (ose.micro.authora.permission.v1.ReadResponse);
+  rpc ReadOne(ose.micro.authora.permission.v1.ReadOneRequest) returns (ose.micro.authora.permission.v1.ReadOneResponse);
 }
