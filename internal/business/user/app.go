@@ -2,8 +2,6 @@ package user
 
 import (
 	"context"
-
-	ose_jwt "github.com/ose-micro/jwt"
 )
 
 type App interface {
@@ -17,7 +15,7 @@ type App interface {
 	HasPermission(ctx context.Context, command HasPermissionCommand) (bool, error)
 	RequestPurposeToken(ctx context.Context, command PurposeTokenCommand) (*string, error)
 	RequestAccessToken(ctx context.Context, command TokenCommand) (*string, error)
-	ParseClaims(ctx context.Context, command TokenCommand) (*ose_jwt.Claims, error)
+	ParseClaims(ctx context.Context, command TokenCommand) (*TokenClaim, error)
 	ChangeStatus(ctx context.Context, command StatusCommand) (bool, error)
 	Read(ctx context.Context, command ReadQuery) (map[string]any, error)
 	ReadOne(ctx context.Context, command ReadQuery) (*Domain, error)

@@ -112,6 +112,7 @@ message RequestAccessTokenResponse {
 message LoginRequest {
   string password = 1;
   string email = 2;
+  string tenant = 3;
 }
 
 message LoginResponse {

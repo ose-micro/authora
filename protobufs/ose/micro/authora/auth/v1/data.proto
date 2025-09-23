@@ -21,14 +21,18 @@ message ParseClaimRequest {
 }
 
 message ParseClaimResponse {
-  string message = 1;
-  ose.micro.common.v1.Claims claim = 2;
+  string key = 1;
+  string tenant = 2;
+  string user = 3;
+  string purpose = 4;
+  ose.micro.common.v1.Claims claim = 5;
 }
 
 message RequestPurposeTokenRequest {
   string id = 1;
   string purpose = 2;
-  bool safe = 3;
+  string tenant = 3;
+  bool safe = 4;
 }
 
 message RequestPurposeTokenResponse {

@@ -10,6 +10,7 @@ import (
 type PurposeTokenCommand struct {
 	Id      string
 	Purpose string
+	Tenant  string
 	Safe    bool
 }
 
@@ -26,6 +27,10 @@ func (c PurposeTokenCommand) Validate() error {
 
 	if c.Purpose == "" {
 		fields = append(fields, "purpose is required")
+	}
+
+	if c.Tenant == "" {
+		fields = append(fields, "tenant is required")
 	}
 
 	if len(fields) > 0 {

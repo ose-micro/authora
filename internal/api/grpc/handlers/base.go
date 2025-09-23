@@ -182,7 +182,7 @@ func buildPermissionsProto(list []claims.Permission) []*commonv1.Permission {
 	return permissions
 }
 
-func buildClaim(claims ose_jwt.Claims) *commonv1.Claims {
+func buildClaims(claims ose_jwt.Claims) *commonv1.Claims {
 	var kind commonv1.TokenKind
 
 	switch claims.Kind {

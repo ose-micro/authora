@@ -7,7 +7,7 @@ import (
 	"github.com/ose-micro/authora/internal/business"
 	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/authora/internal/business/user"
-	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/authora/internal/infrastruture/repository"
 	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/dto"
 	"github.com/ose-micro/core/logger"

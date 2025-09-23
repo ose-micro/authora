@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/ose-micro/authora/internal/business"
 	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/authora/internal/business/user"
-	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/authora/internal/infrastruture/repository"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
@@ -28,6 +29,7 @@ import (
 type loginCommandHandler struct {
 	repo   repository.Repository
 	log    logger.Logger
+	cache  user.Cache
 	tracer tracing.Tracer
 	bs     business.Domain
 	jwt    ose_jwt.Manager
@@ -82,6 +84,37 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 		return nil, err
 	}
 
+	tnt, err := u.repo.Assignment.ReadOne(ctx, dto.Request{
+		Queries: []dto.Query{
+			{
+				Name: "one",
+				Filters: []dto.Filter{
+					{
+						Field: "tenant",
+						Op:    dto.OpEq,
+						Value: command.Tenant,
+					},
+					{
+						Field: "user",
+						Op:    dto.OpEq,
+						Value: record.ID(),
+					},
+				},
+			},
+		},
+	})
+	if err != nil {
+		err = ose_error.New(ose_error.ErrUnauthorized, "you are not authorized to login")
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		u.log.Error("validation process failed",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "login"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
 	if !record.Status().IsActive() {
 		msg := fmt.Sprintf("user is %s, user need to be activated", strings.ToLower(record.Status().State.String()))
 		err := ose_error.New(ose_error.ErrUnauthorized, msg)
@@ -109,7 +142,7 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 		return nil, err
 	}
 
-	auth, err := u.prepareAuth(ctx, *record)
+	auth, err := u.prepareAuth(ctx, *record, tnt.Tenant())
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -131,7 +164,7 @@ func (u loginCommandHandler) Handle(ctx context.Context, command user.LoginComma
 	return auth, nil
 }
 
-func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domain) (*user.Auth, error) {
+func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domain, tnt string) (*user.Auth, error) {
 	tenants := make(map[string]ose_jwt.Tenant)
 
 	// Fetch all roles for user
@@ -191,18 +224,46 @@ func (u loginCommandHandler) prepareAuth(ctx context.Context, command user.Domai
 		}
 	}
 
-	sub := fmt.Sprintf("%s:access", command.ID())
-	accessToken, _, err := u.jwt.IssueAccessToken(sub, tenants, nil)
+	tok, _, err := u.jwt.IssueAccessToken(command.ID(), tenants, nil)
+	if err != nil {
+		return nil, err
+	}
+	accessToken, err := user.NewToken(user.TokenParam{
+		User:    command.ID(),
+		Purpose: "access",
+		Tenant:  tnt,
+		Token:   tok,
+	})
+
+	if err := u.cache.Save(ctx, accessToken, 15*time.Minute); err != nil {
+		return nil, err
+	}
+
+	rtk, _, err := u.jwt.IssueRefreshToken(command.ID(), tenants, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	sub = fmt.Sprintf("%s:refresh", command.ID())
-	refreshToken, _, err := u.jwt.IssueRefreshToken(command.ID(), tenants, nil)
+	refreshToken, err := user.NewToken(user.TokenParam{
+		User:    command.ID(),
+		Purpose: "refresh",
+		Tenant:  tnt,
+		Token:   rtk,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if err := u.cache.Save(ctx, refreshToken, 7*24*time.Hour); err != nil {
+		return nil, err
+	}
+
+	accessTokenString := accessToken.Key()
+	refreshTokenString := refreshToken.Key()
 
 	return &user.Auth{
-		Access:  accessToken,
-		Refresh: refreshToken,
+		Access:  accessTokenString,
+		Refresh: refreshTokenString,
 	}, nil
 }
 
@@ -238,12 +299,13 @@ func (u loginCommandHandler) preparePermission(ctx context.Context, one role.Dom
 }
 
 func newLoginCommandHandler(bs business.Domain, repo repository.Repository,
-	log logger.Logger, tracer tracing.Tracer, jwt ose_jwt.Manager) cqrs.CommandHandle[user.LoginCommand, *user.Auth] {
+	log logger.Logger, tracer tracing.Tracer, jwt ose_jwt.Manager, cache user.Cache) cqrs.CommandHandle[user.LoginCommand, *user.Auth] {
 	return &loginCommandHandler{
 		repo:   repo,
 		log:    log,
 		tracer: tracer,
 		bs:     bs,
 		jwt:    jwt,
+		cache:  cache,
 	}
 }

@@ -276,6 +276,7 @@ func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (
 
 	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
 	payload := user.LoginCommand{
+		Tenant:   request.Tenant,
 		Email:    request.Email,
 		Password: request.Password,
 	}

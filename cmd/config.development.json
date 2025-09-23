@@ -27,6 +27,11 @@
     "refresh_ttl": "168h",
     "purpose_ttl": "30m"
   },
+  "redis": {
+    "addr": "localhost:6379",
+    "password": "yT7f9hK3vLqP8dX2bHcM",
+    "db": 0
+  },
   "grpc": {
     "port": 20245
   },

@@ -6,7 +6,8 @@ import (
 
 	"github.com/ose-micro/authora/internal/business"
 	"github.com/ose-micro/authora/internal/business/user"
-	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/authora/internal/infrastruture/cache"
+	"github.com/ose-micro/authora/internal/infrastruture/repository"
 	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
@@ -26,7 +27,7 @@ type app struct {
 	hasRole             domain.CommandHandle[user.HasRoleCommand, *bool]
 	changeStatus        domain.CommandHandle[user.StatusCommand, *bool]
 	hasPermission       domain.CommandHandle[user.HasPermissionCommand, *bool]
-	parseClaims         domain.CommandHandle[user.TokenCommand, *ose_jwt.Claims]
+	parseClaims         domain.CommandHandle[user.TokenCommand, *user.TokenClaim]
 	requestPurposeToken domain.CommandHandle[user.PurposeTokenCommand, *string]
 	requestAccessToken  domain.CommandHandle[user.TokenCommand, *string]
 	changePassword      domain.CommandHandle[user.ChangePasswordCommand, *user.Domain]
@@ -195,7 +196,7 @@ func (a app) HasPermission(ctx context.Context, command user.HasPermissionComman
 	return *res, nil
 }
 
-func (a app) ParseClaims(ctx context.Context, command user.TokenCommand) (*ose_jwt.Claims, error) {
+func (a app) ParseClaims(ctx context.Context, command user.TokenCommand) (*user.TokenClaim, error) {
 	ctx, span := a.tracer.Start(ctx, "app.user.parse_claims.command", trace.WithAttributes(
 		attribute.String("operation", "parse_claims"),
 		attribute.String("dto", fmt.Sprintf("%v", command)),
@@ -339,19 +340,19 @@ func (a app) Delete(ctx context.Context, params user.UpdateCommand) (*user.Domai
 }
 
 func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo repository.Repository,
-	jwt ose_jwt.Manager, bus domain.Bus) user.App {
+	jwt ose_jwt.Manager, bus domain.Bus, cache cache.Cache) user.App {
 	return &app{
 		tracer:              tracer,
 		log:                 log,
 		create:              newCreateCommandHandler(bs, repo, log, tracer, bus),
 		update:              newUpdateCommandHandler(bs, repo, log, tracer),
-		login:               newLoginCommandHandler(bs, repo, log, tracer, jwt),
+		login:               newLoginCommandHandler(bs, repo, log, tracer, jwt, cache.Token),
 		hasRole:             newHasRoleCommandHandler(log, tracer, jwt),
 		changeStatus:        newChangeStausCommandHandler(bs, repo, log, tracer),
 		hasPermission:       newHasPermissionCommandHandler(log, tracer, jwt),
-		parseClaims:         newParseClaimCommandHandler(log, tracer, jwt),
-		requestPurposeToken: newRequestPurposeTokenCommandHandler(log, tracer, jwt, repo),
-		requestAccessToken:  newRequestAccessTokenCommandHandler(log, tracer, jwt, repo),
+		parseClaims:         newParseClaimCommandHandler(log, tracer, jwt, cache.Token),
+		requestPurposeToken: newRequestPurposeTokenCommandHandler(log, tracer, jwt, repo, cache.Token),
+		requestAccessToken:  newRequestAccessTokenCommandHandler(log, tracer, jwt, repo, cache.Token),
 		changePassword:      newChangePasswordCommandHandler(bs, repo, log, tracer),
 		read:                newReadQueryHandler(repo.User, log, tracer),
 		readOne:             newReadOneQueryHandler(repo.User, log, tracer),

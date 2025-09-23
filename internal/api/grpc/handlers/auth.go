@@ -136,6 +136,7 @@ func (h *AuthHandler) RequestPurposeToken(ctx context.Context, request *authv1.R
 	payload := user.PurposeTokenCommand{
 		Id:      request.Id,
 		Purpose: request.Purpose,
+		Tenant:  request.Tenant,
 		Safe:    request.Safe,
 	}
 
@@ -199,7 +200,7 @@ func (h *AuthHandler) ParseClaim(ctx context.Context, request *authv1.ParseClaim
 		Token: request.Token,
 	}
 
-	claim, err := h.app.ParseClaims(ctx, payload)
+	res, err := h.app.ParseClaims(ctx, payload)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -213,8 +214,11 @@ func (h *AuthHandler) ParseClaim(ctx context.Context, request *authv1.ParseClaim
 	}
 
 	return &authv1.ParseClaimResponse{
-		Message: "parse_claim auth",
-		Claim:   buildClaim(*claim),
+		Key:     res.Key,
+		Tenant:  res.Tenant,
+		User:    res.User,
+		Purpose: res.Purpose,
+		Claim:   buildClaims(res.Claims),
 	}, nil
 }
 

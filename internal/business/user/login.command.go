@@ -5,6 +5,7 @@ import (
 )
 
 type LoginCommand struct {
+	Tenant   string
 	Email    string
 	Password string
 }
@@ -18,6 +19,10 @@ func (c LoginCommand) Validate() error {
 
 	if c.Email == "" {
 		fields = append(fields, "email is required")
+	}
+
+	if c.Tenant == "" {
+		fields = append(fields, "tenant is required")
 	}
 
 	if c.Password == "" {

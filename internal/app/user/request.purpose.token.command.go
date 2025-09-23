@@ -3,11 +3,12 @@ package user
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/authora/internal/business/user"
-	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/authora/internal/infrastruture/repository"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
@@ -26,6 +27,7 @@ type requestPurposeTokenCommandHandler struct {
 	log    logger.Logger
 	repo   repository.Repository
 	tracer tracing.Tracer
+	cache  user.Cache
 	jwt    ose_jwt.Manager
 }
 
@@ -78,6 +80,29 @@ func (h requestPurposeTokenCommandHandler) Handle(ctx context.Context, command u
 		return nil, err
 	}
 
+	if _, err := h.repo.Tenant.ReadOne(ctx, dto.Request{
+		Queries: []dto.Query{
+			{
+				Name: "one",
+				Filters: []dto.Filter{
+					{
+						Field: "_id",
+						Op:    dto.OpEq,
+						Value: command.Tenant,
+					},
+				},
+			},
+		},
+	}); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("validation process failed",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "request_purpose_token"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
 	if !command.Safe {
 		if !record.Status().IsActive() {
 			err = ose_error.New(ose_error.ErrUnauthorized, "user is not active")
@@ -93,7 +118,7 @@ func (h requestPurposeTokenCommandHandler) Handle(ctx context.Context, command u
 		}
 	}
 
-	token, err := h.prepareToken(ctx, command.Id, command.Purpose)
+	token, err := h.prepareToken(ctx, command)
 	if err != nil {
 		err := ose_error.New(ose_error.ErrUnauthorized, err.Error())
 		span.RecordError(err)
@@ -110,7 +135,7 @@ func (h requestPurposeTokenCommandHandler) Handle(ctx context.Context, command u
 	return token, nil
 }
 
-func (h requestPurposeTokenCommandHandler) prepareToken(ctx context.Context, id, purpose string) (*string, error) {
+func (h requestPurposeTokenCommandHandler) prepareToken(ctx context.Context, cmd user.PurposeTokenCommand) (*string, error) {
 	tenants := make(map[string]ose_jwt.Tenant)
 
 	// Fetch all roles for user
@@ -122,7 +147,7 @@ func (h requestPurposeTokenCommandHandler) prepareToken(ctx context.Context, id,
 					{
 						Field: "user",
 						Op:    dto.OpEq,
-						Value: id,
+						Value: cmd.Id,
 					},
 				},
 			},
@@ -170,9 +195,23 @@ func (h requestPurposeTokenCommandHandler) prepareToken(ctx context.Context, id,
 		}
 	}
 
-	sub := fmt.Sprintf("%s:%s", id, purpose)
-	token, _, err := h.jwt.IssuePurposeToken(sub, tenants, nil)
+	token, _, err := h.jwt.IssuePurposeToken(cmd.Id, tenants, nil)
 	if err != nil {
+		return nil, err
+	}
+
+	purposeToken, err := user.NewToken(user.TokenParam{
+		User:    cmd.Id,
+		Purpose: cmd.Purpose,
+		Tenant:  cmd.Tenant,
+		Token:   token,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	token = purposeToken.Key()
+	if err := h.cache.Save(ctx, purposeToken, 15*time.Minute); err != nil {
 		return nil, err
 	}
 
@@ -212,11 +251,12 @@ func (h requestPurposeTokenCommandHandler) preparePermission(ctx context.Context
 }
 
 func newRequestPurposeTokenCommandHandler(log logger.Logger, tracer tracing.Tracer,
-	jwt ose_jwt.Manager, repo repository.Repository) cqrs.CommandHandle[user.PurposeTokenCommand, *string] {
+	jwt ose_jwt.Manager, repo repository.Repository, cache user.Cache) cqrs.CommandHandle[user.PurposeTokenCommand, *string] {
 	return &requestPurposeTokenCommandHandler{
 		log:    log,
 		tracer: tracer,
 		jwt:    jwt,
 		repo:   repo,
+		cache:  cache,
 	}
 }

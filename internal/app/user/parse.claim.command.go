@@ -20,10 +20,11 @@ type parseClaimCommandHandler struct {
 	log    logger.Logger
 	tracer tracing.Tracer
 	jwt    ose_jwt.Manager
+	cache  user.Cache
 }
 
 // Handle implements cqrs.CommandHandle.
-func (u parseClaimCommandHandler) Handle(ctx context.Context, command user.TokenCommand) (*ose_jwt.Claims, error) {
+func (u parseClaimCommandHandler) Handle(ctx context.Context, command user.TokenCommand) (*user.TokenClaim, error) {
 	ctx, span := u.tracer.Start(ctx, "app.user.parse_claim.command.handler", trace.WithAttributes(
 		attribute.String("operation", "parse_claim"),
 		attribute.String("dto", fmt.Sprintf("%v", command)),
@@ -45,7 +46,19 @@ func (u parseClaimCommandHandler) Handle(ctx context.Context, command user.Token
 		return nil, err
 	}
 
-	claims, err := u.jwt.ParseClaims(command.Token)
+	token, err := u.cache.Get(ctx, command.Token)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		u.log.Error("get cache failed",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "parse_claim"),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	claims, err := u.jwt.ParseClaims(token.Token())
 	if err != nil {
 		err := ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error(), traceId)
 		span.RecordError(err)
@@ -59,14 +72,22 @@ func (u parseClaimCommandHandler) Handle(ctx context.Context, command user.Token
 		return nil, err
 	}
 
-	return claims, nil
+	return &user.TokenClaim{
+		Key:     token.Key(),
+		User:    token.User(),
+		Purpose: token.Purpose(),
+		Tenant:  token.Tenant(),
+		Token:   token.Token(),
+		Claims:  *claims,
+	}, nil
 }
 
 func newParseClaimCommandHandler(log logger.Logger, tracer tracing.Tracer,
-	jwt ose_jwt.Manager) cqrs.CommandHandle[user.TokenCommand, *ose_jwt.Claims] {
+	jwt ose_jwt.Manager, cache user.Cache) cqrs.CommandHandle[user.TokenCommand, *user.TokenClaim] {
 	return &parseClaimCommandHandler{
 		log:    log,
 		tracer: tracer,
 		jwt:    jwt,
+		cache:  cache,
 	}
 }

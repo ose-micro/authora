@@ -3,11 +3,12 @@ package user
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/business/role"
 	"github.com/ose-micro/authora/internal/business/user"
-	"github.com/ose-micro/authora/internal/repository"
+	"github.com/ose-micro/authora/internal/infrastruture/repository"
 	"github.com/ose-micro/common"
 	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
@@ -27,6 +28,7 @@ type requestAccessTokenCommandHandler struct {
 	repo   repository.Repository
 	tracer tracing.Tracer
 	jwt    ose_jwt.Manager
+	cache  user.Cache
 }
 
 // Handle implements cqrs.CommandHandle.
@@ -52,7 +54,7 @@ func (h requestAccessTokenCommandHandler) Handle(ctx context.Context, command us
 		return nil, err
 	}
 
-	parseClaims, err := h.jwt.ParseClaims(command.Token)
+	tokenClaim, err := h.cache.Get(ctx, command.Token)
 	if err != nil {
 		err := ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error(), traceId)
 		span.RecordError(err)
@@ -66,7 +68,7 @@ func (h requestAccessTokenCommandHandler) Handle(ctx context.Context, command us
 		return nil, err
 	}
 
-	token, err := h.prepareToken(ctx, parseClaims.Sub)
+	token, err := h.prepareToken(ctx, *tokenClaim)
 	if err != nil {
 		err := ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error(), traceId)
 		span.RecordError(err)
@@ -83,7 +85,7 @@ func (h requestAccessTokenCommandHandler) Handle(ctx context.Context, command us
 	return token, nil
 }
 
-func (h requestAccessTokenCommandHandler) prepareToken(ctx context.Context, id string) (*string, error) {
+func (h requestAccessTokenCommandHandler) prepareToken(ctx context.Context, payload user.Token) (*string, error) {
 	tenants := make(map[string]ose_jwt.Tenant)
 
 	// Fetch all roles for user
@@ -95,7 +97,7 @@ func (h requestAccessTokenCommandHandler) prepareToken(ctx context.Context, id s
 					{
 						Field: "user",
 						Op:    dto.OpEq,
-						Value: id,
+						Value: payload.User(),
 					},
 				},
 			},
@@ -143,8 +145,23 @@ func (h requestAccessTokenCommandHandler) prepareToken(ctx context.Context, id s
 		}
 	}
 
-	token, _, err := h.jwt.IssueAccessToken(id, tenants, nil)
+	token, _, err := h.jwt.IssueAccessToken(payload.User(), tenants, nil)
 	if err != nil {
+		return nil, err
+	}
+	accessToken, err := user.NewToken(user.TokenParam{
+		User:    payload.User(),
+		Purpose: "access",
+		Tenant:  payload.Tenant(),
+		Token:   token,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	token = accessToken.Key()
+
+	if err := h.cache.Save(ctx, accessToken, 15*time.Minute); err != nil {
 		return nil, err
 	}
 
@@ -184,11 +201,12 @@ func (h requestAccessTokenCommandHandler) preparePermission(ctx context.Context,
 }
 
 func newRequestAccessTokenCommandHandler(log logger.Logger, tracer tracing.Tracer,
-	jwt ose_jwt.Manager, repo repository.Repository) cqrs.CommandHandle[user.TokenCommand, *string] {
+	jwt ose_jwt.Manager, repo repository.Repository, cache user.Cache) cqrs.CommandHandle[user.TokenCommand, *string] {
 	return &requestAccessTokenCommandHandler{
 		log:    log,
 		tracer: tracer,
 		jwt:    jwt,
 		repo:   repo,
+		cache:  cache,
 	}
 }

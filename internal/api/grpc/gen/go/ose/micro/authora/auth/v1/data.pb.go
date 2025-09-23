@@ -172,8 +172,11 @@ func (x *ParseClaimRequest) GetToken() string {
 
 type ParseClaimResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
-	Claim         *v1.Claims             `protobuf:"bytes,2,opt,name=claim,proto3" json:"claim,omitempty"`
+	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Tenant        string                 `protobuf:"bytes,2,opt,name=tenant,proto3" json:"tenant,omitempty"`
+	User          string                 `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
+	Purpose       string                 `protobuf:"bytes,4,opt,name=purpose,proto3" json:"purpose,omitempty"`
+	Claim         *v1.Claims             `protobuf:"bytes,5,opt,name=claim,proto3" json:"claim,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -208,9 +211,30 @@ func (*ParseClaimResponse) Descriptor() ([]byte, []int) {
 	return file_ose_micro_authora_auth_v1_data_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ParseClaimResponse) GetMessage() string {
+func (x *ParseClaimResponse) GetKey() string {
 	if x != nil {
-		return x.Message
+		return x.Key
+	}
+	return ""
+}
+
+func (x *ParseClaimResponse) GetTenant() string {
+	if x != nil {
+		return x.Tenant
+	}
+	return ""
+}
+
+func (x *ParseClaimResponse) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *ParseClaimResponse) GetPurpose() string {
+	if x != nil {
+		return x.Purpose
 	}
 	return ""
 }
@@ -226,7 +250,8 @@ type RequestPurposeTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Purpose       string                 `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
-	Safe          bool                   `protobuf:"varint,3,opt,name=safe,proto3" json:"safe,omitempty"`
+	Tenant        string                 `protobuf:"bytes,3,opt,name=tenant,proto3" json:"tenant,omitempty"`
+	Safe          bool                   `protobuf:"varint,4,opt,name=safe,proto3" json:"safe,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -271,6 +296,13 @@ func (x *RequestPurposeTokenRequest) GetId() string {
 func (x *RequestPurposeTokenRequest) GetPurpose() string {
 	if x != nil {
 		return x.Purpose
+	}
+	return ""
+}
+
+func (x *RequestPurposeTokenRequest) GetTenant() string {
+	if x != nil {
+		return x.Tenant
 	}
 	return ""
 }
@@ -530,14 +562,18 @@ const file_ose_micro_authora_auth_v1_data_proto_rawDesc = "" +
 	"\x0fHasRoleResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\")\n" +
 	"\x11ParseClaimRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"a\n" +
-	"\x12ParseClaimResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x121\n" +
-	"\x05claim\x18\x02 \x01(\v2\x1b.ose.micro.common.v1.ClaimsR\x05claim\"Z\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"\x9f\x01\n" +
+	"\x12ParseClaimResponse\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x16\n" +
+	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12\x12\n" +
+	"\x04user\x18\x03 \x01(\tR\x04user\x12\x18\n" +
+	"\apurpose\x18\x04 \x01(\tR\apurpose\x121\n" +
+	"\x05claim\x18\x05 \x01(\v2\x1b.ose.micro.common.v1.ClaimsR\x05claim\"r\n" +
 	"\x1aRequestPurposeTokenRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x12\n" +
-	"\x04safe\x18\x03 \x01(\bR\x04safe\"3\n" +
+	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x16\n" +
+	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12\x12\n" +
+	"\x04safe\x18\x04 \x01(\bR\x04safe\"3\n" +
 	"\x1bRequestPurposeTokenResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"5\n" +
 	"\x19RequestAccessTokenRequest\x12\x18\n" +
