@@ -17,11 +17,11 @@
     "db": 0
   },
   "nats": {
-    "url": "nats://nats-server.railway.internal:4222",
-    "name": "authora",
-    "user": "nats",
-    "password": "m67r9jQpLk3uXy6fHnWb2sEwRtAq8fGhJaL0yUzXk5E",
-    "timeout": "2s",
+    "url": "",
+    "name": "",
+    "user": "",
+    "password": "",
+    "timeout": "",
     "max_reconnect": -1
   },
   "grpc": {
