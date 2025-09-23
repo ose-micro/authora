@@ -11,6 +11,11 @@
       "sampleRatio": 0
     }
   },
+  "redis": {
+    "addr": "",
+    "password": "",
+    "db": 0
+  },
   "nats": {
     "url": "nats://nats-server.railway.internal:4222",
     "name": "authora",
