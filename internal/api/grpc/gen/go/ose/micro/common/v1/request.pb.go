@@ -9,6 +9,7 @@ package commonv1
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	structpb "google.golang.org/protobuf/types/known/structpb"
 	reflect "reflect"
 	sync "sync"
@@ -288,7 +289,7 @@ type Filter struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
 	Op            FilterOp               `protobuf:"varint,2,opt,name=op,proto3,enum=ose.micro.common.v1.FilterOp" json:"op,omitempty"`
-	Value         string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	Value         *anypb.Any             `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -337,11 +338,11 @@ func (x *Filter) GetOp() FilterOp {
 	return FilterOp_FILTER_OP_UNSPECIFIED
 }
 
-func (x *Filter) GetValue() string {
+func (x *Filter) GetValue() *anypb.Any {
 	if x != nil {
 		return x.Value
 	}
-	return ""
+	return nil
 }
 
 type Aggregation struct {
@@ -708,11 +709,11 @@ var File_ose_micro_common_v1_request_proto protoreflect.FileDescriptor
 
 const file_ose_micro_common_v1_request_proto_rawDesc = "" +
 	"\n" +
-	"!ose/micro/common/v1/request.proto\x12\x13ose.micro.common.v1\x1a\x1cgoogle/protobuf/struct.proto\"c\n" +
+	"!ose/micro/common/v1/request.proto\x12\x13ose.micro.common.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x19google/protobuf/any.proto\"y\n" +
 	"\x06Filter\x12\x14\n" +
 	"\x05field\x18\x01 \x01(\tR\x05field\x12-\n" +
-	"\x02op\x18\x02 \x01(\x0e2\x1d.ose.micro.common.v1.FilterOpR\x02op\x12\x14\n" +
-	"\x05value\x18\x03 \x01(\tR\x05value\"m\n" +
+	"\x02op\x18\x02 \x01(\x0e2\x1d.ose.micro.common.v1.FilterOpR\x02op\x12*\n" +
+	"\x05value\x18\x03 \x01(\v2\x14.google.protobuf.AnyR\x05value\"m\n" +
 	"\vAggregation\x128\n" +
 	"\x04type\x18\x01 \x01(\x0e2$.ose.micro.common.v1.AggregationTypeR\x04type\x12\x14\n" +
 	"\x05field\x18\x02 \x01(\tR\x05field\x12\x0e\n" +
@@ -810,25 +811,27 @@ var file_ose_micro_common_v1_request_proto_goTypes = []any{
 	(*Request)(nil),        // 9: ose.micro.common.v1.Request
 	(*Result)(nil),         // 10: ose.micro.common.v1.Result
 	nil,                    // 11: ose.micro.common.v1.Result.DataEntry
-	(*structpb.Value)(nil), // 12: google.protobuf.Value
+	(*anypb.Any)(nil),      // 12: google.protobuf.Any
+	(*structpb.Value)(nil), // 13: google.protobuf.Value
 }
 var file_ose_micro_common_v1_request_proto_depIdxs = []int32{
 	0,  // 0: ose.micro.common.v1.Filter.op:type_name -> ose.micro.common.v1.FilterOp
-	1,  // 1: ose.micro.common.v1.Aggregation.type:type_name -> ose.micro.common.v1.AggregationType
-	2,  // 2: ose.micro.common.v1.SortOption.order:type_name -> ose.micro.common.v1.SortOrder
-	3,  // 3: ose.micro.common.v1.ComputedField.operator:type_name -> ose.micro.common.v1.ComputedOperator
-	4,  // 4: ose.micro.common.v1.FacetQuery.filters:type_name -> ose.micro.common.v1.Filter
-	5,  // 5: ose.micro.common.v1.FacetQuery.aggregations:type_name -> ose.micro.common.v1.Aggregation
-	6,  // 6: ose.micro.common.v1.FacetQuery.sort:type_name -> ose.micro.common.v1.SortOption
-	7,  // 7: ose.micro.common.v1.FacetQuery.computed_fields:type_name -> ose.micro.common.v1.ComputedField
-	8,  // 8: ose.micro.common.v1.Request.facets:type_name -> ose.micro.common.v1.FacetQuery
-	11, // 9: ose.micro.common.v1.Result.data:type_name -> ose.micro.common.v1.Result.DataEntry
-	12, // 10: ose.micro.common.v1.Result.DataEntry.value:type_name -> google.protobuf.Value
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	12, // 1: ose.micro.common.v1.Filter.value:type_name -> google.protobuf.Any
+	1,  // 2: ose.micro.common.v1.Aggregation.type:type_name -> ose.micro.common.v1.AggregationType
+	2,  // 3: ose.micro.common.v1.SortOption.order:type_name -> ose.micro.common.v1.SortOrder
+	3,  // 4: ose.micro.common.v1.ComputedField.operator:type_name -> ose.micro.common.v1.ComputedOperator
+	4,  // 5: ose.micro.common.v1.FacetQuery.filters:type_name -> ose.micro.common.v1.Filter
+	5,  // 6: ose.micro.common.v1.FacetQuery.aggregations:type_name -> ose.micro.common.v1.Aggregation
+	6,  // 7: ose.micro.common.v1.FacetQuery.sort:type_name -> ose.micro.common.v1.SortOption
+	7,  // 8: ose.micro.common.v1.FacetQuery.computed_fields:type_name -> ose.micro.common.v1.ComputedField
+	8,  // 9: ose.micro.common.v1.Request.facets:type_name -> ose.micro.common.v1.FacetQuery
+	11, // 10: ose.micro.common.v1.Result.data:type_name -> ose.micro.common.v1.Result.DataEntry
+	13, // 11: ose.micro.common.v1.Result.DataEntry.value:type_name -> google.protobuf.Value
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_ose_micro_common_v1_request_proto_init() }

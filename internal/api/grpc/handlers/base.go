@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	userv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1"
 	commonv1 "github.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/common/v1"
 	"github.com/ose-micro/authora/internal/business/user"
+	"github.com/ose-micro/common"
 	"github.com/ose-micro/common/claims"
 	"github.com/ose-micro/core/dto"
 	ose_error "github.com/ose-micro/error"
@@ -55,14 +55,11 @@ func buildAppRequest(query *commonv1.Request) (*dto.Request, error) {
 					switch filter.Op {
 					case commonv1.FilterOp_FILTER_OP_EQ, commonv1.FilterOp_FILTER_OP_IN, commonv1.FilterOp_FILTER_OP_NE,
 						commonv1.FilterOp_FILTER_OP_NIN:
-						return filter.Value
+						return common.FromAnyToPrimitive(filter.Value)
 					case commonv1.FilterOp_FILTER_OP_GTE, commonv1.FilterOp_FILTER_OP_GT, commonv1.FilterOp_FILTER_OP_LT,
 						commonv1.FilterOp_FILTER_OP_LTE:
-						value, err := strconv.ParseFloat(filter.Value, 32)
-						if err != nil {
-							return nil
-						}
-						return float32(value)
+						value := common.FromAnyToPrimitive(filter.Value)
+						return value
 
 					default:
 						return dto.OpEq

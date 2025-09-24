@@ -3,7 +3,7 @@ module github.com/ose-micro/authora
 go 1.25.0
 
 require (
-	github.com/ose-micro/common v0.1.0
+	github.com/ose-micro/common v0.1.2
 	github.com/ose-micro/core v0.3.8
 	github.com/ose-micro/cqrs v0.3.3
 	github.com/ose-micro/error v0.0.1
