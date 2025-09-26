@@ -7,7 +7,7 @@ import (
 	"github.com/ose-micro/rid"
 )
 
-const OnboardEvent string = "events.assignment_onboard"
+const AssignmentOnboardEvent string = "authoras.assignment_onboard"
 
 type Domain struct {
 	*domain.Aggregate

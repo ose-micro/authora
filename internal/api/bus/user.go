@@ -15,8 +15,8 @@ import (
 	"go.uber.org/zap"
 )
 
-func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) {
-	err := bus.Subscribe(user.CreatedEvent, "user_created", func(ctx context.Context, data any) error {
+func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
+	err := bus.Subscribe(user.CreatedEvent, "user_created_consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.created.handler", trace.WithAttributes(
 			attribute.String("operation", "user_created"),
 			attribute.String("payload", fmt.Sprintf("%v", data)),
@@ -44,10 +44,14 @@ func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, lo
 		return nil
 	})
 	if err != nil {
-		return
+		return err
 	}
 
-	if err := bus.Subscribe(user.ChangeStateEvent, "user_change_state", func(ctx context.Context, data any) error {
+	return nil
+}
+
+func newUserChangeStateEvent(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
+	if err := bus.Subscribe(user.ChangeStateEvent, "user_change_state_consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.change_state.handler", trace.WithAttributes(
 			attribute.String("operation", "change_state"),
 			attribute.String("payload", fmt.Sprintf("%v", data)),
@@ -73,6 +77,8 @@ func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, lo
 
 		return nil
 	}); err != nil {
-		return
+		return err
 	}
+
+	return nil
 }

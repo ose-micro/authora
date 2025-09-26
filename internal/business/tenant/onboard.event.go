@@ -13,7 +13,7 @@ type OnboardEvent struct {
 }
 
 func (e OnboardEvent) EventName() string {
-	return OnboardedEvent
+	return "user.created"
 }
 
 func (e OnboardEvent) OccurredAt() time.Time {

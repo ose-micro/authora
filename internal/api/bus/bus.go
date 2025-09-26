@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/ose-micro/authora/internal/app"
-	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/business/tenant"
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/events"
@@ -22,11 +21,9 @@ func InvokeConsumers(lc fx.Lifecycle, app app.Apps, event *events.Events, bus do
 		OnStart: func(context.Context) error {
 			go func() {
 				eventList := []string{
-					user.OnboardedEvent,
 					user.CreatedEvent,
-					tenant.OnboardedEvent,
 					user.ChangeStateEvent,
-					assignment.OnboardEvent,
+					tenant.NewEvent,
 				}
 				err := bus.EnsureStream("EVENT", eventList...)
 				if err != nil {
@@ -38,13 +35,16 @@ func InvokeConsumers(lc fx.Lifecycle, app app.Apps, event *events.Events, bus do
 					log.Fatal("tenant consumer failed", zap.Error(err))
 				}
 
-				newUserConsumer(bus, *event, trancer, log)
-
+				err = newUserConsumer(bus, *event, trancer, log)
+				if err != nil {
+					log.Fatal("user consumer failed", zap.Error(err))
+				}
 				err = newAssignmentConsumer(bus, app, *event, trancer, log)
 				if err != nil {
 					log.Fatal("assignment consumer failed", zap.Error(err))
 				}
 			}()
+
 			return nil
 		},
 	})
