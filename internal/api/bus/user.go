@@ -47,10 +47,6 @@ func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, lo
 		return err
 	}
 
-	return nil
-}
-
-func newUserChangeStateEvent(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
 	if err := bus.Subscribe(user.ChangeStateEvent, "user_change_state_consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.change_state.handler", trace.WithAttributes(
 			attribute.String("operation", "change_state"),
