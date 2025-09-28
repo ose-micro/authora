@@ -14,8 +14,8 @@
   "nats": {
     "url": "nats://localhost:4222",
     "name": "authora",
-    "user": "myuser",
-    "password": "mypassword",
+    "user": "moriba",
+    "password": "yT7f9hK3vLqP8dX2bHcM",
     "timeout": "2s",
     "max_reconnect": -1
   },
@@ -37,7 +37,7 @@
   },
   "mongo": {
     "host": "localhost",
-    "port": 27018,
+    "port": 27017,
     "timeout": "3s",
     "user": "moriba",
     "password": "yT7f9hK3vLqP8dX2bHcM",
