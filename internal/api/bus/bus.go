@@ -27,7 +27,7 @@ func InvokeConsumers(lc fx.Lifecycle, app app.Apps, event *events.Events, bus do
 					user.CreatedEvent,
 					user.ChangeStateEvent,
 				}
-				err := bus.EnsureStream("EVENT", eventList...)
+				err := bus.EnsureStream("AUTHORA", eventList...)
 				if err != nil {
 					log.Fatal("nats stream failed", zap.Error(err))
 				}
