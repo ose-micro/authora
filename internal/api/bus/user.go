@@ -47,7 +47,7 @@ func newUserConsumer(bus domain.Bus, event events.Events, tracer tracing.Tracer,
 		return err
 	}
 
-	if err := bus.Subscribe(user.ChangeStateEvent, "user_change_state_consumer", func(ctx context.Context, data any) error {
+	if err := bus.Subscribe(user.ChangeStateEvent, "user_state_consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.change_state.handler", trace.WithAttributes(
 			attribute.String("operation", "change_state"),
 			attribute.String("payload", fmt.Sprintf("%v", data)),
