@@ -6,16 +6,16 @@ import (
 
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/events"
+	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
-	"github.com/ose-micro/cqrs/bus"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
-func newUserConsumer(bus bus.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
+func newUserConsumer(bus domain.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
 	err := bus.Subscribe(user.CreatedEvent, "user_created_consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.created.handler", trace.WithAttributes(
 			attribute.String("operation", "user_created"),

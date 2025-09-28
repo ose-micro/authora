@@ -9,16 +9,16 @@ import (
 	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/events"
+	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
-	"github.com/ose-micro/cqrs/bus"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
-func newAssignmentConsumer(bus bus.Bus, app app.Apps, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
+func newAssignmentConsumer(bus domain.Bus, app app.Apps, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
 	_ = bus.Subscribe(user.CreatedEvent, "assignment_user_create_consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.assignment.created.handler", trace.WithAttributes(
 			attribute.String("operation", "created"),
