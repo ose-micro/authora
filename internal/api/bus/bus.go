@@ -39,6 +39,7 @@ func InvokeConsumers(lc fx.Lifecycle, app app.Apps, event *events.Events, bus do
 				if err != nil {
 					log.Fatal("user consumer failed", zap.Error(err))
 				}
+				
 				err = newAssignmentConsumer(bus, app, *event, trancer, log)
 				if err != nil {
 					log.Fatal("assignment consumer failed", zap.Error(err))
