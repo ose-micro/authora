@@ -7,9 +7,9 @@ import (
 	"github.com/ose-micro/authora/internal/business"
 	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/infrastruture/repository"
-	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	"github.com/ose-micro/cqrs"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -19,9 +19,9 @@ import (
 type app struct {
 	tracer tracing.Tracer
 	log    logger.Logger
-	create domain.CommandHandle[assignment.CreateCommand, *assignment.Domain]
-	update domain.CommandHandle[assignment.UpdateCommand, *assignment.Domain]
-	read   domain.QueryHandle[assignment.ReadQuery, map[string]any]
+	create cqrs.CommandHandle[assignment.CreateCommand, *assignment.Domain]
+	update cqrs.CommandHandle[assignment.UpdateCommand, *assignment.Domain]
+	read   cqrs.QueryHandle[assignment.ReadQuery, map[string]any]
 }
 
 func (a app) Read(ctx context.Context, command assignment.ReadQuery) (map[string]any, error) {

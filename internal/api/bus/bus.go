@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/ose-micro/authora/internal/app"
+	"github.com/ose-micro/authora/internal/business/assignment"
 	"github.com/ose-micro/authora/internal/business/tenant"
 	"github.com/ose-micro/authora/internal/business/user"
 	"github.com/ose-micro/authora/internal/events"
@@ -21,6 +22,7 @@ func InvokeConsumers(lc fx.Lifecycle, app app.Apps, event *events.Events, bus do
 		OnStart: func(context.Context) error {
 			go func() {
 				eventList := []string{
+					assignment.AssignmentOnboardEvent,
 					user.CreatedEvent,
 					user.ChangeStateEvent,
 					tenant.NewEvent,

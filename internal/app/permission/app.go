@@ -7,9 +7,9 @@ import (
 	"github.com/ose-micro/authora/internal/business"
 	"github.com/ose-micro/authora/internal/business/permission"
 	"github.com/ose-micro/authora/internal/infrastruture/repository"
-	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	"github.com/ose-micro/cqrs"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -19,10 +19,10 @@ import (
 type app struct {
 	tracer  tracing.Tracer
 	log     logger.Logger
-	create  domain.CommandHandle[permission.CreateCommand, *permission.Domain]
-	update  domain.CommandHandle[permission.UpdateCommand, *permission.Domain]
-	read    domain.QueryHandle[permission.ReadQuery, map[string]any]
-	readOne domain.QueryHandle[permission.ReadQuery, *permission.Domain]
+	create  cqrs.CommandHandle[permission.CreateCommand, *permission.Domain]
+	update  cqrs.CommandHandle[permission.UpdateCommand, *permission.Domain]
+	read    cqrs.QueryHandle[permission.ReadQuery, map[string]any]
+	readOne cqrs.QueryHandle[permission.ReadQuery, *permission.Domain]
 }
 
 func (a app) ReadOne(ctx context.Context, command permission.ReadQuery) (*permission.Domain, error) {

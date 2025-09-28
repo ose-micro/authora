@@ -11,6 +11,7 @@ import (
 	"github.com/ose-micro/core/domain"
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	"github.com/ose-micro/cqrs"
 	ose_jwt "github.com/ose-micro/jwt"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -21,19 +22,19 @@ import (
 type app struct {
 	tracer              tracing.Tracer
 	log                 logger.Logger
-	create              domain.CommandHandle[user.CreateCommand, *user.Domain]
-	update              domain.CommandHandle[user.UpdateCommand, *user.Domain]
-	login               domain.CommandHandle[user.LoginCommand, *user.Auth]
-	hasRole             domain.CommandHandle[user.HasRoleCommand, *bool]
-	changeStatus        domain.CommandHandle[user.StatusCommand, *bool]
-	hasPermission       domain.CommandHandle[user.HasPermissionCommand, *bool]
-	parseClaims         domain.CommandHandle[user.TokenCommand, *user.TokenClaim]
-	requestPurposeToken domain.CommandHandle[user.PurposeTokenCommand, *string]
-	requestAccessToken  domain.CommandHandle[user.TokenCommand, *string]
-	changePassword      domain.CommandHandle[user.ChangePasswordCommand, *user.Domain]
-	resetPassword       domain.CommandHandle[user.ResetPasswordCommand, *user.Domain]
-	read                domain.QueryHandle[user.ReadQuery, map[string]any]
-	readOne             domain.QueryHandle[user.ReadQuery, *user.Domain]
+	create              cqrs.CommandHandle[user.CreateCommand, *user.Domain]
+	update              cqrs.CommandHandle[user.UpdateCommand, *user.Domain]
+	login               cqrs.CommandHandle[user.LoginCommand, *user.Auth]
+	hasRole             cqrs.CommandHandle[user.HasRoleCommand, *bool]
+	changeStatus        cqrs.CommandHandle[user.StatusCommand, *bool]
+	hasPermission       cqrs.CommandHandle[user.HasPermissionCommand, *bool]
+	parseClaims         cqrs.CommandHandle[user.TokenCommand, *user.TokenClaim]
+	requestPurposeToken cqrs.CommandHandle[user.PurposeTokenCommand, *string]
+	requestAccessToken  cqrs.CommandHandle[user.TokenCommand, *string]
+	changePassword      cqrs.CommandHandle[user.ChangePasswordCommand, *user.Domain]
+	resetPassword       cqrs.CommandHandle[user.ResetPasswordCommand, *user.Domain]
+	read                cqrs.QueryHandle[user.ReadQuery, map[string]any]
+	readOne             cqrs.QueryHandle[user.ReadQuery, *user.Domain]
 }
 
 func (a app) ResetPassword(ctx context.Context, command user.ResetPasswordCommand) (*user.Domain, error) {

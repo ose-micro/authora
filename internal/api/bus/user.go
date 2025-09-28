@@ -16,7 +16,7 @@ import (
 )
 
 func newUserConsumer(bus domain.Bus, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
-	err := bus.Subscribe(user.CreatedEvent, "user_consumer", func(ctx context.Context, data any) error {
+	err := bus.Subscribe(user.CreatedEvent, "user-consumer", "user-created-consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.created.handler", trace.WithAttributes(
 			attribute.String("operation", "user_created"),
 			attribute.String("payload", fmt.Sprintf("%v", data)),
@@ -47,7 +47,7 @@ func newUserConsumer(bus domain.Bus, event events.Events, tracer tracing.Tracer,
 		return err
 	}
 
-	if err := bus.Subscribe(user.ChangeStateEvent, "user_state_consumer", func(ctx context.Context, data any) error {
+	if err := bus.Subscribe(user.ChangeStateEvent, "user-state-consumer", "user-change-state-consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.user.change_state.handler", trace.WithAttributes(
 			attribute.String("operation", "change_state"),
 			attribute.String("payload", fmt.Sprintf("%v", data)),
