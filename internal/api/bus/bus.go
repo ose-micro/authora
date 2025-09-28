@@ -22,10 +22,10 @@ func InvokeConsumers(lc fx.Lifecycle, app app.Apps, event *events.Events, bus do
 		OnStart: func(context.Context) error {
 			go func() {
 				eventList := []string{
+					tenant.NewEvent,
 					assignment.AssignmentOnboardEvent,
 					user.CreatedEvent,
 					user.ChangeStateEvent,
-					tenant.NewEvent,
 				}
 				err := bus.EnsureStream("EVENT", eventList...)
 				if err != nil {

@@ -7,7 +7,7 @@ import (
 	"github.com/ose-micro/rid"
 )
 
-const NewEvent string = "authora.tenant_new"
+const NewEvent string = "authora.tenant_create"
 
 type Domain struct {
 	*domain.Aggregate
