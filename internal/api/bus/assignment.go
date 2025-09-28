@@ -19,7 +19,7 @@ import (
 )
 
 func newAssignmentConsumer(bus domain.Bus, app app.Apps, event events.Events, tracer tracing.Tracer, log logger.Logger) error {
-	_ = bus.Subscribe(user.CreatedEvent, "assignment_user_create_consumer", func(ctx context.Context, data any) error {
+	_ = bus.Subscribe(user.CreatedEvent, "assignment_new_user_consumer", func(ctx context.Context, data any) error {
 		ctx, span := tracer.Start(ctx, "event.assignment.created.handler", trace.WithAttributes(
 			attribute.String("operation", "created"),
 			attribute.String("dto", fmt.Sprintf("%v", data)),
