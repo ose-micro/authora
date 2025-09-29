@@ -10,6 +10,7 @@ type App interface {
 	ChangePassword(ctx context.Context, command ChangePasswordCommand) (*Domain, error)
 	ResetPassword(ctx context.Context, command ResetPasswordCommand) (*Domain, error)
 	Login(ctx context.Context, command LoginCommand) (*Auth, error)
+	Logout(ctx context.Context, command TokenCommand) (bool, error)
 	Delete(ctx context.Context, command UpdateCommand) (*Domain, error)
 	HasRole(ctx context.Context, command HasRoleCommand) (bool, error)
 	HasPermission(ctx context.Context, command HasPermissionCommand) (bool, error)

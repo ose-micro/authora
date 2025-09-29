@@ -216,15 +216,15 @@ func buildTenant(tenant ose_jwt.Tenant) *commonv1.Tenant {
 }
 
 func buildUserStatus(status user.Status) *userv1.Status {
-	var prev userv1.State
-	if status.Previous != nil { // 0 is default proto enum = none
+	var previous userv1.State
+	if status.Previous != nil {
 		tmp := userv1.State(*status.Previous)
-		prev = tmp
+		previous = tmp
 	}
 
 	return &userv1.Status{
 		State:    userv1.State(status.State),
-		Previous: prev,
+		Previous: &previous,
 		OccurOn:  timestamppb.New(status.OccurOn),
 	}
 }

@@ -309,6 +309,41 @@ func (h *UserHandler) Login(ctx context.Context, request *userv1.LoginRequest) (
 	}, nil
 }
 
+func (h *UserHandler) Logout(ctx context.Context, request *userv1.LogoutRequest) (*userv1.LogoutResponse, error) {
+	ctx, span := h.tracer.Start(ctx, "api.grpc.user.logout.handler", trace.WithAttributes(
+		attribute.String("operation", "logout"),
+		attribute.String("dto", fmt.Sprintf("%v", request)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	payload := user.TokenCommand{
+		Token: request.Token,
+	}
+
+	if _, err := h.app.Logout(ctx, payload); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		h.log.Error("failed to logout user",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "logout"),
+			zap.Error(err),
+		)
+
+		return nil, parseError(err)
+	}
+
+	h.log.Info("user logout process successfully",
+		zap.String("trace_id", traceId),
+		zap.String("operation", "logout"),
+		zap.Any("dto", request),
+	)
+
+	return &userv1.LogoutResponse{
+		Message: "success",
+	}, nil
+}
+
 func (h *UserHandler) Read(ctx context.Context, request *userv1.ReadRequest) (*userv1.ReadResponse, error) {
 	ctx, span := h.tracer.Start(ctx, "api.grpc.user.repository.handler", trace.WithAttributes(
 		attribute.String("operation", "repository"),

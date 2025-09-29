@@ -25,6 +25,7 @@ type app struct {
 	create              cqrs.CommandHandle[user.CreateCommand, *user.Domain]
 	update              cqrs.CommandHandle[user.UpdateCommand, *user.Domain]
 	login               cqrs.CommandHandle[user.LoginCommand, *user.Auth]
+	logout              cqrs.CommandHandle[user.TokenCommand, bool]
 	hasRole             cqrs.CommandHandle[user.HasRoleCommand, *bool]
 	changeStatus        cqrs.CommandHandle[user.StatusCommand, *bool]
 	hasPermission       cqrs.CommandHandle[user.HasPermissionCommand, *bool]
@@ -35,6 +36,30 @@ type app struct {
 	resetPassword       cqrs.CommandHandle[user.ResetPasswordCommand, *user.Domain]
 	read                cqrs.QueryHandle[user.ReadQuery, map[string]any]
 	readOne             cqrs.QueryHandle[user.ReadQuery, *user.Domain]
+}
+
+// Logout implements user.App.
+func (a *app) Logout(ctx context.Context, command user.TokenCommand) (bool, error) {
+	ctx, span := a.tracer.Start(ctx, "app.user.logout.command", trace.WithAttributes(
+		attribute.String("operation", "logout"),
+		attribute.String("dto", fmt.Sprintf("%v", command)),
+	))
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	record, err := a.logout.Handle(ctx, command)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		a.log.Error("failed to process command",
+			zap.String("trace_id", traceId),
+			zap.String("operation", "logout"),
+			zap.Error(err),
+		)
+		return false, err
+	}
+
+	return record, nil
 }
 
 func (a app) ResetPassword(ctx context.Context, command user.ResetPasswordCommand) (*user.Domain, error) {
@@ -358,5 +383,6 @@ func NewApp(bs business.Domain, log logger.Logger, tracer tracing.Tracer, repo r
 		read:                newReadQueryHandler(repo.User, log, tracer),
 		readOne:             newReadOneQueryHandler(repo.User, log, tracer),
 		resetPassword:       newResetPasswordCommandHandler(bs, repo, log, tracer),
+		logout:              newLogoutCommandHandler(log, tracer, cache.Token),
 	}
 }

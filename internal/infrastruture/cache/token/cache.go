@@ -23,6 +23,36 @@ type tokenCache struct {
 	trace tracing.Tracer
 }
 
+// Delete implements user.Cache.
+func (t tokenCache) Delete(ctx context.Context, key string) error {
+	ctx, span := t.trace.Start(ctx, "user.cache.delete", trace.WithAttributes(
+		attribute.String("operation", "delete"),
+		attribute.String("dto", fmt.Sprintf("%v", key))),
+	)
+	defer span.End()
+
+	traceId := trace.SpanContextFromContext(ctx).TraceID().String()
+	
+	if err := t.redis.Del(ctx, key); err != nil {
+		err := ose_error.Wrap(err, ose_error.ErrInternalServerError, err.Error(), traceId)
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		t.log.Error("redis set error",
+			zap.String("operation", "delete"),
+			zap.String("trace", traceId),
+			zap.Error(err),
+		)
+		return err
+	}
+
+	t.log.Info("delete process complete successfully",
+		zap.String("operation", "delete"),
+		zap.String("trace_id", traceId),
+		zap.Any("dto", fmt.Sprintf("%v", key)),
+	)
+	return nil
+}
+
 func (t tokenCache) Save(ctx context.Context, payload *user.Token, ttl time.Duration) error {
 	ctx, span := t.trace.Start(ctx, "user.cache.save", trace.WithAttributes(
 		attribute.String("operation", "save"),

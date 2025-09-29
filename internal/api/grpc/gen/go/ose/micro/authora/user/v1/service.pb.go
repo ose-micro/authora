@@ -24,7 +24,7 @@ var File_ose_micro_authora_user_v1_service_proto protoreflect.FileDescriptor
 
 const file_ose_micro_authora_user_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"'ose/micro/authora/user/v1/service.proto\x12\x19ose.micro.authora.user.v1\x1a$ose/micro/authora/user/v1/data.proto2\xd4\x06\n" +
+	"'ose/micro/authora/user/v1/service.proto\x12\x19ose.micro.authora.user.v1\x1a$ose/micro/authora/user/v1/data.proto2\xb3\a\n" +
 	"\vUserService\x12]\n" +
 	"\x06Create\x12(.ose.micro.authora.user.v1.CreateRequest\x1a).ose.micro.authora.user.v1.CreateResponse\x12]\n" +
 	"\x06Update\x12(.ose.micro.authora.user.v1.UpdateRequest\x1a).ose.micro.authora.user.v1.UpdateResponse\x12u\n" +
@@ -33,7 +33,8 @@ const file_ose_micro_authora_user_v1_service_proto_rawDesc = "" +
 	"\x04Read\x12&.ose.micro.authora.user.v1.ReadRequest\x1a'.ose.micro.authora.user.v1.ReadResponse\x12`\n" +
 	"\aReadOne\x12).ose.micro.authora.user.v1.ReadOneRequest\x1a*.ose.micro.authora.user.v1.ReadOneResponse\x12\x84\x01\n" +
 	"\x13RequestPurposeToken\x125.ose.micro.authora.user.v1.RequestPurposeTokenRequest\x1a6.ose.micro.authora.user.v1.RequestPurposeTokenResponse\x12Z\n" +
-	"\x05Login\x12'.ose.micro.authora.user.v1.LoginRequest\x1a(.ose.micro.authora.user.v1.LoginResponseB\x8e\x02\n" +
+	"\x05Login\x12'.ose.micro.authora.user.v1.LoginRequest\x1a(.ose.micro.authora.user.v1.LoginResponse\x12]\n" +
+	"\x06Logout\x12(.ose.micro.authora.user.v1.LogoutRequest\x1a).ose.micro.authora.user.v1.LogoutResponseB\x8e\x02\n" +
 	"\x1dcom.ose.micro.authora.user.v1B\fServiceProtoP\x01ZVgithub.com/ose-micro/authora/internal/api/grpc/gen/go/ose/micro/authora/user/v1;userv1\xa2\x02\x04OMAU\xaa\x02\x19Ose.Micro.Authora.User.V1\xca\x02\x19Ose\\Micro\\Authora\\User\\V1\xe2\x02%Ose\\Micro\\Authora\\User\\V1\\GPBMetadata\xea\x02\x1dOse::Micro::Authora::User::V1b\x06proto3"
 
 var file_ose_micro_authora_user_v1_service_proto_goTypes = []any{
@@ -45,14 +46,16 @@ var file_ose_micro_authora_user_v1_service_proto_goTypes = []any{
 	(*ReadOneRequest)(nil),              // 5: ose.micro.authora.user.v1.ReadOneRequest
 	(*RequestPurposeTokenRequest)(nil),  // 6: ose.micro.authora.user.v1.RequestPurposeTokenRequest
 	(*LoginRequest)(nil),                // 7: ose.micro.authora.user.v1.LoginRequest
-	(*CreateResponse)(nil),              // 8: ose.micro.authora.user.v1.CreateResponse
-	(*UpdateResponse)(nil),              // 9: ose.micro.authora.user.v1.UpdateResponse
-	(*ChangePasswordResponse)(nil),      // 10: ose.micro.authora.user.v1.ChangePasswordResponse
-	(*ResetPasswordResponse)(nil),       // 11: ose.micro.authora.user.v1.ResetPasswordResponse
-	(*ReadResponse)(nil),                // 12: ose.micro.authora.user.v1.ReadResponse
-	(*ReadOneResponse)(nil),             // 13: ose.micro.authora.user.v1.ReadOneResponse
-	(*RequestPurposeTokenResponse)(nil), // 14: ose.micro.authora.user.v1.RequestPurposeTokenResponse
-	(*LoginResponse)(nil),               // 15: ose.micro.authora.user.v1.LoginResponse
+	(*LogoutRequest)(nil),               // 8: ose.micro.authora.user.v1.LogoutRequest
+	(*CreateResponse)(nil),              // 9: ose.micro.authora.user.v1.CreateResponse
+	(*UpdateResponse)(nil),              // 10: ose.micro.authora.user.v1.UpdateResponse
+	(*ChangePasswordResponse)(nil),      // 11: ose.micro.authora.user.v1.ChangePasswordResponse
+	(*ResetPasswordResponse)(nil),       // 12: ose.micro.authora.user.v1.ResetPasswordResponse
+	(*ReadResponse)(nil),                // 13: ose.micro.authora.user.v1.ReadResponse
+	(*ReadOneResponse)(nil),             // 14: ose.micro.authora.user.v1.ReadOneResponse
+	(*RequestPurposeTokenResponse)(nil), // 15: ose.micro.authora.user.v1.RequestPurposeTokenResponse
+	(*LoginResponse)(nil),               // 16: ose.micro.authora.user.v1.LoginResponse
+	(*LogoutResponse)(nil),              // 17: ose.micro.authora.user.v1.LogoutResponse
 }
 var file_ose_micro_authora_user_v1_service_proto_depIdxs = []int32{
 	0,  // 0: ose.micro.authora.user.v1.UserService.Create:input_type -> ose.micro.authora.user.v1.CreateRequest
@@ -63,16 +66,18 @@ var file_ose_micro_authora_user_v1_service_proto_depIdxs = []int32{
 	5,  // 5: ose.micro.authora.user.v1.UserService.ReadOne:input_type -> ose.micro.authora.user.v1.ReadOneRequest
 	6,  // 6: ose.micro.authora.user.v1.UserService.RequestPurposeToken:input_type -> ose.micro.authora.user.v1.RequestPurposeTokenRequest
 	7,  // 7: ose.micro.authora.user.v1.UserService.Login:input_type -> ose.micro.authora.user.v1.LoginRequest
-	8,  // 8: ose.micro.authora.user.v1.UserService.Create:output_type -> ose.micro.authora.user.v1.CreateResponse
-	9,  // 9: ose.micro.authora.user.v1.UserService.Update:output_type -> ose.micro.authora.user.v1.UpdateResponse
-	10, // 10: ose.micro.authora.user.v1.UserService.ChangePassword:output_type -> ose.micro.authora.user.v1.ChangePasswordResponse
-	11, // 11: ose.micro.authora.user.v1.UserService.ResetPassword:output_type -> ose.micro.authora.user.v1.ResetPasswordResponse
-	12, // 12: ose.micro.authora.user.v1.UserService.Read:output_type -> ose.micro.authora.user.v1.ReadResponse
-	13, // 13: ose.micro.authora.user.v1.UserService.ReadOne:output_type -> ose.micro.authora.user.v1.ReadOneResponse
-	14, // 14: ose.micro.authora.user.v1.UserService.RequestPurposeToken:output_type -> ose.micro.authora.user.v1.RequestPurposeTokenResponse
-	15, // 15: ose.micro.authora.user.v1.UserService.Login:output_type -> ose.micro.authora.user.v1.LoginResponse
-	8,  // [8:16] is the sub-list for method output_type
-	0,  // [0:8] is the sub-list for method input_type
+	8,  // 8: ose.micro.authora.user.v1.UserService.Logout:input_type -> ose.micro.authora.user.v1.LogoutRequest
+	9,  // 9: ose.micro.authora.user.v1.UserService.Create:output_type -> ose.micro.authora.user.v1.CreateResponse
+	10, // 10: ose.micro.authora.user.v1.UserService.Update:output_type -> ose.micro.authora.user.v1.UpdateResponse
+	11, // 11: ose.micro.authora.user.v1.UserService.ChangePassword:output_type -> ose.micro.authora.user.v1.ChangePasswordResponse
+	12, // 12: ose.micro.authora.user.v1.UserService.ResetPassword:output_type -> ose.micro.authora.user.v1.ResetPasswordResponse
+	13, // 13: ose.micro.authora.user.v1.UserService.Read:output_type -> ose.micro.authora.user.v1.ReadResponse
+	14, // 14: ose.micro.authora.user.v1.UserService.ReadOne:output_type -> ose.micro.authora.user.v1.ReadOneResponse
+	15, // 15: ose.micro.authora.user.v1.UserService.RequestPurposeToken:output_type -> ose.micro.authora.user.v1.RequestPurposeTokenResponse
+	16, // 16: ose.micro.authora.user.v1.UserService.Login:output_type -> ose.micro.authora.user.v1.LoginResponse
+	17, // 17: ose.micro.authora.user.v1.UserService.Logout:output_type -> ose.micro.authora.user.v1.LogoutResponse
+	9,  // [9:18] is the sub-list for method output_type
+	0,  // [0:9] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

@@ -56,7 +56,7 @@ func (h requestAccessTokenCommandHandler) Handle(ctx context.Context, command us
 
 	tokenClaim, err := h.cache.Get(ctx, command.Token)
 	if err != nil {
-		err := ose_error.Wrap(err, ose_error.ErrUnauthorized, err.Error(), traceId)
+		err := ose_error.New(ose_error.ErrUnauthorized, "request pass failed please check your token", traceId)
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 		h.log.Error("validation process failed",

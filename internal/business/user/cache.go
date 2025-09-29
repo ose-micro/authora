@@ -97,6 +97,7 @@ func ExistingToken(param TokenParam) (*Token, error) {
 type Cache interface {
 	Save(ctx context.Context, payload *Token, ttl time.Duration) error
 	Get(ctx context.Context, key string) (*Token, error)
+	Delete(ctx context.Context, key string) error
 }
 
 func (p TokenParam) Validate(isExisting bool) error {

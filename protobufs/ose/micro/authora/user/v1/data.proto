@@ -25,7 +25,7 @@ enum State {
 
 message Status {
   State state = 1;
-  State previous = 2; // optional previous state
+  optional State previous = 2; // optional previous state
   google.protobuf.Timestamp occur_on = 3;
 }
 
@@ -118,6 +118,14 @@ message LoginRequest {
 message LoginResponse {
   string message = 1;
   ose.micro.common.v1.Auth record = 2;
+}
+
+message LogoutRequest {
+  string token = 3;
+}
+
+message LogoutResponse {
+  string message = 1;
 }
 
 message DeleteRequest {

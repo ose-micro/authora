@@ -15,4 +15,5 @@ service UserService {
   rpc ReadOne(ose.micro.authora.user.v1.ReadOneRequest) returns (ose.micro.authora.user.v1.ReadOneResponse);
   rpc RequestPurposeToken(ose.micro.authora.user.v1.RequestPurposeTokenRequest) returns (ose.micro.authora.user.v1.RequestPurposeTokenResponse);
   rpc Login(ose.micro.authora.user.v1.LoginRequest) returns (ose.micro.authora.user.v1.LoginResponse);
+  rpc Logout(ose.micro.authora.user.v1.LogoutRequest) returns (ose.micro.authora.user.v1.LogoutResponse);
 }
